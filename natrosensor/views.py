@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.auth.decorators import login_required
-import folium, geocoder
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
+# import folium, geocoder
+# import numpy as np
+# import pandas as pd
+# import matplotlib.pyplot as plt
 
-from scipy.optimize import curve_fit
+# from scipy.optimize import curve_fit
 from io import StringIO
 from .forms import SignupForm, LoginForm
 
@@ -55,11 +55,12 @@ def signup(request):
 @login_required(login_url='/natrosensor/login')
 def location(request):
     template_name = "natrosensor/location.html"
-    g = geocoder.ip('me')
-    map = folium.Map(location=g.latlng, zoom_start=12)
-    folium.Marker(g.latlng, popup=g.address,icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
-    map = map._repr_html_()
-    return render(request, template_name, context={"template_name": "Location", "map": map, "location": g})
+    return render(request, template_name, context={"template_name": "Location"})
+    # g = geocoder.ip('me')
+    # map = folium.Map(location=g.latlng, zoom_start=12)
+    # folium.Marker(g.latlng, popup=g.address,icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
+    # map = map._repr_html_()
+    # return render(request, template_name, context={"template_name": "Location", "map": map, "location": g})
 
 @login_required(login_url='/natrosensor/login')
 def dashboard(request):
