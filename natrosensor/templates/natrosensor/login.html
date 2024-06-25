@@ -1,0 +1,56 @@
+{% extends "./base.html" %}
+{% load static %}
+{% load filters %}
+
+{% block content %}
+<div class="flex flex-col flex-grow overflow-y-auto overflow-x-hidden align-middle justify-center h-screen antialiased">
+    <div class="grid grid-cols-12 text-white align-middle justify-center">
+        <div class="hidden md:block col-start-2 col-span-5 rounded-l-lg bg-cover" style="background-image: url({% static '/natrosensor/assets/antibiotic.jpg' %});">
+            <div class="flex flex-col h-full align-middle justify-stretch items-center mx-auto p-2">
+                <div class="max-w-sm h-full p-6 bg-white/80 border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-2xl font-extrabold">NATRO<span class="bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 bg-clip-text text-transparent">SENSOR</span></span>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 mt-2">The <span class="font-bold">project NATROSENSOR</span> aims to develop a multiplex detection device that can be used to detect the presence of various antibiotics for monitoring the success of wastewater treatment facilities. it can also be used to detect the presence of various antibiotics in other substrates such as surface and ground water, and food products such as milk.</p>
+                    <a href="#" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Read more
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-start-2 col-span-10 sm:col-start-3 sm:col-span-8 md:col-end-12 md:col-span-5 bg-gradient-to-r from-cyan-900/90 to-cyan-950/90 rounded-lg md:rounded-l-none md:rounded-r-lg p-5">
+            <div class="flex flex-col h-full align-middle justify-center items-center mx-auto p-5">
+                <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-4xl font-extrabold mb-5">NATRO<span class="text-white">SENSOR</span></span>
+                <form method="POST" class="w-full mx-auto lg:px-6">
+                    {% csrf_token %}
+                    <div class="relative mb-4">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
+                              <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z"/>
+                              <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z"/>
+                            </svg>
+                          </div>
+                        {{ form.email|addClass:'block rounded-lg ps-10 px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-600 peer'}}
+                        <label for="email_login" class="absolute ps-10 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Email Address</label>
+                    </div>
+                    <div class="relative mb-3">  
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">  
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                                <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
+                            </svg>  
+                        </div>        
+                        {{ form.password|addClass:'block rounded-lg ps-10 px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-600 peer'}}
+                        <label for="password_login" class="absolute ps-10 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Password</label>
+                    </div>
+                    <a href="#" class="font-medium text-cyan-400 dark:text-cyan-500 hover:underline">Forgot password?</a>
+                    <div class="pt-3"> 
+                        <button type="submit" class="flex flex-col w-full items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-md px-5 py-2.5 text-center me-2 mb-2">Login</button>
+                    </div>
+                </form>
+                <span class="justify-center"> Don't have an account? <a href="{% url 'natrosensor:signup' %}" class="font-medium text-cyan-400 dark:text-cyan-500 hover:underline"> Signup </a></span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

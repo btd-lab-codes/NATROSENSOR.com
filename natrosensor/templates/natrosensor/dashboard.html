@@ -1,0 +1,118 @@
+{% extends "./sidebar.html" %}
+{% load static %}
+
+{% block subcontent %}
+<div class="flex flex-col flex-grow overflow-y-auto overflow-x-hidden h-screen p-2">
+  <div class="flex flex-col md:flex-row h-20 gap-2 mb-3">
+    <div class="flex flex-col w-full bg-white rounded-lg justify-center items-center">
+      <span class="text-2xl font-medium"> Hello, <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent">{{user.first_name}} {{user.last_name}}!</span> </span>
+    </div>
+    <div class="flex flex-col w-full md:w-60 bg-white rounded-lg justify-center items-center">
+      In Progress
+    </div>
+  </div> 
+  <div class="flex flex-col md:flex-row flex-grow gap-2 mb-3">
+    <div class="flex flex-col w-full md:w-60 bg-white rounded-lg justify-center items-center gap-2 px-2">
+      <a href="{% url 'natrosensor:process' %}" class="flex flex-col items-center w-full text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-md px-5 py-2.5 text-center">
+        Process
+      </a>
+      <a href="{% url 'natrosensor:records' %}" class="flex flex-col items-center w-full text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-md px-5 py-2.5 text-center">
+        Records
+      </a>
+      <a href="{% url 'natrosensor:about' %}" class="flex flex-col items-center w-full text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-md px-5 py-2.5 text-center">
+        About
+      </a>
+      <a href="{% url 'natrosensor:location' %}" class="flex flex-col items-center w-full text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-md px-5 py-2.5 text-center">
+        Location
+      </a>
+    </div>
+    <div class="flex flex-col w-full bg-white rounded-lg justify-center items-center p-2">
+        <span class="justify-start font-medium text-lg text-cyan-950 mb-3">Recent Records </span>
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-white uppercase bg-cyan-950 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                  <th scope="col" class="px-6 py-3">
+                      Name
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      Datetime
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      Location
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      Action
+                  </th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      Test 1
+                  </th>
+                  <td class="px-6 py-4">
+                      23 Jan 2024 09:00 AM
+                  </td>
+                  <td class="px-6 py-4">
+                      Los Ba&ntilde;os, Laguna
+                  </td>
+                  <td class="px-6 py-4">
+                      <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                  </td>
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      Test 2
+                  </th>
+                  <td class="px-6 py-4">
+                      22 Jan 2024 09:00 AM
+                  </td>
+                  <td class="px-6 py-4">
+                      Los Ba&ntilde;os, Laguna
+                  </td>
+                  <td class="px-6 py-4">
+                      <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                  </td>
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      Test 3
+                  </th>
+                  <td class="px-6 py-4">
+                      21 Jan 2024 09:00 AM
+                  </td>
+                  <td class="px-6 py-4">
+                      Los Ba&ntilde;os, Laguna
+                  </td>
+                  <td class="px-6 py-4">
+                      <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                  </td>
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      Test 4
+                  </th>
+                  <td class="px-6 py-4">
+                      20 Jan 2024 09:00 AM
+                  </td>
+                  <td class="px-6 py-4">
+                      Los Ba&ntilde;os, Laguna
+                  </td>
+                  <td class="px-6 py-4">
+                      <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="flex flex-col md:flex-row h-36 gap-2">
+    <div class="flex flex-col w-full md:w-72 bg-white rounded-lg justify-center items-center">
+      In Progress
+    </div>
+    <div class="flex flex-col w-full bg-white rounded-lg justify-center items-center">
+      In Progress
+    </div>
+  </div>
+</div>
+{% endblock subcontent %}

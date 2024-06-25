@@ -1,0 +1,18 @@
+from django.urls import path
+
+from . import views
+
+app_name = "natrosensor"
+urlpatterns = [
+    path("login", views.user_login, name="login"),
+    path("logout", views.user_logout, name="logout"),
+    path("signup", views.signup, name="signup"),
+    path("dashboard", views.dashboard, name="dashboard"),
+    path("location", views.location, name="location"),
+    path("process", views.process, name="process"),
+    path("result", views.result, name="result"),
+    path("records", views.records, name="records"),
+    path("about", views.about, name="about"),
+    path("profile", views.profile, name="profile"),
+    path("settings", views.settings, name="settings")
+]

@@ -1,0 +1,21 @@
+{% extends "./sidebar.html" %}
+{% load static %}
+
+{% block subcontent %}
+<div class="flex flex-col h-screen p-2">  
+  <div class="grid grid-cols-5 h-full gap-2">
+    <div class="flex flex-col bg-white p-5 rounded-lg shadow-xl">
+        <div class="font-medium"> Coordinates </div>
+        <div class="mb-3"> {{location.latlng|safe}} </div>
+        <div class="font-medium"> City </div>
+        <div class="mb-3"> {{location.city|safe}} </div> 
+        <div class="font-medium"> Country </div>
+        <div class="mb-3"> {{location.country|safe}} </div>    
+        <div class="font-medium"> Zip Code </div>
+        <div class="mb-3"> {{location.postal|safe}} </div>    
+    </div>
+    <div class="flex col-span-4 items-center bg-white p-5 rounded-lg shadow-lg">
+      {{map | safe}}
+    </div>
+</div>
+{% endblock subcontent %}
