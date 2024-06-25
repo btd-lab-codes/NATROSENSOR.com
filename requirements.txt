@@ -7,7 +7,7 @@ colorama==0.4.6
 contourpy==1.2.1
 cycler==0.12.1
 decorator==5.1.1
-django==5.0.1
+Django==5.0.1
 django-browser-reload==1.12.1
 django-htmx==1.17.3
 django-tailwind==3.8.0
