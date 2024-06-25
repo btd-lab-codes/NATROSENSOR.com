@@ -4,7 +4,7 @@
       {
         "src": "core/wsgi.py",
         "use": "@vercel/python",
-        "config": { "maxLambdaSize": "15mb", "runtime": "python3.10" }
+        "config": { "maxLambdaSize": "15mb", "runtime": "python3.10", "excludeFiles": "{.next,*.cache,node_modules,public,app}/**" }
       },
       {
         "src": "build_files.sh",
@@ -20,10 +20,5 @@
         "src": "/(.*)",
         "dest": "core/wsgi.py"
       }
-    ],
-    "functions": {
-      "api/**": {
-        "excludeFiles": "{.next,*.cache,node_modules,public,app}/**"
-      }
-    }
+    ]
 }
