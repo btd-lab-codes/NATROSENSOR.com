@@ -9,6 +9,13 @@
       {
         "src": "build_files.sh",
         "use": "@vercel/static"
+      },
+      {
+        "functions": {
+          "api/**": {
+            "excludeFiles": "{.next,*.cache,node_modules,public,app}/**"
+          }
+        }
       }
     ],
     "routes": [
@@ -20,10 +27,5 @@
         "src": "/(.*)",
         "dest": "core/wsgi.py"
       }
-    ],
-    "functions": {
-      "api/**": {
-        "excludeFiles": "{.next,*.cache,node_modules,public,app}/**"
-      }
-    }
+    ]
 }
