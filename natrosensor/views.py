@@ -11,7 +11,7 @@ from io import StringIO
 from .forms import SignupForm, LoginForm
 
 def web_main(request):
-    return redirect('/natrosensor/login')
+    return redirect('/login')
 
 def user_login(request):
     if request.method == 'POST':
@@ -22,7 +22,7 @@ def user_login(request):
             user = authenticate(request, email=email, password=password)
             if user:
                 login(request, user)    
-                return redirect('/natrosensor/dashboard')
+                return redirect('/dashboard')
     else:
         form = LoginForm()
 
@@ -31,7 +31,7 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
-    return redirect('/natrosensor/login')
+    return redirect('/login')
 
 def signup(request):
     if request.method == 'POST':
@@ -48,14 +48,14 @@ def signup(request):
             else:
                 user.set_password(password2)
                 user.save()
-                return redirect('/natrosensor/login')
+                return redirect('/login')
     else:
         form = SignupForm()
 
     template_name = "natrosensor/signup.html"
     return render(request, template_name, context={"template_name": "Signup", 'form': form})
 
-@login_required(login_url='/natrosensor/login')
+@login_required(login_url='/login')
 def location(request):
     template_name = "natrosensor/location.html"
     return render(request, template_name, context={"template_name": "Location"})
@@ -65,7 +65,7 @@ def location(request):
     # map = map._repr_html_()
     # return render(request, template_name, context={"template_name": "Location", "map": map, "location": g})
 
-@login_required(login_url='/natrosensor/login')
+@login_required(login_url='/login')
 def dashboard(request):
     user = {}
     user['first_name'] = request.user.first_name if request.user.is_authenticated else None
@@ -74,32 +74,32 @@ def dashboard(request):
     template_name = "natrosensor/dashboard.html"
     return render(request, template_name, context={"template_name": "Dashboard", "user": user})
 
-@login_required(login_url='/natrosensor/login')
+@login_required(login_url='/login')
 def process(request):
     template_name = "natrosensor/process.html"
     return render(request, template_name, context={"template_name": "Process"})
 
-@login_required(login_url='/natrosensor/login')
+@login_required(login_url='/login')
 def records(request):
     template_name = "natrosensor/records.html"
     return render(request, template_name, context={"template_name": "Records"})
 
-@login_required(login_url='/natrosensor/login')
+@login_required(login_url='/login')
 def about(request):
     template_name = "natrosensor/about.html"
     return render(request, template_name, context={"template_name": "About"})
 
-@login_required(login_url='/natrosensor/login')
+@login_required(login_url='/login')
 def profile(request):
     template_name = "natrosensor/profile.html"
     return render(request, template_name, context={"template_name": "Profile"})
 
-@login_required(login_url='/natrosensor/login')
+@login_required(login_url='/login')
 def settings(request):
     template_name = "natrosensor/settings.html"
     return render(request, template_name, context={"template_name": "Settings"})
 
-@login_required(login_url='/natrosensor/login')
+@login_required(login_url='/login')
 def result(request):
     process_name = request.POST.get('process_name', '') 
     process_trial = int(request.POST.get('process_trial', ''))
