@@ -10,6 +10,9 @@ from django.contrib.auth.decorators import login_required
 from io import StringIO
 from .forms import SignupForm, LoginForm
 
+def web_main(request):
+    return redirect('/natrosensor/login')
+
 def user_login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
