@@ -9,6 +9,13 @@
       {
         "src": "build_files.sh",
         "use": "@vercel/static"
+      },
+      {
+        "src": "theme/static_src/**/*",
+        "use": "@vercel/static-build",
+        "config": {
+          "distDir": "theme/static"
+        }
       }
     ],
     "routes": [
