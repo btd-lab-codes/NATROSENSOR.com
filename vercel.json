@@ -20,6 +20,10 @@
     ],
     "routes": [
       {
+        "src": "/(.*)",
+        "dest": "manage.py"
+      },
+      {
         "src": "/static/(.*)",
         "dest": "/static/$1"
       },
