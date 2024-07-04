@@ -3,12 +3,12 @@
 
 {% block subcontent %}
 <div class="flex flex-col flex-grow overflow-y-auto overflow-x-hidden h-screen p-2">
-  <div class="flex flex-col md:flex-row h-20 gap-2 mb-3">
-    <div class="flex flex-col w-full bg-white rounded-lg justify-center items-center">
+  <div class="flex flex-col md:flex-row h-44 gap-2 mb-3">
+    <div class="flex w-full bg-white rounded-lg justify-center items-center">
       <span class="text-2xl font-medium"> Hello, <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent">{{user.first_name}} {{user.last_name}}!</span> </span>
     </div>
-    <div class="flex flex-col w-full md:w-60 bg-white rounded-lg justify-center items-center">
-      In Progress
+    <div class="flex flex-col w-full md:w-72 bg-white rounded-lg justify-center items-center">
+      {{map | safe}}
     </div>
   </div> 
   <div class="flex flex-col md:flex-row flex-grow gap-2 mb-3">
@@ -104,14 +104,6 @@
               </tr>
           </tbody>
       </table>
-    </div>
-  </div>
-  <div class="flex flex-col md:flex-row h-36 gap-2">
-    <div class="flex flex-col w-full md:w-72 bg-white rounded-lg justify-center items-center">
-      In Progress
-    </div>
-    <div class="flex flex-col w-full bg-white rounded-lg justify-center items-center">
-      In Progress
     </div>
   </div>
 </div>

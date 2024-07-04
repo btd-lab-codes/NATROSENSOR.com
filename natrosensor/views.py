@@ -1,17 +1,24 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout 
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
-# import folium, geocoder
-# import numpy as np
-# import pandas as pd
-# import matplotlib.pyplot as plt
-
-# from scipy.optimize import curve_fit
+from scipy.optimize import curve_fit
 from io import StringIO
 from .forms import SignupForm, LoginForm
+from .models import Otp
+from .module import fourpl
 
-def web_main(request):
-    return redirect('/login')
+import folium, geocoder
+import pandas as pd
+
+map_markers = []
+
+def index(request):
+    map = folium.Map([14.1608, 121.2453], zoom_start=18)
+    folium.Marker([14.1608, 121.2453], popup="", icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
+    map_embed = map._repr_html_()
+
+    template_name = "natrosensor/index.html"
+    return render(request, template_name, context={"template_name": "Index", "map": map_embed})
 
 def user_login(request):
     if request.method == 'POST':
@@ -30,6 +37,9 @@ def user_login(request):
     return render(request, template_name, context={"template_name": "Login", 'form': form})
 
 def user_logout(request):
+    global map_markers
+    map_markers = []
+
     logout(request)
     return redirect('/login')
 
@@ -55,24 +65,62 @@ def signup(request):
     template_name = "natrosensor/signup.html"
     return render(request, template_name, context={"template_name": "Signup", 'form': form})
 
+def verify(request, email):
+    user = get_user_model().objects.get(email=email)
+    otp = Otp.objects.filter(user=user).last()
+
+    if request.method == "POST":
+        if otp.code == request.POST.get('code'):
+            user.is_active = True
+            user.save()
+            return redirect('/login')
+
 @login_required(login_url='/login')
 def location(request):
+    global map_markers
+
+    g = geocoder.ip('me')
+    map = folium.Map(location=g.latlng, zoom_start=5)
+    folium.Marker(g.latlng, popup=g.address,icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
+
+    if request.method == 'POST':
+        lat = float(request.POST.get('loc_lat'))
+        lng = float(request.POST.get('loc_lng'))        
+        g = geocoder.google([lat, lng], method='reverse')
+        g.latlng = [lat, lng]
+
+        map_markers.append({
+            'lat': lat,
+            'lng': lng,
+            'addr': g
+        })     
+
+    for marker in map_markers:
+        folium.Marker([marker['lat'], marker['lng']], popup="[" + str(marker['lat']) + "," + str(marker['lng']) + "]" + str(marker['addr']), icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
+
     template_name = "natrosensor/location.html"
-    return render(request, template_name, context={"template_name": "Location"})
-    # g = geocoder.ip('me')
-    # map = folium.Map(location=g.latlng, zoom_start=12)
-    # folium.Marker(g.latlng, popup=g.address,icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
-    # map = map._repr_html_()
-    # return render(request, template_name, context={"template_name": "Location", "map": map, "location": g})
+    map.add_child(folium.LatLngPopup())
+    map_embed = map._repr_html_()
+    return render(request, template_name, context={"template_name": "Location", "map": map_embed, "location": g})
 
 @login_required(login_url='/login')
 def dashboard(request):
+    global map_markers
+
     user = {}
     user['first_name'] = request.user.first_name if request.user.is_authenticated else None
     user['last_name'] = request.user.last_name if request.user.is_authenticated else None
 
+    g = geocoder.ip('me')
+    map = folium.Map(location=g.latlng, zoom_start=12)
+    folium.Marker(g.latlng, popup=g.address,icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)   
+
+    for marker in map_markers:
+        folium.Marker([marker['lat'], marker['lng']], popup="[" + str(marker['lat']) + "," + str(marker['lng']) + "]" + str(marker['addr']), icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
+
     template_name = "natrosensor/dashboard.html"
-    return render(request, template_name, context={"template_name": "Dashboard", "user": user})
+    map_embed = map._repr_html_()
+    return render(request, template_name, context={"template_name": "Dashboard", "user": user, "map": map_embed})
 
 @login_required(login_url='/login')
 def process(request):
@@ -91,8 +139,13 @@ def about(request):
 
 @login_required(login_url='/login')
 def profile(request):
+    user = {}
+    user['first_name'] = request.user.first_name if request.user.is_authenticated else None
+    user['last_name'] = request.user.last_name if request.user.is_authenticated else None
+    user['institution'] = request.user.institution if request.user.is_authenticated else None
+
     template_name = "natrosensor/profile.html"
-    return render(request, template_name, context={"template_name": "Profile"})
+    return render(request, template_name, context={"template_name": "Profile", "user": user})
 
 @login_required(login_url='/login')
 def settings(request):
@@ -106,32 +159,30 @@ def result(request):
     process_file = request.FILES['process_file']
 
     df = pd.read_csv(process_file)
+    size = fourpl.graph_settings()
+    fig = fourpl.fourpl(df, size)
 
-    x_data = df.iloc[:,0]
-    log_x = np.log10(x_data)
-    y_data = df.iloc[:,2]
+    # y_lod = []
+    # for index in range(0, len(x_data)):
+    #     if x_data[index] < 1:
+    #         y_lod.append(y_data[index])
 
-    params, covariance = curve_fit(hill_model, log_x, y_data, p0=[min(y_data), max(y_data), np.median(log_x), 1.0])
+    # Linear of Detection
+    # mean_lod = np.mean(y_lod)
+    # std_lod = np.std(y_lod)
+    # response_lod = mean_lod + (3 * std_lod)
+    # concentration_lod = (response_lod - slope) * ec50 / (np.abs(r_min - response_lod)**(1/r_max))
+    # lod = (3.3 * std_lod) / slope
 
-    r_min, r_max, ec50, slope = params
+    # print("LOD: " + str(lod))
+    # print("Response LOD: " + str(response_lod))
+    # print("Concentration LOD:" + str(concentration_lod))
 
-    x_model = np.linspace(min(log_x), max(log_x), 100)
-    y_model = hill_model(x_model, r_min, r_max, ec50, slope)
-
-    residuals = y_data - hill_model(log_x, r_min, r_max, ec50, slope)
-    ss_res = np.sum(residuals**2)
-    ss_tot = np.sum((y_data-np.mean(y_data))**2)
-    r_squared = 1 - (ss_res / ss_tot)
-    print(r_squared)
-
-    fig = plt.figure()
-    plt.scatter(log_x, y_data)
-    plt.plot(x_model, y_model)
-    plt.rcParams["font.family"] = "Times New Roman" # set the font of the graph to Times New Roman
-
-    plt.xlabel("Concentration")
-    plt.ylabel("Response (mV)")
-    plt.xticks(ticks=log_x, labels=x_data) 
+    # Linear Range
+    # threshold = 0.1
+    # derivative = np.gradient(hill_model(x_model, r_min, r_max, ec50, slope), x_model)
+    # linear_range_index = np.where(np.abs(derivative - np.mean(derivative)) < threshold)[0]
+    # linear_range = x_model[linear_range_index[0]], x_model[linear_range_index[-1]]
 
     imgdata = StringIO()
     fig.savefig(imgdata, format='svg')
@@ -140,9 +191,3 @@ def result(request):
 
     template_name = "natrosensor/result.html"
     return render(request, template_name, context={"template_name": "Result", "graph": graph})
-
-def hill_model(x, r_min, r_max, ec50, slope):
-    return r_min + (r_max - r_min) / (1 + np.exp(-1 * slope * (x - ec50)))
-
-def linear_model(x, slope, b):
-    return (x * slope) + b

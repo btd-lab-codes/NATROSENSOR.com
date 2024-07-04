@@ -4,10 +4,11 @@ from . import views
 
 app_name = "natrosensor"
 urlpatterns = [
-    path("", views.web_main, name="web_main"),
+    path("", views.index, name="index"),
     path("login", views.user_login, name="login"),
     path("logout", views.user_logout, name="logout"),
     path("signup", views.signup, name="signup"),
+    path("verify", views.verify, name="verify"),
     path("dashboard", views.dashboard, name="dashboard"),
     path("location", views.location, name="location"),
     path("process", views.process, name="process"),

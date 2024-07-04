@@ -8,7 +8,6 @@ class SignupForm(forms.ModelForm):
     first_name = forms.CharField()
     last_name = forms.CharField()
     institution = forms.CharField()
-    # profile_pic = forms.ImageField()
 
     email.widget.attrs.update({'id': 'email_signup', 'placeholder': ''})
     password1.widget.attrs.update({'id': 'password_signup', 'placeholder': ''})
@@ -16,7 +15,6 @@ class SignupForm(forms.ModelForm):
     first_name.widget.attrs.update({'id': 'fname_signup', 'placeholder': ''})
     last_name.widget.attrs.update({'id': 'lname_signup', 'placeholder': ''})
     institution.widget.attrs.update({'id': 'inst_signup', 'placeholder': ''})
-    # profile_pic.widget.attrs.update({'id': 'pfp_signup', 'type':"file", 'accept':"image/*", '@change':"fileChosen"})
 
     class Meta:
         model = User

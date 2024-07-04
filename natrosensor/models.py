@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.conf import settings
 
 class CustomUserManager(BaseUserManager):
     def _create_user(self, email, password, first_name, last_name, institution, **extra_fields):
@@ -37,4 +38,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+class Otp(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="otp")
+    code = models.CharField(max_length=6)
 
+    def __str__(self):
+        return self.user.email

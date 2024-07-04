@@ -103,7 +103,7 @@
   </div>
   <div class="fixed flex flex-col top-0 left-0 w-full h-full bg-black/50 z-10 transition-all duration-300 md:hidden" @click="sidebar = !sidebar" :class="{'hidden': sidebar, 'block': !sidebar}"></div>
   <div id="content-area" class="fixed flex flex-col top-0 right-0 bottom-0 transition-all duration-300" :class="{'left-0 md:left-60': sidebar, 'left-0': !sidebar}">
-    <div id="content-header" class="flex h-16 bg-white border-green-500 border-b-2 px-5 shadow-lg">
+    <div id="content-header" class="flex justify-between h-16 bg-white border-green-500 border-b-2 px-5 shadow-lg">
         <div class="py-4">
           <button class="text-2xl me-2" @click="sidebar = !sidebar" :class="{'md:hidden': sidebar}">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -111,6 +111,11 @@
             </svg>            
           </button>
           <span class="bg-black bg-clip-text text-transparent text-xl md:text-2xl font-bold mb-5"> {{template_name}} </span>
+        </div>
+        <div class="flex items-center">
+          <div class="bg-cyan-500 rounded-lg p-1 px-2">
+            <span class="text-2xl font-medium">{{user.first_name|first}}{{user.last_name|first}}</span>
+          </div>     
         </div>
     </div>
     {% block subcontent %}
