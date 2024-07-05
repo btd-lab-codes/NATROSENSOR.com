@@ -43,7 +43,11 @@ module.exports = {
         './theme/static_src/**/*.js',
     ],
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: { 
+                "roboto": ['Roboto', 'sans-serif'] 
+            } 
+        },
     },
     plugins: [
         /**
