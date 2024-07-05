@@ -45,7 +45,8 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: { 
-                "lato": ['Lato', 'sans-serif'] 
+                "poppins": ['Poppins', 'sans-serif'],
+                "notosans": ['Noto Sans', 'sans-serif'] 
             } 
         },
     },
