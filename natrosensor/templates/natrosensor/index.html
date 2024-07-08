@@ -3,22 +3,31 @@
 {% load filters %}
 
 {% block content %}
-<div class="fixed flex flex-col w-full font-sans m-0 p-0">
-    <div class="flex flex-grow bg-white h-16 border-green-500/60 border-b-2 justify-between m-0">
+<div x-data="{ dropdown_idx: false }" class="fixed flex flex-col w-full font-sans m-0 p-0">
+    <div class="flex flex-grow bg-white h-16 z-20 border-green-500/60 border-b-2 justify-between m-0">
         <div class="flex flex-col justify-center ms-5">
             <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-2xl font-extrabold font-poppins">NATRO<span class="text-cyan-950">SENSOR</span></span>
         </div> 
         <div class="flex flex-col justify-center me-5">
             <div class="flex gap-2">
-                <a href="{% url 'natrosensor:login' %}" class="text-cyan-950 hover:text-white border-2 border-cyan-950 hover:bg-cyan-950 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg px-3 py-1 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800 font-poppins"> Login </a>
-                <a href="{% url 'natrosensor:signup' %}" class="text-white bg-gradient-to-r from-green-400 via-green-600 to-green-800 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-bold rounded-lg px-3 py-1 text-center font-poppins"> Signup </a>
+                <a href="{% url 'natrosensor:signup' %}" class="text-white bg-gradient-to-r from-green-400 via-green-600 to-green-800 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-bold rounded-lg px-3 py-1 text-center font-poppins hidden md:block"> Signup </a>
+                <a href="{% url 'natrosensor:login' %}" class="text-cyan-950 hover:text-white border-2 border-cyan-950 hover:bg-cyan-950 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg px-3 py-1 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800 font-poppins hidden md:block"> Login </a>            
+                <button @click="dropdown_idx = !dropdown_idx" type="button" class="text-cyan-950 hover:text-white border-2 border-cyan-950 hover:bg-cyan-950 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg px-3 py-1 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800 font-poppins block md:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 font-bold">
+                        <path fill-rule="evenodd" d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+                    </svg>  
+                </button>
             </div>
         </div>     
     </div>
+    <div class="fixed flex flex-col w-full h-auto z-10 top-16 left-0 bg-white p-8 gap-3 border-green-500/60 border-b-2 md:hidden transition-all ease-in-out duration-300" :class="{'translate-y-0': dropdown_idx, '-translate-y-full': !dropdown_idx}">
+        <a href="{% url 'natrosensor:signup' %}" class="text-white bg-gradient-to-r from-green-400 via-green-600 to-green-800 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-bold rounded-lg px-3 py-1 text-center font-poppins"> Signup </a>
+        <a href="{% url 'natrosensor:login' %}" class="text-cyan-950 hover:text-white border-2 border-cyan-950 hover:bg-cyan-950 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg px-3 py-1 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800 font-poppins"> Login </a>   
+    </div>
     <div class="fixed flex flex-col flex-grow top-16 bottom-0">
         <div class="h-screen overflow-x-hidden overflow-y-auto">
-            <div class="grid grid-cols-1 h-2/3 bg-cover bg-no-repeat bg-bottom" style="background-image: url({% static '/natrosensor/assets/antibiotic.jpg' %});">
-                <div class="flex flex-col bg-black/70 justify-center items-center md:items-start border-none shadow-none outline-none h-full p-5 md:p-20 gap-3">
+            <div class="grid grid-cols-1 h-auto bg-cover bg-no-repeat bg-bottom" style="background-image: url({% static '/natrosensor/assets/antibiotic.jpg' %});">
+                <div class="flex flex-col bg-black/70 justify-center items-center md:items-start border-none shadow-none outline-none h-full p-20 gap-3">
                     <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-4xl font-extrabold font-poppins">NATRO<span class="text-white">SENSOR</span></span>
                     <span class="text-white font-bold text-xl text-center md:text-start font-notosans"> Experience the future of wastewater monitoring with our antibiotic detection technology </span>
                     <div class="flex gap-3">

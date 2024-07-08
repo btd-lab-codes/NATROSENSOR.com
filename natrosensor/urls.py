@@ -16,5 +16,6 @@ urlpatterns = [
     path("records", views.records, name="records"),
     path("about", views.about, name="about"),
     path("profile", views.profile, name="profile"),
-    path("settings", views.settings, name="settings")
+    path("settings", views.settings, name="settings"),
+    path("test", views.test, name="test")
 ]

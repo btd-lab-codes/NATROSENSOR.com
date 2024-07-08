@@ -12,6 +12,10 @@ import pandas as pd
 
 map_markers = []
 
+def test(request):
+    template_name = "natrosensor/test.html"
+    return render(request, template_name, context={"template_name": "Test"})
+
 def index(request):
     map = folium.Map([14.1608, 121.2453], zoom_start=18)
     folium.Marker([14.1608, 121.2453], popup="", icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
