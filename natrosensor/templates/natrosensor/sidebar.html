@@ -3,7 +3,7 @@
 
 {% block content %}
 <div x-data="{sidebar: true}" class="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased text-gray-800">
-  <div class="fixed flex flex-col top-0 left-0 w-60 h-full bg-transparent md:bg-white z-20 transition-all duration-300" :class="{'-translate-x-full md:translate-x-0': sidebar, 'translate-x-0 md:-translate-x-full': !sidebar}">
+  <div class="fixed flex flex-col top-0 left-0 w-60 h-full bg-transparent md:bg-white z-40 transition-all duration-300" :class="{'-translate-x-full md:translate-x-0': sidebar, 'translate-x-0 md:-translate-x-full': !sidebar}">
     <div class="flex items-center justify-center h-16 bg-cyan-950 border-green-500 border-b-2 rounded-tr-3xl">
       <div class="py-4">
         <button @click="sidebar = !sidebar">
@@ -53,7 +53,7 @@
                 <path fill-rule="evenodd" d="m9.69 18.933.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 0 0 .281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 1 0 3 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 0 0 2.273 1.765 11.842 11.842 0 0 0 .976.544l.062.029.018.008.006.003ZM10 11.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" clip-rule="evenodd" />
               </svg>
             </span>
-            <span class="ml-3 text-lg text-white tracking-wide truncate font-notosan font-semibold">Location</span>
+            <span class="ml-3 text-lg text-white tracking-wide truncate font-notosans font-semibold">Location</span>
           </a>
         </li>
         <li>
@@ -101,9 +101,9 @@
       </ul>
     </div>
   </div>
-  <div class="fixed flex flex-col top-0 left-0 w-full h-full bg-black/50 z-10 transition-all duration-300 md:hidden" @click="sidebar = !sidebar" :class="{'hidden': sidebar, 'block': !sidebar}"></div>
-  <div id="content-area" class="fixed flex flex-col top-0 right-0 bottom-0 transition-all duration-300" :class="{'left-0 md:left-60': sidebar, 'left-0': !sidebar}">
-    <div id="content-header" class="flex justify-between h-16 bg-white border-green-500 border-b-2 px-5 shadow-lg">
+  <div class="fixed flex flex-col top-0 left-0 w-full h-full bg-black/50 z-30 transition-all duration-300 md:hidden" @click="sidebar = !sidebar" :class="{'hidden': sidebar, 'block': !sidebar}"></div>
+  <div x-data="{dropdown_app: false}"id="content-area" class="fixed flex flex-col top-0 right-0 bottom-0 transition-all duration-300" :class="{'left-0 md:left-60': sidebar, 'left-0': !sidebar}">
+    <div id="content-header" class="flex justify-between h-16 z-20 bg-white border-green-500 border-b-2 px-5 shadow-lg">
         <div class="py-4">
           <button class="text-2xl me-2" @click="sidebar = !sidebar" :class="{'md:hidden': sidebar}">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -113,10 +113,18 @@
           <span class="bg-black bg-clip-text text-transparent text-xl md:text-2xl font-bold mb-5"> {{template_name}} </span>
         </div>
         <div class="flex items-center">
-          <div class="bg-cyan-500 rounded-lg p-1 px-2">
+          <button @click="dropdown_app = !dropdown_app" type="button" class="bg-cyan-500 rounded-full p-1 px-2">
             <span class="text-2xl font-medium">{{user.first_name|first}}{{user.last_name|first}}</span>
-          </div>     
+          </button>     
         </div>
+    </div>
+    <div class="fixed flex flex-col bg-white w-60 z-10 h-auto top-16 right-0 border-green-500/60 border-b-2 p-4 -translate-y-full transition-all ease-in-out duration-300" :class="{'translate-y-0 shadow-xl': dropdown_app, '-translate-y-full': !dropdown_app}">
+      <span class="font-poppins"> Signed in </span>
+      <span class="font-notosans mb-3">{{user.first_name}} {{user.last_name}}</span>
+      <hr class="border-2 border-green-500/60 mb-3" />
+      <a href="{% url 'natrosensor:profile' %}" class="font-poppins mb-3"> Profile </a>
+      <a href="{% url 'natrosensor:settings' %}" class="font-poppins mb-3"> Settings </a>
+      <a href="{% url 'natrosensor:logout' %}" class="font-poppins"> Logout </a>
     </div>
     {% block subcontent %}
     {% endblock subcontent %}

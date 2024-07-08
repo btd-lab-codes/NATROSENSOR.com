@@ -13,8 +13,9 @@ import pandas as pd
 map_markers = []
 
 def test(request):
+    form = LoginForm()
     template_name = "natrosensor/test.html"
-    return render(request, template_name, context={"template_name": "Test"})
+    return render(request, template_name, context={"template_name": "Test", "form": form})
 
 def index(request):
     map = folium.Map([14.1608, 121.2453], zoom_start=18)
