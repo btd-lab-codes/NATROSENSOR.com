@@ -113,18 +113,25 @@
           <span class="bg-black bg-clip-text text-transparent text-xl md:text-2xl font-bold mb-5"> {{template_name}} </span>
         </div>
         <div class="flex items-center">
-          <button @click="dropdown_app = !dropdown_app" type="button" class="bg-cyan-500 rounded-full p-1 px-2">
+          <button @click="dropdown_app = !dropdown_app" type="button" class="bg-cyan-500 rounded-full py-1 px-2">
             <span class="text-2xl font-medium">{{user.first_name|first}}{{user.last_name|first}}</span>
           </button>     
         </div>
     </div>
-    <div class="fixed flex flex-col bg-white w-60 z-10 h-auto top-16 right-0 border-green-500/60 border-b-2 p-4 -translate-y-full transition-all ease-in-out duration-300" :class="{'translate-y-0 shadow-xl': dropdown_app, '-translate-y-full': !dropdown_app}">
-      <span class="font-poppins"> Signed in </span>
-      <span class="font-notosans mb-3">{{user.first_name}} {{user.last_name}}</span>
-      <hr class="border-2 border-green-500/60 mb-3" />
-      <a href="{% url 'natrosensor:profile' %}" class="font-poppins mb-3"> Profile </a>
-      <a href="{% url 'natrosensor:settings' %}" class="font-poppins mb-3"> Settings </a>
-      <a href="{% url 'natrosensor:logout' %}" class="font-poppins"> Logout </a>
+    <div class="fixed flex flex-col bg-white w-72 z-10 h-auto top-16 right-0 border-green-500/60 border-b-2 p-4 -translate-y-full transition-all ease-in-out duration-300 gap-3" :class="{'translate-y-0 shadow-xl': dropdown_app, '-translate-y-full': !dropdown_app}">
+      <div class="flex w-full border-b-2 border-green-500/60 pb-4">
+        <div class="flex flex-col w-1/4 justify-center items-center">
+          <span class="text-2xl font-medium text-center bg-cyan-500 rounded-lg py-1 px-2">{{user.first_name|first}}{{user.last_name|first}}</span>
+        </div>
+        <div class="flex flex-col w-3/4">
+          <span class="font-poppins"> Signed in </span>
+          <span class="font-notosans">{{user.first_name}} {{user.last_name}}</span>
+        </div>      
+      </div>     
+      {% comment %} <hr class="border-2 border-green-500/60" /> {% endcomment %}
+      <a href="{% url 'natrosensor:profile' %}" class="flex font-poppins hover:bg-blue-500/80 hover:text-white rounded-lg ps-6 px-3"> Profile </a>
+      <a href="{% url 'natrosensor:settings' %}" class="flex font-poppins hover:bg-blue-500/80 hover:text-white rounded-lg ps-6 px-2"> Settings </a>
+      <a href="{% url 'natrosensor:logout' %}" class="flex font-poppins hover:bg-blue-500/80 hover:text-white rounded-lg ps-6 px-2"> Logout </a>
     </div>
     {% block subcontent %}
     {% endblock subcontent %}

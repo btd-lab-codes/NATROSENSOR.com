@@ -5,23 +5,23 @@
 <div class="flex flex-col flex-grow overflow-y-auto overflow-x-hidden rounded-lg bg-white h-screen m-3 p-8">
     <form hx-post="{% url 'natrosensor:result' %}" hx-swap="outerHTML" hx-encoding='multipart/form-data' class="flex flex-col flex-grow">
         <div class="mb-4">
-            <label for="process_name" class="block ms-2 mb-2 text-md font-medium text-gray-900 dark:text-white">Process Name <span class="text-red-500">*</span></label>
-            <input type="text" id="process_name" name="process_name" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="Process Name" required/>
+            <label for="process_name" class="block ms-2 mb-2 text-md font-medium text-gray-900">Process Name <span class="text-red-500">*</span></label>
+            <input type="text" id="process_name" name="process_name" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="Process Name" required/>
         </div>
         <div class="mb-4">
-            <label for="process_file" class="block ms-2 mb-2 text-md font-medium text-gray-900 dark:text-white">Calibration Model File <span class="text-red-500">*</span></label>
-            <input id="process_file" name="process_file" type="file" aria-describedby="file_input_help" accept=".csv" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-600 file:outline-none file:border-0 file:bg-gradient-to-r file:bg-cyan-950 file:rounded-lg file:py-2 file:px-4 file:text-white file:me-3 hover:file:hover:bg-blue-500/80" required/>
+            <label for="process_file" class="block ms-2 mb-2 text-md font-medium text-gray-900">Calibration Model File <span class="text-red-500">*</span></label>
+            <input id="process_file" name="process_file" type="file" aria-describedby="file_input_help" accept=".csv" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 file:outline-none file:border-0 file:bg-gradient-to-r file:bg-cyan-950 file:rounded-lg file:py-2 file:px-4 file:text-white file:me-3 hover:file:hover:bg-blue-500/80" required/>
         </div>
         <div class="mb-4">
-            <label for="process_trial" class="block ms-2 mb-2 text-md font-medium text-gray-900 dark:text-white">Trials <span class="text-red-500">*</span></label>
-            <input type="number" value="1" min="1" id="process_trial" name="process_trial" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="Number of trials" required/>
+            <label for="process_trial" class="block ms-2 mb-2 text-md font-medium text-gray-900">Trials <span class="text-red-500">*</span></label>
+            <input type="number" value="1" min="1" id="process_trial" name="process_trial" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="Number of trials" required/>
         </div>
         <div class="mb-4">
-            <label for="process_note" class="block ms-2 mb-2 text-md font-medium text-gray-900 dark:text-white">Notes</label>
-            <textarea id="process_note" name="process_note" rows="2" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="Write your notes here..."></textarea>
+            <label for="process_note" class="block ms-2 mb-2 text-md font-medium text-gray-900">Notes</label>
+            <textarea id="process_note" name="process_note" rows="2" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="Write your notes here..."></textarea>
         </div>
         <div class="flex mt-auto justify-end">
-            <button type="submit" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-md px-5 py-2.5 text-center">Start</button>
+            <button type="submit" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-md px-5 py-2.5 text-center">Start</button>
         </div>
     </form>
 </div>
