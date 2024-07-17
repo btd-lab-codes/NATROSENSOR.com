@@ -4,7 +4,7 @@
 
 {% block content %}
 <div x-data="{ dropdown_idx: false }" class="fixed flex flex-col w-full font-sans m-0 p-0">
-    <div class="flex flex-grow bg-white dark:bg-slate-900 h-16 z-20 border-green-500/60 border-b-2 justify-between m-0">
+    <div class="flex flex-grow bg-white dark:bg-dark-primary h-16 z-20 border-green-500/60 border-b-2 justify-between m-0">
         <div class="flex flex-col justify-center ms-5">
             <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-2xl font-extrabold font-poppins">NATRO<span class="text-cyan-950 dark:text-gray-300">SENSOR</span></span>
         </div> 
@@ -20,14 +20,14 @@
             </div>
         </div>     
     </div>
-    <div class="fixed flex flex-col w-full h-auto z-10 top-16 left-0 bg-white dark:bg-slate-900 px-12 py-6 gap-3 border-green-500/60 border-b-2 md:hidden -translate-y-full transition-all ease-in-out duration-300" :class="{'translate-y-0 shadow-xl': dropdown_idx, '-translate-y-full': !dropdown_idx}">
+    <div class="fixed flex flex-col w-full h-auto z-10 top-16 left-0 bg-white dark:bg-dark-primary px-12 py-6 gap-3 border-green-500/60 border-b-2 md:hidden -translate-y-full transition-all ease-in-out duration-300" :class="{'translate-y-0 shadow-xl': dropdown_idx, '-translate-y-full': !dropdown_idx}">
         <a href="{% url 'natrosensor:signup' %}" class="text-white bg-gradient-to-r from-green-400 via-green-600 to-green-800 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-bold rounded-lg px-3 py-1 text-center font-poppins"> Signup </a>
         <a href="{% url 'natrosensor:login' %}" class="text-cyan-950 hover:text-white border-2 border-cyan-950 hover:bg-cyan-950 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg px-3 py-1 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800 font-poppins"> Login </a>   
     </div>
     <div class="fixed flex flex-col flex-grow top-16 bottom-0">
         <div class="h-screen overflow-x-hidden overflow-y-auto">
             <div class="grid grid-cols-1 h-auto bg-cover bg-no-repeat bg-bottom" style="background-image: url({% static '/natrosensor/assets/antibiotic.jpg' %});">
-                <div class="flex flex-col bg-slate-900/80 justify-center items-center md:items-start border-none shadow-none outline-none h-full p-20 gap-3">
+                <div class="flex flex-col bg-dark-primary/75 justify-center items-center md:items-start border-none shadow-none outline-none h-full p-20 gap-3">
                     <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-4xl font-extrabold font-poppins">NATRO<span class="text-gray-200">SENSOR</span></span>
                     <span class="text-gray-200 font-bold text-xl text-center md:text-start font-notosans"> Experience the future of wastewater monitoring with our antibiotic detection technology </span>
                     <div class="flex gap-3">
@@ -36,7 +36,7 @@
                     </div>
                 </div>        
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 bg-white dark:bg-slate-900 p-16 h-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 bg-white dark:bg-dark-primary/95 p-16 h-auto">
                 <div class="flex flex-col md:col-span-2 lg:col-span-4 justify-center items-center pb-8">
                     <span class="font-bold text-3xl text-cyan-950 dark:text-cyan-400 text-center font-poppins"> Features </span>
                 </div>
@@ -71,7 +71,7 @@
                     <span class="font-medium text-lg text-gray-800 dark:text-gray-300 text-center font-notosans"> Locate details </span>
                 </div>
             </div>
-            <div class="grid grid-cols-1 bg-white dark:bg-slate-900 p-8 h-auto">
+            <div class="grid grid-cols-1 bg-white dark:bg-dark-primary/95 p-8 h-auto">
                 <div class="flex flex-col md:col-span-2 justify-center items-center pb-8">
                     <span class="font-bold text-3xl text-cyan-950 dark:text-cyan-400 text-center font-poppins"> Other Projects </span>
                 </div>
@@ -80,7 +80,7 @@
                     <span class="font-medium text-lg text-gray-800 dark:text-gray-300 text-justify font-notosans"> Project HBV e-APTASENSE aims to develop an electrochemical device that can be used to detect the presence of HBsAg and HBeAg using blood samples. Specific aptamer can be selected from a set of libraries and manufactured through chemical synthesis. </span>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bg-slate-950/90 p-8 h-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bg-dark-secondary p-8 h-auto">
                 <div class="flex flex-col p-3">
                     <span class="font-bold mb-2 text-gray-300 text-lg font-poppins"> About NATROSENSOR</span>          
                     <span class="text-gray-300 text-justify font-notosans">The <span class="font-bold">NATROSENSOR</span> aims to develop a multiplex detection device that can be used to detect the presence of various antibiotics for monitoring the success of wastewater treatment facilities. it can also be used to detect the presence of various antibiotics in other substrates such as surface and ground water, and food products such as milk.</span>

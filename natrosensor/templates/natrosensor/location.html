@@ -2,19 +2,19 @@
 {% load static %}
 
 {% block subcontent %}
-<div class="flex flex-col overflow-y-auto overflow-x-hidden h-screen p-2">  
-  <div class="grid grid-cols-5 h-full gap-2">
-    <div class="flex flex-col col-span-5 lg:col-span-1 h-full bg-white p-5 rounded-lg shadow-xl">
+<div class="flex flex-col overflow-y-auto overflow-x-hidden h-screen">  
+  <div class="grid grid-cols-5 h-full gap-2 dark:bg-dark-primary/95">
+    <div class="flex flex-col col-span-5 lg:col-span-1 h-full bg-white dark:bg-dark-alt p-5 shadow-xl">
         <div>
           <form method="POST" class="mb-2">
             {% csrf_token %}
             <label class="block ms-2 mb-2 text-md font-medium text-gray-900 dark:text-white">Add Marker </label>
-            <input type="text" id="loc_lat" name="loc_lat" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="Latitude" required/>
-            <input type="text" id="loc_lng" name="loc_lng" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="Longitude" required/>
+            <input type="text" id="loc_lat" name="loc_lat" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="Latitude" required/>
+            <input type="text" id="loc_lng" name="loc_lng" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="Longitude" required/>
             <button type="submit" class="w-full text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-md px-5 py-2.5 text-center my-2">Add</button>
           </form>
         </div>     
-        <div>
+        <div class="dark:text-white">
           <div class="font-medium"> Coordinates </div>
           <div class="mb-3"> {{location.latlng|safe}} </div>
           <div class="font-medium"> City </div>
@@ -25,7 +25,7 @@
           <div class="mb-3"> {{location.postal|safe}} </div>  
         </div>  
     </div>
-    <div class="flex h-full col-span-5 lg:col-span-4 items-center bg-white p-5 rounded-lg shadow-lg">
+    <div class="flex h-full col-span-5 lg:col-span-4 items-center bg-white dark:bg-dark-alt p-5 shadow-lg">
       {{map | safe}}
     </div>
 </div>

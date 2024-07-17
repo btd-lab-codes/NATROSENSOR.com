@@ -2,18 +2,18 @@
 {% load static %}
 
 {% block subcontent %}
-<div class="flex flex-col h-screen p-2">  
-  <div class="flex bg-white w-full h-full align-middle justify-center gap-2">
+<div class="flex flex-col h-screen">  
+  <div class="flex bg-white dark:bg-dark-primary/95 w-full h-full align-middle justify-center gap-2">
       <div class="flex flex-col h-full justify-center pe-4">
         <div class="flex bg-cyan-500 rounded-lg justify-center w-full p-1 px-2">
           <span class="text-9xl font-medium">{{user.first_name|first}}{{user.last_name|first}}</span>
         </div> 
       </div>
       <div class="flex flex-col h-full justify-center ps-4">
-        <span class="text-2xl font-medium"> Name </span>
-        <span class="text-2xl text-blue-600 mb-5"> {{user.first_name}} {{user.last_name}} </span>
-        <span class="text-2xl font-medium"> Institution </span>
-        <span class="text-2xl text-blue-600"> {{user.institution}} </span>
+        <span class="text-2xl font-medium dark:text-white"> Name </span>
+        <span class="text-2xl text-blue-600 dark:text-blue-300 mb-5"> {{user.first_name}} {{user.last_name}} </span>
+        <span class="text-2xl font-medium dark:text-white"> Institution </span>
+        <span class="text-2xl text-blue-600 dark:text-blue-300"> {{user.institution}} </span>
       </div>
   </div>
 </div>

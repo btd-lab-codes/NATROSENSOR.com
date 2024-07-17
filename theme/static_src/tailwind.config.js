@@ -47,6 +47,18 @@ module.exports = {
             fontFamily: { 
                 "poppins": ['Poppins', 'sans-serif'],
                 "notosans": ['Noto Sans', 'sans-serif'] 
+            },
+            colors: {
+                dark: {
+                    100: "#455A64",
+                    200: "#37474F",
+                    300: "#263238",
+                    400: "#222222",
+                    primary: "#092635",
+                    secondary: "#1B4242",
+                    alt: "#225454",
+                    contrast: "#9EC8B9"
+                }
             } 
         },
     },
