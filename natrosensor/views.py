@@ -13,7 +13,7 @@ import pandas as pd
 map_markers = []
 
 def test(request):
-    form = LoginForm()
+    form = SignupForm()
     template_name = "natrosensor/test.html"
     return render(request, template_name, context={"template_name": "Test", "form": form})
 
