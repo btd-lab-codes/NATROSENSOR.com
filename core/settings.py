@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-4d*cf$)a=tn+taky)jd%i@^s0io1ta48y(&=zz7$0xn-9rulzh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '172.16.10.41', '78.142.47.245', '.natrosensor.org']
 
@@ -128,9 +128,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = os.path.join(BASE_DIR, 'theme', 'static'),
-STATIC_ROOT = os.path.join(BASE_DIR, 'natrosensor', 'static')
+STATIC_URL = '/theme/static/'
+STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'theme', 'static'),
+        os.path.join(BASE_DIR, 'natrosensor', 'static'),
+]
+STATIC_ROOT = '/var/www/natrosensor.org/static/'
+
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -143,4 +148,5 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
+CSRF_TRUSTED_ORIGINS = ['https://natrosensor.org']
 NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
