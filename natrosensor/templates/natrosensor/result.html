@@ -1,8 +1,75 @@
-{% comment %} {% extends "./sidebar.html" %}
-{% load static %}
-
-{% block subcontent %} {% endcomment %}
-<div class="align-middle justify-center">
-    {{graph|safe}}
+<div class="flex flex-col flex-grow p-3">
+    <div class="flex flex-col flex-grow rounded-lg gap-3 py-4">
+        <div class="flex justify-between items-center px-4">
+            <span class="font-poppins font-bold text-2xl text-white"> Analysis </span>
+            <span class="font-poppins font-bold text-xs text-slate-500"> Step 3/3 </span>
+        </div>
+        <div class="flex flex-col lg:flex-row h-full gap-4">
+            <div class="flex flex-col w-full lg:w-2/3 items-center px-4 gap-4"> 
+                <span class="font-notosans font-bold text-xl text-center dark:text-white"> 4PL Curve Graph </span>
+                <div class="flex flex-col w-auto h-72 md:h-[23rem] items-center">
+                    {{graph | safe}}
+                </div>         
+            </div>
+            <div x-data="{modal1: false, input1: '', input2: '', isEmpty(input) { return input.trim() === ''}}" class="flex flex-col w-full lg:w-1/3 items-center px-4 gap-2">
+                <span class="font-notosans font-bold text-xl text-center dark:text-white"> Overview </span>
+                <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 z-50" :class="{'hidden': !modal1}">
+                    <div class="flex items-center justify-center min-h-screen">
+                        <div class="bg-white dark:bg-dark-primary p-6 rounded-lg shadow-lg w-full max-w-lg mx-4">
+                            <div class="flex flex-col w-full dark:bg-dark-secondary justify-center items-center rounded-lg px-4 py-2">
+                                <span class="font-poppins font-bold text-2xl dark:text-white"> Overview </span>
+                            </div>
+                            <div class="flex flex-col w-full dark:bg-dark-secondary rounded-lg mt-4">
+                                <div class="flex px-4 pt-4">
+                                    <span class="font-notosans font-bold text-xl dark:text-white pe-6"> Name: </span>
+                                    <span class="font-notosans font-bold text-xl dark:text-white"> {{process.name}} </span>
+                                </div>
+                                <div class="flex px-4 pt-4">
+                                    <span class="font-notosans font-bold text-xl dark:text-white pe-6"> Antibiotics: </span>
+                                    <span class="font-notosans font-bold text-xl dark:text-white"> {{process.med}} </span>
+                                </div>
+                                <div class="flex px-4 pt-4">
+                                    <span class="font-notosans font-bold text-xl dark:text-white pe-6"> Trial: </span>
+                                    <span class="font-notosans font-bold text-xl dark:text-white"> {{process.trial}} </span>
+                                </div>
+                                <div x-data="{temp: '{{process.temp}}'}" class="flex px-4 pt-4">
+                                    <span class="font-notosans font-bold text-xl dark:text-white pe-6"> Temperature: </span>
+                                    <div x-show="temp.trim() === ''" class="font-notosans font-bold text-xl dark:text-white"> N/A </div>
+                                    <div x-show="temp.trim() !== ''" class="font-notosans font-bold text-xl dark:text-white"> {{process.temp}} </div>
+                                </div>
+                                <div x-data="{pH: '{{process.pH}}'}" class="flex px-4 pt-4">
+                                    <span class="font-notosans font-bold text-xl dark:text-white pe-6"> pH: </span>
+                                    <div x-show="pH.trim() === ''" class="font-notosans font-bold text-xl dark:text-white"> N/A </div>
+                                    <div x-show="pH.trim() !== ''" class="font-notosans font-bold text-xl dark:text-white"> {{process.pH}} </div>
+                                </div>
+                                <div x-data="{note: '{{process.note}}'}" class="flex px-4 py-4">
+                                    <span class="font-notosans font-bold text-xl dark:text-white pe-6"> Notes: </span>
+                                    <div x-show="note.trim() === ''" class="font-notosans font-bold text-xl dark:text-white"> N/A </div>
+                                    <div x-show="note.trim() !== ''" class="font-notosans font-bold text-xl dark:text-white"> {{process.note}} </div>
+                                </div>
+                            </div>               
+                            <button @click="modal1 = !modal1" id="close-btn" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">Close</button>
+                        </div>
+                    </div>
+                </div>
+                <button @click="modal1 = !modal1" id="open-btn" class="items-center text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Open Details</button>
+                
+                <span class="font-notosans font-bold text-xl text-center dark:text-white pt-6"> Linear Range </span>
+                <span class="font-notosans font-semibold text-sm text-center dark:text-white">y = {{y_int}} + {{slope}}x</span>
+                <div class="w-full px-6 pt-2">
+                    <input x-model="input1" x-on:input="isEmpty(input1) ? input2 = '' : input2 = {{y_int}} + ({{slope}} * input1)" type="text" id="linear_x" name="linear_x" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="x"/>
+                </div>
+                <div class="w-full px-6 pt-2">
+                    <input x-model="input2" x-on:input="isEmpty(input2) ? input1 = '' : input1 = (input2 - {{y_int}}) / {{slope}}" type="text" id="linear_y" name="linear_y" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="y"/>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-between mt-auto px-6 pt-3">
+            <a href="{% url 'natrosensor:process' %}" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">Discard</a>
+            <div class="flex">
+                <button type="button" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">Redo</button>
+                <button type="button" class="w-24 items-center text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Save</button>
+            </div>        
+        </div> 
+    </div> 
 </div>
-{% comment %} {% endblock subcontent %} {% endcomment %}

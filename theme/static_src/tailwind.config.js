@@ -57,7 +57,8 @@ module.exports = {
                     primary: "#092635",
                     secondary: "#1B4242",
                     alt: "#225454",
-                    contrast: "#9EC8B9"
+                    contrast: "#9EC8B9",
+                    content: "#0A2C3B"
                 }
             } 
         },

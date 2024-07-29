@@ -3,7 +3,7 @@
 
 {% block content %}
 <div x-data="{sidebar: true}" class="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased text-gray-800">
-  <div class="fixed flex flex-col top-0 left-0 w-60 h-full bg-transparent md:bg-white dark:md:bg-dark-primary z-40 transition-all duration-300" :class="{'-translate-x-full md:translate-x-0': sidebar, 'translate-x-0 md:-translate-x-full': !sidebar}">
+  <div class="fixed flex flex-col top-0 left-0 w-60 h-full bg-transparent md:bg-white dark:md:bg-dark-content z-40 transition-all duration-300" :class="{'-translate-x-full md:translate-x-0': sidebar, 'translate-x-0 md:-translate-x-full': !sidebar}">
     <div class="flex items-center justify-center h-16 bg-cyan-950 border-green-500 border-b-2 rounded-tr-3xl">
       <div class="py-4">
         <button @click="sidebar = !sidebar">
@@ -102,23 +102,23 @@
     </div>
   </div>
   <div class="fixed flex flex-col top-0 left-0 w-full h-full bg-black/50 z-30 transition-all duration-300 md:hidden" @click="sidebar = !sidebar" :class="{'hidden': sidebar, 'block': !sidebar}"></div>
-  <div x-data="{dropdown_app: false}"id="content-area" class="fixed flex flex-col top-0 right-0 bottom-0 transition-all duration-300" :class="{'left-0 md:left-60': sidebar, 'left-0': !sidebar}">
-    <div id="content-header" class="flex justify-between h-16 z-20 bg-white dark:bg-dark-primary border-green-500 border-b-2 px-5 shadow-lg">
+  <div x-data="{dropdown_app: false}" id="content-area" class="fixed flex flex-col top-0 right-0 bottom-0 transition-all duration-300" :class="{'left-0 md:left-60': sidebar, 'left-0': !sidebar}">
+    <div id="content-header" class="flex justify-between h-16 z-20 bg-white dark:bg-dark-content border-green-500 border-b-2 px-5">
         <div class="py-4">
           <button class="text-2xl me-2 dark:text-gray-300" @click="sidebar = !sidebar" :class="{'md:hidden': sidebar}">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
             </svg>            
           </button>
-          <span class="bg-black dark:bg-gray-300 bg-clip-text text-transparent text-xl md:text-2xl font-bold mb-5"> {{template_name}} </span>
+          <span class="bg-slate-800 dark:bg-white bg-clip-text text-transparent text-xl md:text-2xl font-bold mb-5"> {{template_name}} </span>
         </div>
         <div class="flex items-center">
-          <button @click="dropdown_app = !dropdown_app" type="button" class="bg-cyan-500 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-full py-1 px-2">
+          <button @click="dropdown_app = !dropdown_app" type="button" class="bg-cyan-500 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-full py-1 px-2" @click.outside="dropdown_app = false">
             <span class="text-2xl font-semibold font-poppins">{{user.first_name|first}}{{user.last_name|first}}</span>
           </button>     
         </div>
     </div>
-    <div class="fixed flex flex-col bg-white dark:bg-dark-primary w-72 z-10 h-auto top-16 right-0 border-green-500/60 border-b-2 p-4 -translate-y-full transition-all ease-in-out duration-300 gap-3" :class="{'translate-y-0 shadow-xl': dropdown_app, '-translate-y-full': !dropdown_app}">
+    <div class="fixed flex flex-col bg-white dark:bg-dark-content w-72 z-10 h-auto top-16 right-0 border-green-500/60 border-b-2 p-4 -translate-y-full transition-all ease-in-out duration-300 gap-3" :class="{'translate-y-0 shadow-xl': dropdown_app, '-translate-y-full': !dropdown_app}">
       <div class="flex w-full border-b-2 border-green-500/60 pb-4">
         <div class="flex flex-col w-1/4 justify-center items-center">
           <span class="text-2xl font-semibold font-poppins text-center bg-cyan-500 rounded-lg py-1 px-2">{{user.first_name|first}}{{user.last_name|first}}</span>

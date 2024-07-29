@@ -13,9 +13,8 @@ import pandas as pd
 map_markers = []
 
 def test(request):
-    form = SignupForm()
     template_name = "natrosensor/test.html"
-    return render(request, template_name, context={"template_name": "Test", "form": form})
+    return render(request, template_name, context={"template_name": "Test"})
 
 def index(request):
     map = folium.Map([14.1608, 121.2453], zoom_start=18)
@@ -110,22 +109,12 @@ def location(request):
 
 @login_required(login_url='/login')
 def dashboard(request):
-    global map_markers
-
-    user = {}
-    user['first_name'] = request.user.first_name if request.user.is_authenticated else None
-    user['last_name'] = request.user.last_name if request.user.is_authenticated else None
-
-    g = geocoder.ip('me')
-    map = folium.Map(location=g.latlng, zoom_start=12)
-    folium.Marker(g.latlng, popup=g.address,icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)   
-
-    for marker in map_markers:
-        folium.Marker([marker['lat'], marker['lng']], popup="[" + str(marker['lat']) + "," + str(marker['lng']) + "]" + str(marker['addr']), icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
+    # user = {}
+    # user['first_name'] = request.user.first_name if request.user.is_authenticated else None
+    # user['last_name'] = request.user.last_name if request.user.is_authenticated else None
 
     template_name = "natrosensor/dashboard.html"
-    map_embed = map._repr_html_()
-    return render(request, template_name, context={"template_name": "Dashboard", "user": user, "map": map_embed})
+    return render(request, template_name, context={"template_name": "Dashboard"})
 
 @login_required(login_url='/login')
 def process(request):
@@ -159,35 +148,26 @@ def settings(request):
 
 @login_required(login_url='/login')
 def result(request):
-    process_name = request.POST.get('process_name', '') 
-    process_trial = int(request.POST.get('process_trial', ''))
+    process_name = request.POST.get('process_name') 
+    process_med = request.POST.get('process_med', 'Penicillin')
+    process_trial = int(request.POST.get('process_trial'))
     process_file = request.FILES['process_file']
+    process_note = request.POST.get('process_note')
+    process_temp = request.POST.get('process_temp')
+    process_ph = request.POST.get('process_ph')
+
+    process = {
+        'name': process_name,
+        'med': process_med,
+        'trial': process_trial,
+        'note': process_note,
+        'temp': process_temp,
+        'pH': process_ph,
+    }
 
     df = pd.read_csv(process_file)
     size = fourpl.graph_settings()
-    fig = fourpl.fourpl(df, size)
-
-    # y_lod = []
-    # for index in range(0, len(x_data)):
-    #     if x_data[index] < 1:
-    #         y_lod.append(y_data[index])
-
-    # Linear of Detection
-    # mean_lod = np.mean(y_lod)
-    # std_lod = np.std(y_lod)
-    # response_lod = mean_lod + (3 * std_lod)
-    # concentration_lod = (response_lod - slope) * ec50 / (np.abs(r_min - response_lod)**(1/r_max))
-    # lod = (3.3 * std_lod) / slope
-
-    # print("LOD: " + str(lod))
-    # print("Response LOD: " + str(response_lod))
-    # print("Concentration LOD:" + str(concentration_lod))
-
-    # Linear Range
-    # threshold = 0.1
-    # derivative = np.gradient(hill_model(x_model, r_min, r_max, ec50, slope), x_model)
-    # linear_range_index = np.where(np.abs(derivative - np.mean(derivative)) < threshold)[0]
-    # linear_range = x_model[linear_range_index[0]], x_model[linear_range_index[-1]]
+    fig, y_int, slope = fourpl.fourpl(df, size)
 
     imgdata = StringIO()
     fig.savefig(imgdata, format='svg')
@@ -195,4 +175,4 @@ def result(request):
     graph = imgdata.getvalue()    
 
     template_name = "natrosensor/result.html"
-    return render(request, template_name, context={"template_name": "Result", "graph": graph})
+    return render(request, template_name, context={"template_name": "Result", "graph": graph, "y_int": y_int, "slope": slope, "process": process})
