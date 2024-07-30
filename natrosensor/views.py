@@ -83,7 +83,12 @@ def verify(request, email):
 def location(request):
     global map_markers
 
-    g = geocoder.ip('me')
+    # g = geocoder.ip('me')
+    g = geocoder.google([45.15, -75.14], method='reverse')
+    g.latlng = (14.1769, 121.2225)
+    g.city = "Los Baños"
+    g.country = "PH"
+    g.postal = "4030"
     map = folium.Map(location=g.latlng, zoom_start=5)
     folium.Marker(g.latlng, popup=g.address,icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
 
