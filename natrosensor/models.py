@@ -37,6 +37,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+class Records(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    antibiotics = models.CharField(max_length=255)
+    trials = models.IntegerField(default=1)
+    temperature = models.CharField(max_length=255, null=True)
+    ph = models.CharField(max_length=255, blank=True, null=True)
+    note = models.TextField(blank=True, null=True)
 
 class Otp(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="otp")

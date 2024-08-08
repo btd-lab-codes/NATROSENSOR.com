@@ -4,17 +4,49 @@ from django.contrib.auth.decorators import login_required
 from scipy.optimize import curve_fit
 from io import StringIO
 from .forms import SignupForm, LoginForm
-from .models import Otp
+from .models import Otp, Records
 from .module import fourpl
 
-import folium, geocoder
+import folium, branca, geocoder
 import pandas as pd
 
 map_markers = []
 
+@login_required(login_url='/login')
 def test(request):
+    global map_markers
+
+    g = geocoder.google([45.15, -75.14], method='reverse')
+    g.latlng = (14.1769, 121.2225)
+    g.city = "Los Baños"
+    g.country = "PH"
+    g.postal = "4030"
+
+    map = folium.Map(location=g.latlng, zoom_start=5)
+    folium.Marker(g.latlng, popup=g.address,icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
+
+    if request.method == 'POST':
+        lat = float(request.POST.get('loc_lat'))
+        lng = float(request.POST.get('loc_lng'))        
+        g = geocoder.google([lat, lng], method='reverse')
+        g.latlng = [lat, lng]
+
+        map_markers.append({
+            'lat': lat,
+            'lng': lng,
+            'addr': g
+        })     
+
+    for marker in map_markers:
+        folium.Marker([marker['lat'], marker['lng']], popup="[" + str(marker['lat']) + "," + str(marker['lng']) + "]" + str(marker['addr']), icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
+
     template_name = "natrosensor/test.html"
-    return render(request, template_name, context={"template_name": "Test"})
+    map.add_child(folium.LatLngPopup())
+
+    fig = branca.element.Figure(height='100%')
+    fig.add_child(map)
+    map_embed = fig._repr_html_()
+    return render(request, template_name, context={"template_name": "Location", "map": map_embed, "location": g})
 
 def index(request):
     map = folium.Map([14.1608, 121.2453], zoom_start=18)
@@ -83,33 +115,38 @@ def verify(request, email):
 def location(request):
     global map_markers
 
-    # g = geocoder.ip('me')
     g = geocoder.google([45.15, -75.14], method='reverse')
     g.latlng = (14.1769, 121.2225)
     g.city = "Los Baños"
     g.country = "PH"
     g.postal = "4030"
+
     map = folium.Map(location=g.latlng, zoom_start=5)
     folium.Marker(g.latlng, popup=g.address,icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
 
-    if request.method == 'POST':
-        lat = float(request.POST.get('loc_lat'))
-        lng = float(request.POST.get('loc_lng'))        
-        g = geocoder.google([lat, lng], method='reverse')
-        g.latlng = [lat, lng]
+    g_test = geocoder.osm('Lalakay, Los Baños, Laguna', maxRows=5)
+    print(g_test.osm)
+    # if request.method == 'POST':
+    #     lat = float(request.POST.get('loc_lat'))
+    #     lng = float(request.POST.get('loc_lng'))        
+    #     g = geocoder.google([lat, lng], method='reverse')
+    #     g.latlng = [lat, lng]
 
-        map_markers.append({
-            'lat': lat,
-            'lng': lng,
-            'addr': g
-        })     
+    #     map_markers.append({
+    #         'lat': lat,
+    #         'lng': lng,
+    #         'addr': g
+    #     })     
 
     for marker in map_markers:
         folium.Marker([marker['lat'], marker['lng']], popup="[" + str(marker['lat']) + "," + str(marker['lng']) + "]" + str(marker['addr']), icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
 
     template_name = "natrosensor/location.html"
     map.add_child(folium.LatLngPopup())
-    map_embed = map._repr_html_()
+
+    fig = branca.element.Figure(height='100%')
+    fig.add_child(map)
+    map_embed = fig._repr_html_()
     return render(request, template_name, context={"template_name": "Location", "map": map_embed, "location": g})
 
 @login_required(login_url='/login')

@@ -2,31 +2,116 @@
 {% load static %}
 
 {% block subcontent %}
-<div class="flex flex-col overflow-y-auto overflow-x-hidden h-screen">  
-  <div class="grid grid-cols-5 h-full gap-2 dark:bg-dark-primary/95">
-    <div class="flex flex-col col-span-5 lg:col-span-1 h-full bg-white dark:bg-dark-alt p-5 shadow-xl">
-        <div>
-          <form method="POST" class="mb-2">
-            {% csrf_token %}
-            <label class="block ms-2 mb-2 text-md font-medium text-gray-900 dark:text-white">Add Marker </label>
-            <input type="text" id="loc_lat" name="loc_lat" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="Latitude" required/>
-            <input type="text" id="loc_lng" name="loc_lng" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="Longitude" required/>
-            <button type="submit" class="w-full text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-md px-5 py-2.5 text-center my-2">Add</button>
-          </form>
-        </div>     
-        <div class="dark:text-white">
-          <div class="font-medium"> Coordinates </div>
-          <div class="mb-3"> {{location.latlng|safe}} </div>
-          <div class="font-medium"> City </div>
-          <div class="mb-3"> {{location.city|safe}} </div> 
-          <div class="font-medium"> Country </div>
-          <div class="mb-3"> {{location.country|safe}} </div>    
-          <div class="font-medium"> Zip Code </div>
-          <div class="mb-3"> {{location.postal|safe}} </div>  
-        </div>  
-    </div>
-    <div class="flex h-full col-span-5 lg:col-span-4 items-center bg-white dark:bg-dark-alt p-5 shadow-lg">
-      {{map | safe}}
+<div class="flex flex-col w-full h-full">
+    <div class="grid left-0 right-0 bottom-0 top-0 h-full">
+        <div class="flex flex-col">
+            {{map | safe}}
+        </div>
+        <div x-data="{filter: false}" class="absolute items-center right-0 bottom-5 top-16 mt-2 gap-2 overflow-x-hidden overflow-y-auto">
+            <div class="flex flex-col flex-grow h-full gap-2">
+                <div class="flex me-3 gap-2">
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                            </svg>
+                        </div>
+                        <input type="search" class="block w-full ps-10 px-2.5 py-2.5 text-sm text-gray-900 border-0 border-b-2 border-gray-300 rounded-lg bg-gray-50 focus:ring-0 focus:border-cyan-600" placeholder="Search..."/>
+                    </div>
+                    <button @click="filter = !filter" type="button" class="bg-white justify-center items-center border-2 border-gray-400 rounded-lg px-2 py-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
+                        </svg>               
+                    </button>
+                </div>
+                <div class="flex flex-col bg-white/70 me-3 rounded-lg transition-all ease-in-out duration-150 p-3" :class="{'transform scale-y-0 -translate-y-1/2': !filter, 'transform scale-y-100 translate-y-0': filter}">
+                    <span class="font-poppins font-bold text-lg"> Filter </span>
+                    <div x-data="{antibiotics: false, antibiotics_value: ''}" class="flex flex-col w-full p-2">
+                        <span class="font-notosans font-semibold text-sm"> Antibiotics </span>
+                        <button @click="antibiotics = !antibiotics" @click.outside="antibiotics = false" class="flex justify-between rounded-md bg-white/90 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                            <span class="font-notosans" x-text="antibiotics_value !== '' ? antibiotics_value : 'Select antibiotics'"></span>
+                            <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <div class="absolute flex flex-col flex-grow w-[85%] h-24 bg-white overflow-x-hidden overflow-y-auto ring-1 ring-inset ring-gray-300 mt-14 p-2 z-10 transition-all ease-in-out duration-150 gap-2" :class="{'transform scale-y-0 -translate-y-1/2': !antibiotics, 'transform scale-y-100 translate-y-0': antibiotics}">
+                            <button @click="antibiotics_value = 'Penicillin'" class="flex justify-start hover:bg-blue-400">
+                                <span class="font-notosans font-semibold text-sm ps-2"> Penicillin </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div x-data="{region: false, region_value: ''}" class="flex flex-col p-2">
+                        <span class="font-notosans font-semibold text-sm"> Region </span>
+                        <button @click="region = !region" @click.outside="region = false" class="flex justify-between rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                            <span class="font-notosans" x-text="region_value !== '' ? region_value : 'Select region'"></span>
+                            <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <div class="absolute flex flex-col w-[85%] h-24 bg-white overflow-x-hidden overflow-y-auto ring-1 ring-inset ring-gray-300 mt-14 p-2 z-10 transition-all ease-in-out duration-150 gap-2" :class="{'transform scale-y-0 -translate-y-1/2': !region, 'transform scale-y-100 translate-y-0': region}">
+                            <button @click="region_value = 'Region I'" class="flex justify-start hover:bg-blue-400">
+                                <span class="font-notosans font-semibold text-sm ps-2"> Region I </span>
+                            </button>
+                            <button @click="region_value = 'Region II'" class="flex justify-start hover:bg-blue-400">
+                                <span class="font-notosans font-semibold text-sm ps-2"> Region II </span>
+                            </button>
+                            <button @click="region_value = 'Region III'" class="flex justify-start hover:bg-blue-400">
+                                <span class="font-notosans font-semibold text-sm ps-2"> Region III </span>
+                            </button>
+                            <button @click="region_value = 'Region IV - A'" class="flex justify-start hover:bg-blue-400">
+                                <span class="font-notosans font-semibold text-sm ps-2"> Region IV - A </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div x-data="{province: false, province_value: ''}" class="flex flex-col px-2 pt-2">
+                        <span class="font-notosans font-semibold text-sm"> Province </span>
+                        <button @click="province = !province" @click.outside="province = false" class="flex justify-between rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                            <span class="font-notosans" x-text="province_value !== '' ? province_value : 'Select province'"></span>
+                            <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <div class="absolute flex flex-col w-[85%] h-24 bg-white overflow-x-hidden overflow-y-auto ring-1 ring-inset ring-gray-300 mt-14 p-2 z-10 transition-all ease-in-out duration-150 gap-2" :class="{'transform scale-y-0 -translate-y-1/2': !province, 'transform scale-y-100 translate-y-0': province}">
+                            <button @click="province_value = 'Batangas'" class="flex justify-start hover:bg-blue-400">
+                                <span class="font-notosans font-semibold text-sm ps-2"> Batangas </span>
+                            </button>
+                            <button @click="province_value = 'Cavite'" class="flex justify-start hover:bg-blue-400">
+                                <span class="font-notosans font-semibold text-sm ps-2"> Cavite </span>
+                            </button>
+                            <button @click="province_value = 'Laguna'" class="flex justify-start hover:bg-blue-400">
+                                <span class="font-notosans font-semibold text-sm ps-2"> Laguna </span>
+                            </button>
+                            <button @click="province_value = 'Quezon'" class="flex justify-start hover:bg-blue-400">
+                                <span class="font-notosans font-semibold text-sm ps-2"> Quezon </span>
+                            </button>
+                            <button @click="province_value = 'Rizal'" class="flex justify-start hover:bg-blue-400">
+                                <span class="font-notosans font-semibold text-sm ps-2"> Rizal </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex justify-end px-2 pt-5">
+                        <button type="button" class="w-24 items-center text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Save</button>
+                    </div>  
+                </div>
+                <div class="flex flex-col mt-auto ms-20 me-3 rounded-lg bg-white/70 p-2">
+                    <div class="flex pb-1">
+                        <span class="font-poppins font-bold text-xs text-black"> Concentration (ppm) </span>
+                    </div>
+                    <div class="flex justify-between items-center pb-0.5 px-1">
+                        <span class="font-notosans font-semibold text-xs text-black"> Safe </span>
+                        <span class="font-notosans font-semibold text-xs text-black"> Danger </span>
+                    </div>
+                    <div class="flex justify-center items-center px-1">
+                        <div class="bg-rose-200 w-7 h-5"></div>
+                        <div class="bg-rose-300 w-7 h-5"></div>
+                        <div class="bg-rose-400 w-7 h-5"></div>
+                        <div class="bg-rose-500 w-7 h-5"></div>
+                        <div class="bg-rose-600 w-7 h-5"></div>
+                        <div class="bg-rose-700 w-7 h-5"></div>
+                    </div>
+                </div>
+            </div>  
+        </div>
     </div>
 </div>
 {% endblock subcontent %}
