@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from scipy.optimize import curve_fit
 from io import StringIO
 from .forms import SignupForm, LoginForm
-from .models import Otp, Records
+from .models import Otp
 from .module import fourpl
 
 import folium, branca, geocoder
@@ -124,8 +124,15 @@ def location(request):
     map = folium.Map(location=g.latlng, zoom_start=5)
     folium.Marker(g.latlng, popup=g.address,icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
 
-    g_test = geocoder.osm('Lalakay, Los Baños, Laguna', maxRows=5)
-    print(g_test.osm)
+    current_location = geocoder.ip("me")
+    g_curr = geocoder.osm(current_location.latlng, method='reverse')
+    # g_test = geocoder.osm('Laguna', maxRow=5)
+    # g_rev = geocoder.osm([14.16315, 121.24464], method='reverse')
+    # print(g_test.address)
+    # print(g_rev.address)
+    print(g_curr.address)
+    print(g_curr.json)
+    
     # if request.method == 'POST':
     #     lat = float(request.POST.get('loc_lat'))
     #     lng = float(request.POST.get('loc_lng'))        

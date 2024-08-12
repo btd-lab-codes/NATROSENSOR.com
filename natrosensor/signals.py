@@ -14,7 +14,7 @@ def create_token(sender, user, created, **kwargs):
         otp = Otp.objects.filter(user=user).last()
         subject = "Verification Code via Email"
         message = "Here is your verification code: {otp.code}"
-        sender = "jttagaza@gmail.com"
+        sender = "support@natrosensor.org"
         receiver = [user.email]
 
         send_mail(subject, message, sender, receiver, fail_silently=False)
