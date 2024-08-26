@@ -2,206 +2,133 @@
 {% load static %}
 
 {% block subcontent %}
-<div class="flex flex-col flex-grow top-16 bottom-0 right-0 overflow-y-auto overflow-x-hidden dark:bg-dark-primary/95 gap-3">
-    <div class="flex flex-col lg:flex-row w-full h-auto lg:h-3/5 gap-3">
-        <div class="flex w-full lg:w-1/2 h-full items-center gap-3 ps-3 pt-3">
-            <div class="flex flex-col w-full h-full dark:bg-dark-secondary rounded-lg justify-center items-center">
-                <span class="dark:text-gray-300"> Personal Recent Activity </span>  
-            </div>
-            {% comment %} <span class="dark:text-gray-300"> Personal Recent Activity </span>     {% endcomment %}
+<div class="flex flex-col flex-grow top-16 bottom-0 right-0 overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-dark-primary gap-3 p-5 shadow-inner">
+    <div class="flex px-1 justify-between items-center">
+        <div class="flex flex-col">
+            <span class="font-semibold font-poppins text-2xl dark:text-white"> Welcome back, {{first_name}}! </span>
+            <span class="font-poppins text-sm dark:text-gray-300"> Here is a quick overview of your dashboard. </span>
         </div>
-        <div class="flex flex-col flex-grow w-full lg:w-1/2 h-full bg-white dark:bg-dark-secondary justify-center items-center pe-3 pt-3">
-            <div x-data="calendar()" x-init="init()" class="bg-white dark:bg-dark-alt border h-full border-gray-200 rounded-lg shadow-lg p-4">
-                <!-- Header -->
-                <div class="flex items-center justify-between mb-4">
-                    <button @click="prevMonth()" class="px-2 py-1 text-blue-500 hover:text-blue-700">Previous</button>
-                    <span x-ref="monthYear" class="text-lg font-semibold dark:text-white"></span>
-                    <button @click="nextMonth()" class="px-2 py-1 text-blue-500 hover:text-blue-700">Next</button>
-                </div>
-                
-                <!-- Days of Week -->
-                <div class="grid grid-cols-7 gap-1 text-center font-semibold text-gray-700 dark:text-white mb-2">
-                    <div>Sun</div>
-                    <div>Mon</div>
-                    <div>Tue</div>
-                    <div>Wed</div>
-                    <div>Thu</div>
-                    <div>Fri</div>
-                    <div>Sat</div>
-                </div>
-                
-                <!-- Calendar Days -->
-                <div class="grid grid-cols-7 gap-1 text-center text-gray-800">
-                    <template x-for="(day, index) in days" :key="index">
-                        <div :class="{'bg-blue-100': day.current, 'text-gray-500': !day.current}" class="p-2 rounded hover:bg-gray-200">
-                            <span x-text="day.date"></span>
-                        </div>
-                    </template>
-                </div>
-            </div>
-            {% comment %} <span class="dark:text-gray-300"> Schedule </span> {% endcomment %}
+        <div x-data="clock" class="flex flex-col text-end">
+            <span x-text="date" class="dark:text-white font-semibold font-notosans"></span>
+            <span x-text="time" class="dark:text-white font-semibold font-notosans"></span>
         </div>
     </div>
-    <div class="flex w-full h-2/5 gap-3">
-        <div class="flex flex-col w-2/3 h-full bg-white dark:bg-dark-secondary justify-center items-center">
-            <span class="dark:text-gray-300"> Overall Total Number of Recent Activity and Registered User </span>
+    <div class="flex flex-col">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full gap-3">
+            <div class="flex flex-col bg-white dark:bg-dark-secondary p-5 h-52 col-span-1 sm:col-span-2 rounded-lg shadow-2xl">
+                <span class="font-notosans font-semibold text-xl dark:text-white"> Recent Process </span>
+                <span class="font-notosans text-xs text-justify dark:text-white"> Your recent process of the calibration model </span>
+            </div>
+            <div class="flex flex-col bg-white dark:bg-dark-secondary p-5 h-52 rounded-lg shadow-2xl">
+                <span class="font-notosans font-semibold text-xl dark:text-white"> Total Process </span>
+                <span class="font-notosans text-xs text-justify dark:text-white"> The total number of your processes </span>
+                <div class="flex flex-col justify-center items-center h-full">
+                    <span class="font-notosans font-bold text-6xl dark:text-white"> 0 </span>
+                </div>
+            </div>
+            <div class="flex flex-col bg-white dark:bg-dark-secondary p-5 h-52 rounded-lg shadow-2xl">
+                <span class="font-notosans font-semibold text-xl dark:text-white"> Total User </span>
+                <span class="font-notosans text-xs text-justify dark:text-white"> The total number of registered users </span>
+                <div class="flex flex-col justify-center items-center h-full">
+                    <span class="font-notosans font-bold text-6xl dark:text-white"> 0 </span>
+                </div>
+            </div>
         </div>
-        <div class="flex flex-col w-1/3 h-full bg-white dark:bg-dark-secondary justify-center items-center">
-            <span class="dark:text-gray-300"> Online Users </span>
+    </div>
+    <div class="flex flex-col flex-grow h-full">
+        <div class="grid grid-cols-1 md:grid-cols-2 w-full h-full gap-3">
+            <div class="flex flex-col bg-white dark:bg-dark-secondary p-5 h-64 md:h-full rounded-lg shadow-2xl">
+                <span class="font-notosans font-semibold text-xl dark:text-white"> Graph </span>
+                <span class="font-notosans text-xs dark:text-white"> The total number of processes within the week/month </span>
+            </div>
+            <div class="flex flex-col bg-white dark:bg-dark-secondary p-5 h-64 md:h-full rounded-lg shadow-2xl">
+                <span class="font-notosans font-semibold text-xl dark:text-white"> Schedule </span>
+                <span class="font-notosans text-xs dark:text-white"> The planning of events begins with the upcoming ones </span>
+                <div class="flex flex-col dark:bg-white w-full h-36 overflow-x-hidden overflow-y-visible shadow-inner rounded-lg border-2 mt-3 p-2 gap-1">
+                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
+                        <div class="flex flex-col justify-center w-32">
+                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
+                            <span class="font-notosans text-xs"> 10:00 AM </span>
+                        </div>
+                        <div class="flex flex-col justify-center w-full">
+                            <span class="font-notosans font-semibold"> Schedule 1 </span>
+                        </div>
+                    </div>
+                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
+                        <div class="flex flex-col justify-center w-32">
+                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
+                            <span class="font-notosans text-xs"> 10:00 AM </span>
+                        </div>
+                        <div class="flex flex-col justify-center w-full">
+                            <span class="font-notosans font-semibold"> Schedule 1 </span>
+                        </div>
+                    </div>
+                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
+                        <div class="flex flex-col justify-center w-32">
+                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
+                            <span class="font-notosans text-xs"> 10:00 AM </span>
+                        </div>
+                        <div class="flex flex-col justify-center w-full">
+                            <span class="font-notosans font-semibold"> Schedule 1 </span>
+                        </div>
+                    </div>
+                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
+                        <div class="flex flex-col justify-center w-32">
+                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
+                            <span class="font-notosans text-xs"> 10:00 AM </span>
+                        </div>
+                        <div class="flex flex-col justify-center w-full">
+                            <span class="font-notosans font-semibold"> Schedule 1 </span>
+                        </div>
+                    </div>
+                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
+                        <div class="flex flex-col justify-center w-32">
+                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
+                            <span class="font-notosans text-xs"> 10:00 AM </span>
+                        </div>
+                        <div class="flex flex-col justify-center w-full">
+                            <span class="font-notosans font-semibold"> Schedule 1 </span>
+                        </div>
+                    </div>
+                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
+                        <div class="flex flex-col justify-center w-32">
+                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
+                            <span class="font-notosans text-xs"> 10:00 AM </span>
+                        </div>
+                        <div class="flex flex-col justify-center w-full">
+                            <span class="font-notosans font-semibold"> Schedule 1 </span>
+                        </div>
+                    </div>
+                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
+                        <div class="flex flex-col justify-center w-32">
+                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
+                            <span class="font-notosans text-xs"> 10:00 AM </span>
+                        </div>
+                        <div class="flex flex-col justify-center w-full">
+                            <span class="font-notosans font-semibold"> Schedule 1 </span>
+                        </div>
+                    </div>
+                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
+                        <div class="flex flex-col justify-center w-32">
+                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
+                            <span class="font-notosans text-xs"> 10:00 AM </span>
+                        </div>
+                        <div class="flex flex-col justify-center w-full">
+                            <span class="font-notosans font-semibold"> Schedule 1 </span>
+                        </div>
+                    </div>
+                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
+                        <div class="flex flex-col justify-center w-32">
+                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
+                            <span class="font-notosans text-xs"> 10:00 AM </span>
+                        </div>
+                        <div class="flex flex-col justify-center w-full">
+                            <span class="font-notosans font-semibold"> Schedule 1 </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<script>
-    function calendar() {
-        return {
-            currentDate: new Date(),
-            days: [],
-            init() {
-                this.updateCalendar();
-                this.updateMonthYear();
-            },
-            updateCalendar() {
-                const year = this.currentDate.getFullYear();
-                const month = this.currentDate.getMonth();
-                
-                const firstDay = new Date(year, month, 1).getDay();
-                const lastDay = new Date(year, month + 1, 0).getDate();
-                
-                this.days = [];
-                
-                for (let i = 0; i < firstDay; i++) {
-                    this.days.push({ date: '', current: false });
-                }
-                
-                for (let day = 1; day <= lastDay; day++) {
-                    this.days.push({ date: day, current: true });
-                }
-                
-                // Fill remaining days in the grid
-                while (this.days.length % 7 !== 0) {
-                    this.days.push({ date: '', current: false });
-                }
-            },
-            prevMonth() {
-                this.currentDate.setMonth(this.currentDate.getMonth() - 1);
-                this.updateCalendar();
-                this.updateMonthYear();
-            },
-            nextMonth() {
-                this.currentDate.setMonth(this.currentDate.getMonth() + 1);
-                this.updateCalendar();
-                this.updateMonthYear();
-            },
-            updateMonthYear() {
-                const options = { month: 'long', year: 'numeric' };
-                this.$refs.monthYear.textContent = this.currentDate.toLocaleDateString(undefined, options);
-            }
-        }
-    }
-</script>
-{% comment %} <div class="flex flex-col flex-grow overflow-y-auto overflow-x-hidden h-screen p-2">
-  <div class="flex flex-col md:flex-row h-44 gap-2 mb-3">
-    <div class="flex w-full bg-white rounded-lg justify-center items-center">
-      <span class="text-2xl font-medium"> Hello, <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent">{{user.first_name}} {{user.last_name}}!</span> </span>
-    </div>
-    <div class="flex flex-col w-full md:w-72 bg-white rounded-lg justify-center items-center hidden md:block">
-      {{map | safe}}
-    </div>
-  </div> 
-  <div class="flex flex-col md:flex-row flex-grow gap-2 mb-3">
-    <div class="flex flex-col w-full md:w-60 bg-white rounded-lg justify-center items-center gap-2 px-2">
-      <a href="{% url 'natrosensor:process' %}" class="flex flex-col items-center w-full text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-md px-5 py-2.5 text-center">
-        Process
-      </a>
-      <a href="{% url 'natrosensor:records' %}" class="flex flex-col items-center w-full text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-md px-5 py-2.5 text-center">
-        Records
-      </a>
-      <a href="{% url 'natrosensor:about' %}" class="flex flex-col items-center w-full text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-md px-5 py-2.5 text-center">
-        About
-      </a>
-      <a href="{% url 'natrosensor:location' %}" class="flex flex-col items-center w-full text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-md px-5 py-2.5 text-center">
-        Location
-      </a>
-    </div>
-    <div class="flex flex-col w-full bg-white rounded-lg justify-center items-center p-2">
-        <span class="justify-start font-medium text-lg text-cyan-950 mb-3">Recent Records </span>
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead class="text-xs text-white uppercase bg-cyan-950 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                  <th scope="col" class="px-6 py-3">
-                      Name
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                      Datetime
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                      Location
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                      Action
-                  </th>
-              </tr>
-          </thead>
-          <tbody>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      Test 1
-                  </th>
-                  <td class="px-6 py-4">
-                      23 Jan 2024 09:00 AM
-                  </td>
-                  <td class="px-6 py-4">
-                      Los Ba&ntilde;os, Laguna
-                  </td>
-                  <td class="px-6 py-4">
-                      <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
-                  </td>
-              </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      Test 2
-                  </th>
-                  <td class="px-6 py-4">
-                      22 Jan 2024 09:00 AM
-                  </td>
-                  <td class="px-6 py-4">
-                      Los Ba&ntilde;os, Laguna
-                  </td>
-                  <td class="px-6 py-4">
-                      <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
-                  </td>
-              </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      Test 3
-                  </th>
-                  <td class="px-6 py-4">
-                      21 Jan 2024 09:00 AM
-                  </td>
-                  <td class="px-6 py-4">
-                      Los Ba&ntilde;os, Laguna
-                  </td>
-                  <td class="px-6 py-4">
-                      <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
-                  </td>
-              </tr>
-              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      Test 4
-                  </th>
-                  <td class="px-6 py-4">
-                      20 Jan 2024 09:00 AM
-                  </td>
-                  <td class="px-6 py-4">
-                      Los Ba&ntilde;os, Laguna
-                  </td>
-                  <td class="px-6 py-4">
-                      <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View</a>
-                  </td>
-              </tr>
-          </tbody>
-      </table>
-    </div>
-  </div>
-</div> {% endcomment %}
 {% endblock subcontent %}

@@ -7,9 +7,15 @@ from .forms import SignupForm, LoginForm
 from .models import Otp
 from .module import fourpl
 
-import folium, branca, geocoder
+import folium, branca, geocoder, os
 import pandas as pd
 
+LOC_INFO = {
+    'region': pd.read_csv(os.path.join(os.path.dirname(__file__), "module/csv/table_region.csv")).to_dict('split')['data'],
+    'province': pd.read_csv(os.path.join(os.path.dirname(__file__), "module/csv/table_province.csv")).to_dict('split')['data'],
+    'municipality': pd.read_csv(os.path.join(os.path.dirname(__file__), "module/csv/table_municipality.csv")).to_dict('split')['data'],
+    'barangay': pd.read_csv(os.path.join(os.path.dirname(__file__), "module/csv/table_barangay.csv")).to_dict('split')['data']
+}
 map_markers = []
 
 @login_required(login_url='/login')
@@ -79,7 +85,7 @@ def user_logout(request):
     logout(request)
     return redirect('/login')
 
-def signup(request):
+def signup(request, success=False):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():   
@@ -94,12 +100,12 @@ def signup(request):
             else:
                 user.set_password(password2)
                 user.save()
-                return redirect('/login')
+                success = True
     else:
         form = SignupForm()
 
     template_name = "natrosensor/signup.html"
-    return render(request, template_name, context={"template_name": "Signup", 'form': form})
+    return render(request, template_name, context={"template_name": "Signup", 'form': form, 'success': success})
 
 def verify(request, email):
     user = get_user_model().objects.get(email=email)
@@ -126,24 +132,8 @@ def location(request):
 
     current_location = geocoder.ip("me")
     g_curr = geocoder.osm(current_location.latlng, method='reverse')
-    # g_test = geocoder.osm('Laguna', maxRow=5)
-    # g_rev = geocoder.osm([14.16315, 121.24464], method='reverse')
-    # print(g_test.address)
-    # print(g_rev.address)
     print(g_curr.address)
-    print(g_curr.json)
-    
-    # if request.method == 'POST':
-    #     lat = float(request.POST.get('loc_lat'))
-    #     lng = float(request.POST.get('loc_lng'))        
-    #     g = geocoder.google([lat, lng], method='reverse')
-    #     g.latlng = [lat, lng]
-
-    #     map_markers.append({
-    #         'lat': lat,
-    #         'lng': lng,
-    #         'addr': g
-    #     })     
+    print(g_curr.json)    
 
     for marker in map_markers:
         folium.Marker([marker['lat'], marker['lng']], popup="[" + str(marker['lat']) + "," + str(marker['lng']) + "]" + str(marker['addr']), icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
@@ -158,22 +148,24 @@ def location(request):
 
 @login_required(login_url='/login')
 def dashboard(request):
-    # user = {}
-    # user['first_name'] = request.user.first_name if request.user.is_authenticated else None
-    # user['last_name'] = request.user.last_name if request.user.is_authenticated else None
-
+    first_name = request.user.first_name if request.user.is_authenticated else "User"
     template_name = "natrosensor/dashboard.html"
-    return render(request, template_name, context={"template_name": "Dashboard"})
+    return render(request, template_name, context={"template_name": "Dashboard", "first_name": first_name})
 
 @login_required(login_url='/login')
 def process(request):
     template_name = "natrosensor/process.html"
-    return render(request, template_name, context={"template_name": "Process"})
+    return render(request, template_name, context={"template_name": "Process", "loc_info": LOC_INFO})
 
 @login_required(login_url='/login')
 def records(request):
     template_name = "natrosensor/records.html"
     return render(request, template_name, context={"template_name": "Records"})
+
+@login_required(login_url='/login')
+def schedule(request):
+    template_name = "natrosensor/schedule.html"
+    return render(request, template_name, context={"template_name": "Schedule"})
 
 @login_required(login_url='/login')
 def about(request):
@@ -198,7 +190,7 @@ def settings(request):
 @login_required(login_url='/login')
 def result(request):
     process_name = request.POST.get('process_name') 
-    process_med = request.POST.get('process_med', 'Penicillin')
+    process_med = request.POST.get('process_med')
     process_trial = int(request.POST.get('process_trial'))
     process_file = request.FILES['process_file']
     process_note = request.POST.get('process_note')

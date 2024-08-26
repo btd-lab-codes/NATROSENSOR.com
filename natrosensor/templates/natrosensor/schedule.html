@@ -1,0 +1,40 @@
+{% extends "./sidebar.html" %}
+{% load static %}
+
+{% block subcontent %}
+<div class="flex flex-col overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-dark-primary h-screen p-5 gap-3">
+    <div class="bg-white dark:bg-dark-alt h-full rounded-lg shadow-lg p-5">
+        <div x-data="calendar" x-init="init">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-4">
+                <button @click="prevMonth" class="px-2 py-1 text-blue-500 hover:text-blue-700">Previous</button>
+                <span x-ref="monthYear" class="text-lg font-semibold dark:text-white"></span>
+                <button @click="nextMonth" class="px-2 py-1 text-blue-500 hover:text-blue-700">Next</button>
+            </div>
+            
+            <!-- Days of Week -->
+            <div class="grid grid-cols-7 gap-1 text-center font-semibold text-gray-700 dark:text-white mb-2">
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+            </div>
+            
+            <!-- Calendar Days -->
+            <div class="grid grid-cols-7 gap-1 text-center text-gray-800">
+                <template x-for="(day, index) in days" :key="index">
+                    <div :class="{'bg-blue-100': day.current, 'text-gray-500': !day.current}" class="p-2 rounded hover:bg-gray-200">
+                        <span x-text="day.date" class="font-poppins font-semibold"></span>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+    <div class="flex-grow bg-white dark:bg-dark-alt h-full rounded-lg shadow-lg p-5">
+        Hello
+    </div>
+</div>
+{% endblock subcontent %}

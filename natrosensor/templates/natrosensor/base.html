@@ -14,7 +14,7 @@
 		<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 	</head>
 
-	<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="bg-cover bg-no-repeat h-screen" style="background-image: url({% static '/natrosensor/assets/background.png' %}); background-size: 100% 100%;">		
+	<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' x-data="{ modal: false, purpose: '' }" class="bg-cover bg-no-repeat h-screen" style="background-image: url({% static '/natrosensor/assets/background.png' %}); background-size: 100% 100%;">		
 		{% block content %}
 		{% endblock content %}
 		<script src="{% static '/natrosensor/js/index.js' %}"> </script>

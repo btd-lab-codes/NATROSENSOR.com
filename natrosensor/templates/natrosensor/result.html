@@ -1,9 +1,14 @@
-<div class="flex flex-col flex-grow p-3">
-    <div class="flex flex-col flex-grow rounded-lg gap-3 py-4">
-        <div class="flex justify-between items-center px-4">
+<div class="flex flex-col flex-grow rounded-lg">
+    <div class="flex justify-between px-1 mb-3">
+        <div class="flex flex-col">
             <span class="font-poppins font-bold text-2xl text-slate-800 dark:text-white"> Analysis </span>
-            <span class="font-poppins font-bold text-xs text-slate-800 dark:text-slate-500"> Step 3/3 </span>
+            <span class="font-poppins text-xs text-slate-800 dark:text-gray-300"> Results based on the calibrated model </span>
         </div>
+        <div class="flex text-end">
+            <span class="font-poppins font-bold text-xs text-slate-800 dark:text-slate-500"> Step 4/4 </span>
+        </div> 
+    </div>
+    <div class="flex flex-col flex-grow bg-white dark:bg-dark-secondary rounded-lg shadow-xl py-4 gap-3">
         <div class="flex flex-col lg:flex-row h-full gap-4">
             <div class="flex flex-col w-full lg:w-2/3 items-center px-4 gap-4"> 
                 <span class="font-notosans font-bold text-xl text-center dark:text-white"> 4PL Curve Graph </span>
@@ -11,9 +16,9 @@
                     {{graph | safe}}
                 </div>         
             </div>
-            <div x-data="{modal1: false, input1: '', input2: '', isEmpty(input) { return input.trim() === ''}}" class="flex flex-col w-full lg:w-1/3 items-center px-4 gap-2">
+            <div x-data="{input1: '', input2: '', isEmpty(input) { return input.trim() === ''}}" class="flex flex-col w-full lg:w-1/3 items-center px-4 gap-2">
                 <span class="font-notosans font-bold text-xl text-center dark:text-white"> Overview </span>
-                <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 z-50" :class="{'hidden': !modal1}">
+                <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 z-50" :class="{'hidden': !modal}">
                     <div class="flex items-center justify-center min-h-screen">
                         <div class="bg-white dark:bg-dark-primary p-6 rounded-lg shadow-lg w-full max-w-lg mx-4">
                             <div class="flex flex-col w-full dark:bg-dark-secondary justify-center items-center rounded-lg px-4 py-2">
@@ -48,11 +53,11 @@
                                     <div x-show="note.trim() !== ''" class="font-notosans font-bold text-xl dark:text-white"> {{process.note}} </div>
                                 </div>
                             </div>               
-                            <button @click="modal1 = !modal1" id="close-btn" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">Close</button>
+                            <button @click="modal = !modal" id="close-btn" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">Close</button>
                         </div>
                     </div>
                 </div>
-                <button @click="modal1 = !modal1" id="open-btn" class="items-center text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Open Details</button>
+                <button @click="modal = !modal" id="open-btn" class="items-center text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Open Details</button>
                 
                 <span class="font-notosans font-bold text-xl text-center dark:text-white pt-6"> Linear Range </span>
                 <span class="font-notosans font-semibold text-sm text-center dark:text-white">y = {{y_int}} + {{slope}}x</span>
@@ -71,5 +76,5 @@
                 <button type="button" class="w-24 items-center text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Save</button>
             </div>        
         </div> 
-    </div> 
-</div>
+    </div>
+</div> 

@@ -14,6 +14,7 @@ urlpatterns = [
     path("process", views.process, name="process"),
     path("result", views.result, name="result"),
     path("records", views.records, name="records"),
+    path("schedule", views.schedule, name="schedule"),
     path("about", views.about, name="about"),
     path("profile", views.profile, name="profile"),
     path("settings", views.settings, name="settings"),

@@ -2,8 +2,95 @@
 {% load static %}
 
 {% block subcontent %}
-<div class="flex flex-col flex-grow overflow-y-auto overflow-x-hidden bg-white dark:bg-dark-primary/95 h-screen p-5">
-    <div id="about" class="relative bg-white">
+<div class="flex flex-col flex-grow overflow-y-auto overflow-x-hidden bg-white dark:bg-dark-primary h-screen p-5 gap-5">
+    <div class="flex flex-col bg-white dark:bg-dark-secondary rounded-lg shadow-xl p-8 gap-3">
+        <span class="font-poppins font-bold text-2xl text-slate-800 dark:text-white text-center"> About the Project </span>
+        <p class="font-notosans font-medium text-slate-800 dark:text-white text-justify px-5">The project NATROSENSOR aims to develop a multiplex detection device that can be used to detect the presence of various antibiotics for monitoring the success of wastewater treatment facilities. it can also be used to detect the presence of various antibiotics in other substrates such as surface and ground water, and food products such as milk.</p>
+    </div>
+    <div class="flex flex-col bg-white dark:bg-dark-secondary rounded-lg shadow-xl p-8 gap-3">
+        <span class="font-poppins font-bold text-2xl text-slate-800 dark:text-white text-center"> Partner Agency </span>
+        <div class="flex flex-wrap justify-center gap-1 p-5">
+            <div class="flex gap-1 justify-center">
+                <div class="flex w-24 h-24">
+                    <img class="rounded-lg" src="{% static '/natrosensor/assets/dost-logo.jpg' %}" alt="">
+                </div>
+                <div class="flex w-24 h-24">
+                    <img class="rounded-lg" src="{% static '/natrosensor/assets/uplb-logo.jpg' %}" alt="">
+                </div>
+                <div class="flex w-24 h-24">
+                    <img class="rounded-lg" src="{% static '/natrosensor/assets/ceat-logo.jpg' %}" alt="">
+                </div>
+            </div>
+            <div class="flex gap-1 justify-center">
+                <div class="flex w-24 h-24">
+                    <img class="rounded-lg" src="{% static '/natrosensor/assets/des-logo.jpg' %}" alt="">
+                </div>
+                <div class="flex w-48 h-24">
+                    <img class="rounded-lg" src="{% static '/natrosensor/assets/biomedical-logo.jpg' %}" alt="">
+                </div>
+            </div>                  
+        </div>
+    </div>
+    <div class="flex flex-col bg-white dark:bg-dark-secondary rounded-lg shadow-xl p-8 gap-3">
+        <span class="font-poppins font-bold text-2xl text-slate-800 dark:text-white text-center"> Our Team </span>
+        <div class="grid sm:grid-cols-2">
+            <div class="flex flex-col sm:col-span-2 justify-center items-center p-8 gap-3">
+                <img class="rounded-lg w-48 h-48" src="{% static '/natrosensor/assets/rlr-300x300.png' %}" alt="">
+                <span class="font-bold text-2xl text-cyan-950 dark:text-cyan-400 font-poppins text-center"> Resmond L. Reaño, PhD </span>      
+                <span class="font-medium text-lg text-gray-800 dark:text-white text-center font-notosans"> Assistant Professor / Project Leader </span> 
+            </div>
+            <div class="flex flex-col justify-center items-center p-8 gap-3">
+                <img class="rounded-lg w-48 h-48" src="{% static '/natrosensor/assets/grp-300x300.png' %}" alt="">
+                <span class="font-bold text-2xl text-cyan-950 dark:text-cyan-400 font-poppins text-center"> Glenson R. Panghulan, MSc </span>      
+                <span class="font-medium text-lg text-gray-800 dark:text-white text-center font-notosans"> Assistant Professor </span> 
+            </div>
+            <div class="flex flex-col justify-center items-center p-8 gap-3">
+                <img class="rounded-lg w-48 h-48" src="{% static '/natrosensor/assets/frcb-300x300.png' %}" alt="">
+                <span class="font-bold text-2xl text-cyan-950 dark:text-cyan-400 font-poppins text-center"> Felix Rey C. Bueta, MSc </span>      
+                <span class="font-medium text-lg text-gray-800 dark:text-white text-center font-notosans"> Assistant Professor </span> 
+            </div>
+            <div class="flex flex-col justify-center items-center p-8 gap-3">
+                <img class="rounded-lg w-48 h-48" src="{% static '/natrosensor/assets/dwlbl-300x300.png' %}" alt="">
+                <span class="font-bold text-2xl text-cyan-950 dark:text-cyan-400 font-poppins text-center"> Donna Wren B. Libunao, MSc </span>      
+                <span class="font-medium text-lg text-gray-800 dark:text-white text-center font-notosans"> Assistant Professor </span> 
+            </div>
+            <div class="flex flex-col justify-center items-center p-8 gap-3">
+                <img class="rounded-lg w-48 h-48" src="{% static '/natrosensor/assets/ileg-300x300.png' %}" alt="">
+                <span class="font-bold text-2xl text-cyan-950 dark:text-cyan-400 font-poppins text-center"> Ian Lorenzo E. Gonzaga, MSc </span>      
+                <span class="font-medium text-lg text-gray-800 dark:text-white text-center font-notosans"> Assistant Professor </span> 
+            </div>
+            <div class="flex flex-col justify-center items-center p-8 gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-600 dark:text-green-500 w-28 h-28">
+                    <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
+                </svg>
+                <span class="font-bold text-2xl text-cyan-950 dark:text-cyan-400 font-poppins text-center"> Ismael O. Magculang, MSc </span>      
+                <span class="font-medium text-lg text-gray-800 dark:text-white text-center font-notosans"> Project Technical Assistant III </span> 
+            </div>
+            <div class="flex flex-col justify-center items-center p-8 gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-600 dark:text-green-500 w-28 h-28">
+                    <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
+                </svg> 
+                <span class="font-bold text-2xl text-cyan-950 dark:text-cyan-400 font-poppins text-center"> Vincent Paul P. Laguardia </span>
+                <span class="font-medium text-lg text-gray-800 dark:text-white text-center font-notosans"> Project Technical Assistant III </span>
+            </div>
+            <div class="flex flex-col justify-center items-center p-8 gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-600 dark:text-green-500 w-28 h-28">
+                    <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
+                </svg>          
+                <span class="font-bold text-2xl text-cyan-950 dark:text-cyan-400 font-poppins text-center"> Joreyn Angelo T. Tagaza </span>
+                <span class="font-medium text-lg text-gray-800 dark:text-white text-center font-notosans"> Project Technical Assistant II </span>
+            </div>
+            <div class="flex flex-col justify-center items-center p-8 gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-600 dark:text-green-500 w-28 h-28">
+                    <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
+                </svg> 
+                <span class="font-bold text-2xl text-cyan-950 dark:text-cyan-400 font-poppins text-center"> Angelo C. Torres </span>
+                <span class="font-medium text-lg text-gray-800 dark:text-white text-center font-notosans"> Project Technical Aide V </span>
+            </div>
+        </div>
+    </div>
+
+    {% comment %} <div id="about" class="relative bg-white">
         <div class="max-w-7xl mx-auto">
             <div class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
                 <svg class="hidden lg:block absolute right-0 inset-y-0 h-full w-48 text-white transform translate-x-1/2"
@@ -28,6 +115,6 @@
         <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
             <img class="h-56 w-full object-cover object-top sm:h-72 md:h-96 lg:w-full lg:h-full" src="{% static '/natrosensor/assets/antibiotic.jpg' %}" alt="">
         </div>
-    </div>
+    </div> {% endcomment %}
 </div>
 {% endblock subcontent %}
