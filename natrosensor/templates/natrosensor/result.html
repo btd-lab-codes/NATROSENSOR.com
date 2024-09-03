@@ -18,46 +18,7 @@
             </div>
             <div x-data="{input1: '', input2: '', isEmpty(input) { return input.trim() === ''}}" class="flex flex-col w-full lg:w-1/3 items-center px-4 gap-2">
                 <span class="font-notosans font-bold text-xl text-center dark:text-white"> Overview </span>
-                <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 z-50" :class="{'hidden': !modal}">
-                    <div class="flex items-center justify-center min-h-screen">
-                        <div class="bg-white dark:bg-dark-primary p-6 rounded-lg shadow-lg w-full max-w-lg mx-4">
-                            <div class="flex flex-col w-full dark:bg-dark-secondary justify-center items-center rounded-lg px-4 py-2">
-                                <span class="font-poppins font-bold text-2xl dark:text-white"> Overview </span>
-                            </div>
-                            <div class="flex flex-col w-full dark:bg-dark-secondary rounded-lg mt-4">
-                                <div class="flex px-4 pt-4">
-                                    <span class="font-notosans font-bold text-xl dark:text-white pe-6"> Name: </span>
-                                    <span class="font-notosans font-bold text-xl dark:text-white"> {{process.name}} </span>
-                                </div>
-                                <div class="flex px-4 pt-4">
-                                    <span class="font-notosans font-bold text-xl dark:text-white pe-6"> Antibiotics: </span>
-                                    <span class="font-notosans font-bold text-xl dark:text-white"> {{process.med}} </span>
-                                </div>
-                                <div class="flex px-4 pt-4">
-                                    <span class="font-notosans font-bold text-xl dark:text-white pe-6"> Trial: </span>
-                                    <span class="font-notosans font-bold text-xl dark:text-white"> {{process.trial}} </span>
-                                </div>
-                                <div x-data="{temp: '{{process.temp}}'}" class="flex px-4 pt-4">
-                                    <span class="font-notosans font-bold text-xl dark:text-white pe-6"> Temperature: </span>
-                                    <div x-show="temp.trim() === ''" class="font-notosans font-bold text-xl dark:text-white"> N/A </div>
-                                    <div x-show="temp.trim() !== ''" class="font-notosans font-bold text-xl dark:text-white"> {{process.temp}} </div>
-                                </div>
-                                <div x-data="{pH: '{{process.pH}}'}" class="flex px-4 pt-4">
-                                    <span class="font-notosans font-bold text-xl dark:text-white pe-6"> pH: </span>
-                                    <div x-show="pH.trim() === ''" class="font-notosans font-bold text-xl dark:text-white"> N/A </div>
-                                    <div x-show="pH.trim() !== ''" class="font-notosans font-bold text-xl dark:text-white"> {{process.pH}} </div>
-                                </div>
-                                <div x-data="{note: '{{process.note}}'}" class="flex px-4 py-4">
-                                    <span class="font-notosans font-bold text-xl dark:text-white pe-6"> Notes: </span>
-                                    <div x-show="note.trim() === ''" class="font-notosans font-bold text-xl dark:text-white"> N/A </div>
-                                    <div x-show="note.trim() !== ''" class="font-notosans font-bold text-xl dark:text-white"> {{process.note}} </div>
-                                </div>
-                            </div>               
-                            <button @click="modal = !modal" id="close-btn" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">Close</button>
-                        </div>
-                    </div>
-                </div>
-                <button @click="modal = !modal" id="open-btn" class="items-center text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Open Details</button>
+                <button @click="purpose = 'Overview'" id="open-btn" class="items-center text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Open Details</button>
                 
                 <span class="font-notosans font-bold text-xl text-center dark:text-white pt-6"> Linear Range </span>
                 <span class="font-notosans font-semibold text-sm text-center dark:text-white">y = {{y_int}} + {{slope}}x</span>
@@ -78,3 +39,43 @@
         </div> 
     </div>
 </div> 
+<div class="absolute inset-0 bg-black bg-opacity-50 z-50" :class="{'hidden': purpose != 'Overview'}">
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white dark:bg-dark-primary p-6 rounded-lg shadow-lg w-full max-w-lg mx-4">
+            <div class="flex flex-col w-full dark:bg-dark-secondary justify-center items-center rounded-lg px-4 py-2">
+                <span class="font-poppins font-bold text-2xl dark:text-white"> Overview </span>
+            </div>
+            <div class="flex flex-col w-full dark:bg-dark-secondary rounded-lg mt-4">
+                <div class="flex px-4 pt-4">
+                    <span class="font-notosans font-semibold text-xl dark:text-white pe-6"> Name: </span>
+                    <span class="font-notosans font-semibold text-xl dark:text-white"> {{process.name}} </span>
+                </div>
+                <div class="flex px-4 pt-4">
+                    <span class="font-notosans font-semibold text-xl dark:text-white pe-6"> Antibiotics: </span>
+                    <span class="font-notosans font-semibold text-xl dark:text-white"> {{process.med}} </span>
+                </div>
+                <div class="flex px-4 pt-4">
+                    <span class="font-notosans font-semibold text-xl dark:text-white pe-6"> Trial: </span>
+                    <span class="font-notosans font-semibold text-xl dark:text-white"> {{process.trial}} </span>
+                </div>
+                <div x-data="{temp: '{{process.temp}}'}" class="flex px-4 pt-4">
+                    <span class="font-notosans font-semibold text-xl dark:text-white pe-6"> Temperature: </span>
+                    <div x-show="temp.trim() === ''" class="font-notosans font-semibold text-xl dark:text-white"> N/A </div>
+                    <div x-show="temp.trim() !== ''" class="font-notosans font-semibold text-xl dark:text-white"> {{process.temp}} </div>
+                </div>
+                <div x-data="{pH: '{{process.pH}}'}" class="flex px-4 pt-4">
+                    <span class="font-notosans font-semibold text-xl dark:text-white pe-6"> pH: </span>
+                    <div x-show="pH.trim() === ''" class="font-notosans font-semibold text-xl dark:text-white"> N/A </div>
+                    <div x-show="pH.trim() !== ''" class="font-notosans font-semibold text-xl dark:text-white"> {{process.pH}} </div>
+                </div>
+                <div x-data="{note: '{{process.note}}'}" class="flex px-4 py-4">
+                    <span class="font-notosans font-semibold text-xl dark:text-white pe-6"> Notes: </span>
+                    <div x-show="note.trim() === ''" class="font-notosans font-semibold text-xl dark:text-white"> N/A </div>
+                    <div x-show="note.trim() !== ''" class="font-notosans font-semibold text-xl dark:text-white"> {{process.note}} </div>
+                </div>
+            </div>               
+            <button @click="purpose = ''" id="close-btn" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">Close</button>
+        </div>
+    </div>
+</div>
+

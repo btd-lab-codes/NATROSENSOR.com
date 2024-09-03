@@ -4,9 +4,9 @@
 
 {% block content %}
 <div x-data="{ dropdown_idx: false }" class="fixed flex flex-col w-full font-sans m-0 p-0">
-    <div class="flex flex-grow bg-cyan-950 h-16 z-20 border-green-500/60 border-b-2 justify-between m-0 shadow-2xl">
+    <div class="flex flex-grow bg-cyan-50 dark:bg-dark-content h-16 z-20 border-green-500/60 border-b-[3px] justify-between m-0 shadow-2xl">
         <div class="flex flex-col justify-center ms-5">
-            <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-2xl font-extrabold font-poppins">NATRO<span class="text-white">SENSOR</span></span>
+            <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-2xl font-extrabold font-poppins">NATRO<span class="text-cyan-950 dark:text-white">SENSOR</span></span>
         </div> 
         <div class="flex flex-col justify-center me-5">
             <div class="flex gap-2">
@@ -20,14 +20,14 @@
             </div>
         </div>     
     </div>
-    <div class="fixed flex flex-col w-full h-auto z-10 top-16 left-0 bg-white dark:bg-dark-primary px-12 py-6 gap-3 border-green-500/60 border-b-2 md:hidden -translate-y-full transition-all ease-in-out duration-300" :class="{'translate-y-0 shadow-xl': dropdown_idx, '-translate-y-full': !dropdown_idx}">
+    <div class="fixed flex flex-col w-full h-auto z-10 top-16 left-0 bg-white dark:bg-dark-primary px-12 py-6 gap-3 border-green-500/60 border-b-[3px] md:hidden -translate-y-full transition-all ease-in-out duration-300" :class="{'translate-y-0 shadow-xl': dropdown_idx, '-translate-y-full': !dropdown_idx}">
         <a href="{% url 'natrosensor:signup' %}" class="text-white bg-gradient-to-r from-green-400 via-green-600 to-green-800 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-bold rounded-lg px-3 py-1 text-center font-poppins"> Signup </a>
         <a href="{% url 'natrosensor:login' %}" class="text-cyan-950 hover:text-white border-2 border-cyan-950 hover:bg-cyan-950 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg px-3 py-1 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800 font-poppins"> Login </a>   
     </div>
     <div class="fixed flex flex-col flex-grow top-16 bottom-0 shadow-inner">
         <div class="h-screen overflow-x-hidden overflow-y-auto">
             <div class="grid grid-cols-1 h-auto bg-cover bg-no-repeat bg-bottom" style="background-image: url({% static '/natrosensor/assets/antibiotic.jpg' %});">
-                <div class="flex flex-col bg-dark-primary/55 bg-blend-multiply justify-center border-none shadow-none outline-none h-80 p-5 md:p-20">
+                <div class="flex flex-col bg-dark-primary/60 bg-blend-multiply justify-center border-none shadow-none outline-none h-[22rem] p-5 md:p-20">
                     <div class="flex flex-col border-l-4 border-white gap-3 ps-5">
                         <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-4xl font-extrabold font-poppins">NATRO<span class="text-white">SENSOR</span></span>
                         <span class="text-white font-bold text-xl md:text-start font-notosans"> Experience the future of wastewater monitoring with our antibiotic detection technology </span>
@@ -38,7 +38,7 @@
                     </div>               
                 </div>        
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-cyan-50 dark:bg-cyan-950 p-16 h-auto">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 bg-cyan-50 dark:bg-[#143232] p-16 h-auto border border-y-[3px] border-green-500/60 shadow-2xl">
                 <span class="sm:col-span-2 lg:col-span-4 font-bold text-3xl text-cyan-950 dark:text-cyan-400 text-center font-poppins"> Features </span>
                 <div class="flex flex-col justify-center items-center p-8 gap-3">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-600 dark:text-green-500 w-28 h-28">
@@ -64,14 +64,14 @@
                     <span class="font-medium text-lg text-gray-800 dark:text-white text-center font-notosans"> Record details </span>
                 </div>
                 <div class="flex flex-col justify-center items-center p-8 gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-600 dark:text-green-500  w-28 h-28">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-600 dark:text-green-500 w-28 h-28">
                         <path fill-rule="evenodd" d="M8.161 2.58a1.875 1.875 0 0 1 1.678 0l4.993 2.498c.106.052.23.052.336 0l3.869-1.935A1.875 1.875 0 0 1 21.75 4.82v12.485c0 .71-.401 1.36-1.037 1.677l-4.875 2.437a1.875 1.875 0 0 1-1.676 0l-4.994-2.497a.375.375 0 0 0-.336 0l-3.868 1.935A1.875 1.875 0 0 1 2.25 19.18V6.695c0-.71.401-1.36 1.036-1.677l4.875-2.437ZM9 6a.75.75 0 0 1 .75.75V15a.75.75 0 0 1-1.5 0V6.75A.75.75 0 0 1 9 6Zm6.75 3a.75.75 0 0 0-1.5 0v8.25a.75.75 0 0 0 1.5 0V9Z" clip-rule="evenodd" />
                     </svg>           
                     <span class="font-bold text-2xl text-cyan-950 dark:text-cyan-400 font-poppins"> Locate </span>
                     <span class="font-medium text-lg text-gray-800 dark:text-white text-center font-notosans"> Locate details </span>
                 </div>
             </div>
-            <div class="flex flex-col bg-dark-alt px-8 py-16 h-auto">
+            <div class="flex flex-col bg-dark-secondary px-8 py-16 h-auto border border-b-[3px] border-green-500/60 shadow-inner">
                 <span class="font-bold text-3xl text-cyan-300 text-center font-poppins"> Our Team </span>
                 <div class="grid grid-cols-1 sm:grid-cols-2">
                     <div class="flex flex-col sm:col-span-2 justify-center items-center p-8 gap-3">
@@ -91,7 +91,7 @@
                     </div>
                     <div class="flex flex-col justify-center items-center p-8 gap-3">
                         <img class="rounded-lg w-48 h-48" src="{% static '/natrosensor/assets/dwlbl-300x300.png' %}" alt="">
-                        <span class="font-bold text-2xl text-cyan-300 font-poppins text-center"> Donna Wren B. Libunao, MSc </span>      
+                        <span class="font-bold text-2xl text-cyan-300 font-poppins text-center"> Donna Wren B. Libunao-Bueta, MSc </span>      
                         <span class="font-medium text-lg text-white text-center font-notosans"> Assistant Professor </span> 
                     </div>
                     <div class="flex flex-col justify-center items-center p-8 gap-3">
@@ -100,28 +100,28 @@
                         <span class="font-medium text-lg text-white text-center font-notosans"> Assistant Professor </span> 
                     </div>
                     <div class="flex flex-col justify-center items-center p-8 gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-500 w-28 h-28">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-500 w-48 h-48">
                             <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
                         </svg>
                         <span class="font-bold text-2xl text-cyan-300 font-poppins text-center"> Ismael O. Magculang, MSc </span>      
                         <span class="font-medium text-lg text-white text-center font-notosans"> Project Technical Assistant III </span> 
                     </div>
                     <div class="flex flex-col justify-center items-center p-8 gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-500 w-28 h-28">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-500 w-48 h-48">
                             <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
                         </svg> 
                         <span class="font-bold text-2xl text-cyan-300 font-poppins text-center"> Vincent Paul P. Laguardia </span>
                         <span class="font-medium text-lg text-white text-center font-notosans"> Project Technical Assistant III </span>
                     </div>
                     <div class="flex flex-col justify-center items-center p-8 gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-500 w-28 h-28">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-500 w-48 h-48">
                             <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
                         </svg>          
                         <span class="font-bold text-2xl text-cyan-300 font-poppins text-center"> Joreyn Angelo T. Tagaza </span>
                         <span class="font-medium text-lg text-white text-center font-notosans"> Project Technical Assistant II </span>
                     </div>
                     <div class="flex flex-col justify-center items-center p-8 gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-500 w-28 h-28">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="text-green-500 w-48 h-48">
                             <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
                         </svg> 
                         <span class="font-bold text-2xl text-cyan-300 font-poppins text-center"> Angelo C. Torres </span>
@@ -138,7 +138,7 @@
                     <span class="font-medium text-lg text-gray-800 dark:text-white text-justify font-notosans"> Project HBV e-APTASENSE aims to develop an electrochemical device that can be used to detect the presence of HBsAg and HBeAg using blood samples. Specific aptamer can be selected from a set of libraries and manufactured through chemical synthesis. </span>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bg-dark-secondary p-8 h-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bg-dark-primary p-8 h-auto">
                 <div class="flex flex-col p-3">
                     <span class="font-bold mb-2 text-white text-lg font-poppins"> About NATROSENSOR</span>          
                     <span class="text-white text-justify font-notosans">The <span class="font-bold">NATROSENSOR</span> aims to develop a multiplex detection device that can be used to detect the presence of various antibiotics for monitoring the success of wastewater treatment facilities. it can also be used to detect the presence of various antibiotics in other substrates such as surface and ground water, and food products such as milk.</span>

@@ -12,6 +12,7 @@ urlpatterns = [
     path("dashboard", views.dashboard, name="dashboard"),
     path("location", views.location, name="location"),
     path("process", views.process, name="process"),
+    path("autolocate", views.autolocate, name="autolocate"),
     path("result", views.result, name="result"),
     path("records", views.records, name="records"),
     path("schedule", views.schedule, name="schedule"),

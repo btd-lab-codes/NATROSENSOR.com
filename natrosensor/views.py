@@ -132,8 +132,8 @@ def location(request):
 
     current_location = geocoder.ip("me")
     g_curr = geocoder.osm(current_location.latlng, method='reverse')
-    print(g_curr.address)
-    print(g_curr.json)    
+    print(g_curr.address) 
+    print(g_curr)  
 
     for marker in map_markers:
         folium.Marker([marker['lat'], marker['lng']], popup="[" + str(marker['lat']) + "," + str(marker['lng']) + "]" + str(marker['addr']), icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
@@ -156,6 +156,13 @@ def dashboard(request):
 def process(request):
     template_name = "natrosensor/process.html"
     return render(request, template_name, context={"template_name": "Process", "loc_info": LOC_INFO})
+
+@login_required(login_url='/login')
+def autolocate(request):
+    pass
+    # location = geocoder.ip('me')
+    # location = geocoder.osm(location.latlng, method="reverse")
+    # print(location)
 
 @login_required(login_url='/login')
 def records(request):
@@ -189,21 +196,20 @@ def settings(request):
 
 @login_required(login_url='/login')
 def result(request):
-    process_name = request.POST.get('process_name') 
-    process_med = request.POST.get('process_med')
-    process_trial = int(request.POST.get('process_trial'))
-    process_file = request.FILES['process_file']
-    process_note = request.POST.get('process_note')
-    process_temp = request.POST.get('process_temp')
-    process_ph = request.POST.get('process_ph')
+    process_file = request.FILES['process_file']   
 
     process = {
-        'name': process_name,
-        'med': process_med,
-        'trial': process_trial,
-        'note': process_note,
-        'temp': process_temp,
-        'pH': process_ph,
+        'name': request.POST.get('process_name'),
+        'med': request.POST.get('process_med'),
+        'trial': int(request.POST.get('process_trial')),
+        'region': request.POST.get('process_region'),
+        'province': request.POST.get('process_province'),
+        'municipality': request.POST.get('process_municipality'),
+        'barangay': request.POST.get('process_barangay'),
+        'address': request.POST.get('process_addr'),
+        'temp': request.POST.get('process_temp'),
+        'pH': request.POST.get('process_ph'),
+        'note': request.POST.get('process_note'),
     }
 
     df = pd.read_csv(process_file)

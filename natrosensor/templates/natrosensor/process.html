@@ -56,7 +56,7 @@
                 </div>
             </div>
         </div>
-        <div x-data="{r_id: 0, p_id: 0, m_id: 0, b_id: 0}" class="flex flex-col h-full rounded-lg" :class="{'hidden': step != 2}">
+        <div x-data="{r_id: 0, p_id: 0, m_id: 0, b_id: 0}" class="flex flex-col h-full rounded-lg hidden" :class="{'hidden': step != 2}">
             <div class="flex justify-between px-1 mb-3">
                 <div class="flex flex-col">
                     <span class="font-poppins font-bold text-2xl text-slate-800 dark:text-white"> Location </span>
@@ -84,6 +84,7 @@
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                         </svg>
                     </button>
+                    <input type="hidden" name="process_region" x-model="region_name">
                     <div class="absolute flex flex-col left-8 right-8 h-36 bg-white/0 overflow-x-hidden overflow-y-auto mt-[5.5rem] p-2 z-10 transition-all ease-in-out duration-150 gap-2 shadow-inner" :class="{'transform scale-y-0 -translate-y-1/2 bg-white/0': !region, 'transform scale-y-100 translate-y-0 bg-white ring-1 ring-inset ring-gray-300': region}">
                         <template x-for="([id, name, desc], index) in {{loc_info.region}}" :key="index">
                             <button type="button" @click="region_name = name, r_id = id, p_id = 0, m_id = 0, b_id = 0" class="flex justify-start hover:bg-blue-400">
@@ -100,6 +101,7 @@
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                         </svg>
                     </button>
+                    <input type="hidden" name="process_province" x-model="province_name">
                     <div class="absolute flex flex-col left-8 right-8 h-36 bg-white/0 overflow-x-hidden overflow-y-auto mt-20 p-2 z-10 transition-all ease-in-out duration-150 gap-2" :class="{'transform scale-y-0 -translate-y-1/2 bg-white/0': !province, 'transform scale-y-100 translate-y-0 bg-white ring-1 ring-inset ring-gray-300': province}">
                         <template x-for="([id, region_id, name], index) in {{loc_info.province}}.filter(x => x[1] == r_id)" :key="index">
                             <button type="button" @click="province_name = name, p_id = id, m_id = 0, b_id = 0" class="flex justify-start hover:bg-blue-400">
@@ -116,6 +118,7 @@
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                         </svg>
                     </button>
+                    <input type="hidden" name="process_municipality" x-model="municipality_name">
                     <div class="absolute flex flex-col left-8 right-8 h-36 bg-white/0 overflow-x-hidden overflow-y-auto mt-20 p-2 z-10 transition-all ease-in-out duration-150 gap-2" :class="{'transform scale-y-0 -translate-y-1/2 bg-white/0': !municipality, 'transform scale-y-100 translate-y-0 bg-white ring-1 ring-inset ring-gray-300': municipality}">
                         <template x-for="([id, province_id, name], index) in {{loc_info.municipality}}.filter(x => x[1] == p_id)" :key="index">
                             <button type="button" @click="municipality_name = name, m_id = id, b_id = 0" class="flex justify-start hover:bg-blue-400">
@@ -132,6 +135,7 @@
                             <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                         </svg>
                     </button>
+                    <input type="hidden" name="process_barangay" x-model="barangay_name">
                     <div class="absolute flex flex-col left-8 right-8 h-36 bg-white/0 overflow-x-hidden overflow-y-auto mt-20 p-2 z-10 transition-all ease-in-out duration-150 gap-2" :class="{'transform scale-y-0 -translate-y-1/2 bg-white/0': !barangay, 'transform scale-y-100 translate-y-0 bg-white ring-1 ring-inset ring-gray-300': barangay}">
                         <template x-for="([id, municipality_id, name], index) in {{loc_info.barangay}}.filter(x => x[1] == m_id)" :key="index">
                             <button type="button" @click="barangay_name = name, b_id = id" class="flex justify-start hover:bg-blue-400">
@@ -150,7 +154,7 @@
                 </div> 
             </div>
         </div>
-        <div class="flex flex-col h-full rounded-lg" :class="{'hidden': step != 3}">
+        <div class="flex flex-col h-full rounded-lg hidden" :class="{'hidden': step != 3}">
             <div class="flex justify-between px-1 mb-3">
                 <div class="flex flex-col">
                     <span class="font-poppins font-bold text-2xl text-slate-800 dark:text-white"> Data Collection </span>
@@ -204,13 +208,27 @@
 {% endblock subcontent %}
 
 {% block modal %}
-{% comment %} <div class="absolute inset-0 bg-black bg-opacity-50 z-50" :class="{'hidden': purpose != 'Location'}">
-    <div class="flex items-center justify-center min-h-screen">
+{% comment %} <div class="absolute inset-0 bg-black bg-opacity-50 z-50 hidden" :class="{'hidden': purpose != 'Location'}">
+    <div x-data="{modal_step: 1}" class="flex items-center justify-center min-h-screen">
         <div class="bg-white dark:bg-dark-primary p-6 rounded-lg shadow-lg w-full max-w-lg mx-4">
-            <div class="flex flex-col w-full dark:bg-dark-secondary justify-center items-center rounded-lg px-4 py-2">
-                <span class="font-poppins font-bold text-2xl dark:text-white"> Overview </span>
-            </div>               
-            <button @click="modal = !modal, purpose = ''" id="close-btn" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">Close</button>
+            <div class="flex flex-col" :class="{'hidden': modal_step != 1}">
+                <div class="flex flex-col w-full dark:bg-dark-secondary justify-center items-center rounded-lg px-4 py-2">
+                    <span class="font-poppins font-bold text-2xl dark:text-white"> Overview </span>
+                </div> 
+                <div class="flex justify-between">
+                    <button type="button" @click="modal = !modal, purpose = ''" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">Close</button>
+                    <button type="button" @click="modal_step = 2" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4"> Next </button>
+                </div> 
+            </div>      
+            <div class="flex flex-col" :class="{'hidden': modal_step != 2}">
+                <div class="flex flex-col w-full dark:bg-dark-secondary justify-center items-center rounded-lg px-4 py-2">
+                    <span class="font-poppins font-bold text-2xl dark:text-white"> Overview </span>
+                </div> 
+                <div class="flex justify-between">
+                    <button type="button" @click="modal = !modal, purpose = ''" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">Close</button>
+                    <button type="button" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4"> Next </button>
+                </div> 
+            </div>           
         </div>
     </div>
 </div> {% endcomment %}
