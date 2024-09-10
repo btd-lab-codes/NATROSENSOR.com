@@ -16,6 +16,7 @@ LOC_INFO = {
     'municipality': pd.read_csv(os.path.join(os.path.dirname(__file__), "module/csv/table_municipality.csv")).to_dict('split')['data'],
     'barangay': pd.read_csv(os.path.join(os.path.dirname(__file__), "module/csv/table_barangay.csv")).to_dict('split')['data']
 }
+
 map_markers = []
 
 @login_required(login_url='/login')
@@ -209,7 +210,7 @@ def result(request):
         'address': request.POST.get('process_addr'),
         'temp': request.POST.get('process_temp'),
         'pH': request.POST.get('process_ph'),
-        'note': request.POST.get('process_note'),
+        'note': request.POST.get('process_note')
     }
 
     df = pd.read_csv(process_file)

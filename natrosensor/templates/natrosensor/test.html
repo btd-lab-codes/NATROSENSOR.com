@@ -3,22 +3,53 @@
 {% load filters %}
 
 {% block content %}
-<div>
-    <div class="h-screen flex items-center justify-center">
-        <h1 class="text-2xl font-bold">Scroll down to see the magic!</h1>
+<div class="fixed top-0 h-16 flex w-full items-center justify-center bg-white z-10">
+    <h1 class="text-2xl font-bold">Scroll down to see the magic!</h1>
+</div>
+<div class="absolute top-16 w-full h-[200vh]"> <!-- Spacer to enable scrolling -->
+    <div x-data="{ inView: false }" x-init="
+        new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                inView = entry.isIntersecting;
+            });
+        }, { threshold: 0.35 }).observe($el)
+    " class="h-64 bg-red-500 text-white flex items-center justify-center text-lg"
+        :class="{ 'opacity-100': inView, 'opacity-0': !inView }"
+        style="transition: opacity 0.5s;">
+        I am the div that becomes visible!
     </div>
-    <div class="h-[200vh]"> <!-- Spacer to enable scrolling -->
-        <div x-data="{ inView: false }" x-init="
-            new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    inView = entry.isIntersecting;
-                });
-            }, { threshold: 0.5 }).observe($el)
-        " class="h-64 bg-red-500 text-white flex items-center justify-center text-lg"
-            :class="{ 'opacity-100': inView, 'opacity-0': !inView }"
-            style="transition: opacity 0.5s;">
-            I am the div that becomes visible!
-        </div>
+    <div x-data="{ inView: false }" x-init="
+        new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                inView = entry.isIntersecting;
+            });
+        }, { threshold: 0.35 }).observe($el)
+    " class="h-64 bg-red-500 text-white flex items-center justify-center text-lg"
+        :class="{ 'opacity-100': inView, 'opacity-0': !inView }"
+        style="transition: opacity 0.5s;">
+        I am the div that becomes visible!
+    </div>
+    <div x-data="{ inView: false }" x-init="
+        new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                inView = entry.isIntersecting;
+            });
+        }, { threshold: 0.35 }).observe($el)
+    " class="h-64 bg-red-500 text-white flex items-center justify-center text-lg"
+        :class="{ 'opacity-100': inView, 'opacity-0': !inView }"
+        style="transition: opacity 0.5s;">
+        I am the div that becomes visible!
+    </div>
+    <div x-data="{ inView: false }" x-init="
+        new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                inView = entry.isIntersecting;
+            });
+        }, { threshold: 0.35 }).observe($el)
+    " class="h-64 bg-red-500 text-white flex items-center justify-center text-lg"
+        :class="{ 'opacity-100': inView, 'opacity-0': !inView }"
+        style="transition: opacity 0.5s;">
+        I am the div that becomes visible!
     </div>
 </div>
 {% endblock content %}
