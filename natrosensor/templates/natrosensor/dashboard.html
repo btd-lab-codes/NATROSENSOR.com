@@ -44,7 +44,7 @@
             <div class="relative flex flex-col bg-white dark:bg-dark-secondary p-5 h-64 md:h-full rounded-lg shadow-2xl">
                 <span class="font-notosans font-semibold text-xl dark:text-white"> Schedule </span>
                 <span class="font-notosans text-xs dark:text-white"> The planning of events begins with the upcoming ones </span>
-                <div class="flex flex-col dark:bg-[#487e69] w-full h-full overflow-x-hidden overflow-y-visible shadow-inner rounded-lg mt-3 p-2 gap-1">
+                <div class="flex flex-col dark:bg-[#487e69] w-full h-full overflow-x-hidden overflow-y-auto shadow-inner rounded-lg mt-3 p-2 gap-1">
                     {% if events.count != 0 %}
                         {% for event in events %}
                             <div class="flex flex-col p-4 dark:bg-dark-alt rounded-lg shadow-lg mb-2">

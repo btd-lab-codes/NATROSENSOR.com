@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from scipy.optimize import curve_fit
 from io import StringIO
 from .forms import SignupForm, LoginForm
-from .models import Otp, Event, User
+from .models import Otp, Event, Records, User
 from .module import fourpl
 
 import folium, branca, geocoder, os
@@ -127,6 +127,39 @@ def dashboard(request):
 
 @login_required(login_url='/login')
 def process(request):
+    if request.method == "POST":
+        process_file = request.FILES['process_file']   
+
+        process = {
+            'name': request.POST.get('process_name'),
+            'med': request.POST.get('process_med'),
+            'trial': int(request.POST.get('process_trial')),
+            'region': request.POST.get('process_region'),
+            'province': request.POST.get('process_province'),
+            'municipality': request.POST.get('process_municipality'),
+            'barangay': request.POST.get('process_barangay'),
+            'address': request.POST.get('process_addr'),
+            'temp': request.POST.get('process_temp'),
+            'pH': request.POST.get('process_ph'),
+            'note': request.POST.get('process_note')
+        }
+
+        df = pd.read_csv(process_file)
+        size = fourpl.graph_settings()
+        fig, y_int, slope = fourpl.fourpl(df, size)
+
+        imgdata = StringIO()
+        fig.savefig(imgdata, format='svg')
+        imgdata.seek(0)
+        graph = imgdata.getvalue()   
+
+        request.session['process'] = process
+        request.session['graph'] = graph
+        request.session['y_int'] = y_int
+        request.session['slope'] = slope
+
+        return redirect('/result')
+
     template_name = "natrosensor/process.html"
     return render(request, template_name, context={"template_name": "Process", "loc_info": LOC_INFO})
 
@@ -176,30 +209,13 @@ def settings(request):
 
 @login_required(login_url='/login')
 def result(request):
-    process_file = request.FILES['process_file']   
+    process = request.session.get('process')
+    graph = request.session.get('graph')
+    y_int = request.session.get('y_int')
+    slope = request.session.get('slope') 
 
-    process = {
-        'name': request.POST.get('process_name'),
-        'med': request.POST.get('process_med'),
-        'trial': int(request.POST.get('process_trial')),
-        'region': request.POST.get('process_region'),
-        'province': request.POST.get('process_province'),
-        'municipality': request.POST.get('process_municipality'),
-        'barangay': request.POST.get('process_barangay'),
-        'address': request.POST.get('process_addr'),
-        'temp': request.POST.get('process_temp'),
-        'pH': request.POST.get('process_ph'),
-        'note': request.POST.get('process_note')
-    }
-
-    df = pd.read_csv(process_file)
-    size = fourpl.graph_settings()
-    fig, y_int, slope = fourpl.fourpl(df, size)
-
-    imgdata = StringIO()
-    fig.savefig(imgdata, format='svg')
-    imgdata.seek(0)
-    graph = imgdata.getvalue()    
-
+    if request.method == "POST":
+        print(process['name'])
+    
     template_name = "natrosensor/result.html"
     return render(request, template_name, context={"template_name": "Result", "graph": graph, "y_int": y_int, "slope": slope, "process": process})
