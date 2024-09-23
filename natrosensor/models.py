@@ -40,12 +40,61 @@ class User(AbstractBaseUser, PermissionsMixin):
     
 class Records(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=255)
     antibiotics = models.CharField(max_length=255)
     trials = models.IntegerField(default=1)
     temperature = models.CharField(max_length=255, null=True)
     ph = models.CharField(max_length=255, blank=True, null=True)
     note = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+    
+    def getData(self):
+        record = {
+            'name': self.name,
+            'created_at': self.created_at,
+            'antibiotics': self.antibiotics,
+            'trials': self.trials,
+            'temperature': self.temperature,
+            'ph': self.ph,
+            'note': self.note
+        }
+
+        return record
+
+class Event(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    date = models.DateField(null=False)
+    time = models.TimeField(null=False)
+    detail = models.TextField(blank=True, null=True)
+
+    class Meta:
+        ordering = ['date', 'time']
+
+    def __str__(self):
+        return self.name
+    
+    def getData(self):
+        event = {
+            'name': self.name,
+            'date': self.date.strftime("%B %d, %Y"),
+            'time': self.time.strftime("%I:%M %p"),
+            'detail': self.detail
+        }
+
+        return event
+    
+    def getYear(self):
+        return self.date.year
+    
+    def getMonth(self):
+        return self.date.month
+    
+    def getDay(self):
+        return self.date.day
 
 class Otp(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="otp")

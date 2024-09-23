@@ -2,39 +2,103 @@
 {% load static %}
 
 {% block subcontent %}
-<div class="flex flex-col overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-dark-primary h-screen p-5 gap-3">
-    <div class="bg-white dark:bg-dark-alt h-full rounded-lg shadow-lg p-5">
-        <div x-data="calendar" x-init="init">
-            <!-- Header -->
-            <div class="flex items-center justify-between mb-4">
-                <button @click="prevMonth" class="px-2 py-1 text-blue-500 hover:text-blue-700">Previous</button>
-                <span x-ref="monthYear" class="text-lg font-semibold dark:text-white"></span>
-                <button @click="nextMonth" class="px-2 py-1 text-blue-500 hover:text-blue-700">Next</button>
-            </div>
-            
-            <!-- Days of Week -->
-            <div class="grid grid-cols-7 gap-1 text-center font-semibold text-gray-700 dark:text-white mb-2">
-                <div>Sun</div>
-                <div>Mon</div>
-                <div>Tue</div>
-                <div>Wed</div>
-                <div>Thu</div>
-                <div>Fri</div>
-                <div>Sat</div>
-            </div>
-            
-            <!-- Calendar Days -->
-            <div class="grid grid-cols-7 gap-1 text-center text-gray-800">
-                <template x-for="(day, index) in days" :key="index">
-                    <div :class="{'bg-blue-100': day.current, 'text-gray-500': !day.current}" class="p-2 rounded hover:bg-gray-200">
-                        <span x-text="day.date" class="font-poppins font-semibold"></span>
-                    </div>
-                </template>
+<div class="flex flex-col flex-grow overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-dark-primary h-screen p-5 gap-3">
+    <div class="bg-white dark:bg-dark-secondary rounded-lg shadow-lg p-5" x-data="calendar" x-init="init">
+        <!-- Header -->
+        <div class="flex justify-between">
+            <span class="font-notosans font-bold text-xl dark:text-white"> Calendar </span>
+            <div class="flex items-center justify-start">
+                <button @click="purpose = 'Event'" type="button" class="flex items-center text-white bg-dark-content focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center gap-2 mb-4"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="-ml-1 h-5 w-5 text-white">
+                        <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
+                    </svg>          
+                    <span> Add Event </span>
+                </button>
             </div>
         </div>
+
+        <div class="flex items-center justify-center gap-12 mb-4">
+            <button @click="prevMonth" type="button" class="flex items-center text-white bg-dark-content focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center gap-2">Previous</button>
+            <span x-ref="monthYear" class="text-center text-lg font-semibold dark:text-white"></span>
+            <button @click="nextMonth" type="button" class="flex items-center text-white bg-dark-content focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center gap-2">Next</button>
+        </div>  
+        
+        <!-- Days of Week -->
+        <div class="grid grid-cols-7 gap-1 text-center font-semibold text-gray-800 mb-2">
+            <div class="bg-blue-100 dark:bg-dark-contrast rounded-lg">Sun</div>
+            <div class="bg-blue-100 dark:bg-dark-contrast rounded-lg">Mon</div>
+            <div class="bg-blue-100 dark:bg-dark-contrast rounded-lg">Tue</div>
+            <div class="bg-blue-100 dark:bg-dark-contrast rounded-lg">Wed</div>
+            <div class="bg-blue-100 dark:bg-dark-contrast rounded-lg">Thu</div>
+            <div class="bg-blue-100 dark:bg-dark-contrast rounded-lg">Fri</div>
+            <div class="bg-blue-100 dark:bg-dark-contrast rounded-lg">Sat</div>
+        </div>
+        
+        <!-- Calendar Days -->
+        <div class="grid grid-cols-7 gap-1 text-center text-gray-800">
+            <template x-for="(day, index) in days" :key="index">
+                <div :class="{'dark:bg-dark-contrast': day.current, 'text-gray-500/0': !day.current}" class="p-2 h-12 rounded hover:bg-gray-400">
+                    <span x-text="day.date" class="font-poppins font-semibold"></span>
+                </div>
+            </template>
+        </div>
     </div>
-    <div class="flex-grow bg-white dark:bg-dark-alt h-full rounded-lg shadow-lg p-5">
-        <span class="text-white"> Event </span>
+    <div class="relative flex flex-col bg-white dark:bg-dark-secondary h-96 rounded-lg shadow-lg p-5">
+        <span class="font-notosans font-bold text-xl dark:text-white"> Upcoming Events </span>
+        <div class="h-screen overflow-y-auto overflow-x-hidden font-notosans dark:bg-[#487e69] dark:text-white rounded-lg p-4 mt-4">
+            {% if events.count != 0 %}
+                {% for event in events %}
+                    <div class="flex flex-col p-4 dark:bg-dark-alt rounded-lg shadow-lg gap-1 mb-2">
+                        {% for key, value in event.getData.items %}
+                            {% if key == "date" %}
+                                <span class="font-poppins font-semibold text-xs text-gray-800 dark:text-white"> {{value}} - 
+                            {% elif key == "time" %}
+                                {{value}} </span>
+                            {% elif key == "name" %}
+                                <span class="font-poppins font-semibold text-gray-800 dark:text-white"> {{ value }} </span>
+                            {% elif key == "detail" %}
+                                <span class="font-poppins font-semibold text-xs text-gray-800 dark:text-white"> {{ value }} </span>
+                            {% endif %}  
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <span class="font-poppins font-semibold text-white"> No upcoming events </span>
+            {% endif %} 
+        </div>
     </div>
 </div>
 {% endblock subcontent %}
+
+{% block modal %}
+<div class="absolute inset-0 bg-black bg-opacity-50 z-50" :class="{'hidden': purpose != 'Event'}">
+    <div class="flex items-center justify-center min-h-screen">
+        <form method="POST" class="bg-white dark:bg-dark-primary p-6 rounded-lg shadow-lg w-full max-w-lg mx-4 gap-3">
+            {% csrf_token %}
+            <div class="flex flex-col w-full justify-center items-center rounded-lg px-4 py-2">
+                <span class="font-poppins font-bold text-2xl dark:text-white"> Add Event </span>
+            </div>
+            <div class="px-6 mb-4">
+                <label for="event_name" class="block ms-2 mb-2 text-md font-medium text-gray-900 dark:text-white">Event Name</label>
+                <input type="text" id="event_name" name="event_name" x-model="name" class="block justify-between items-center rounded-lg ps-2 px-2.5 py-3 w-full text-sm font-semibold text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 shadow-sm" placeholder="Event Name"/>
+            </div>
+            <div class="px-6 mb-4">
+                <label for="event_date" class="block ms-2 mb-2 text-md font-medium text-gray-900 dark:text-white">Date</label>
+                <input type="text" id="event_date" name="event_date" x-model="date" class="block justify-between items-center rounded-lg ps-2 px-2.5 py-3 w-full text-sm font-semibold text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 shadow-sm" placeholder="Event Date"/>
+            </div>
+            <div class="px-6 mb-4">
+                <label for="event_time" class="block ms-2 mb-2 text-md font-medium text-gray-900 dark:text-white">Time</label>
+                <input type="text" id="event_time" name="event_time" x-model="time" class="block justify-between items-center rounded-lg ps-2 px-2.5 py-3 w-full text-sm font-semibold text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 shadow-sm" placeholder="Event Time"/>
+            </div>
+            <div class="px-6 mb-4">
+                <label for="event_detail" class="block ms-2 mb-2 text-md font-medium text-gray-900 dark:text-white">Event Detail</label>
+                <input type="text" id="event_detail" name="event_detail" x-model="detail" class="block justify-between items-center rounded-lg ps-2 px-2.5 py-3 w-full text-sm font-semibold text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 shadow-sm" placeholder="Event Detail"/>
+            </div>
+            <div class="flex justify-between">
+                <button @click="purpose = ''" type="button" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">Close</button>
+                <button @click="purpose = ''" type="submit" class="w-24 items-center text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">Save</button>
+            </div>               
+        </form>
+    </div>
+</div>
+{% endblock modal %}

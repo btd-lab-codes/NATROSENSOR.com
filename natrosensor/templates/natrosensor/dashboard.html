@@ -30,7 +30,7 @@
                 <span class="font-notosans font-semibold text-xl dark:text-white"> Total User </span>
                 <span class="font-notosans text-xs text-justify dark:text-white"> The total number of registered users </span>
                 <div class="flex flex-col justify-center items-center h-full">
-                    <span class="font-notosans font-bold text-6xl dark:text-white"> 0 </span>
+                    <span class="font-notosans font-bold text-6xl dark:text-white"> {{user_count}} </span>
                 </div>
             </div>
         </div>
@@ -41,91 +41,27 @@
                 <span class="font-notosans font-semibold text-xl dark:text-white"> Graph </span>
                 <span class="font-notosans text-xs dark:text-white"> The total number of processes within the week/month </span>
             </div>
-            <div class="flex flex-col bg-white dark:bg-dark-secondary p-5 h-64 md:h-full rounded-lg shadow-2xl">
+            <div class="relative flex flex-col bg-white dark:bg-dark-secondary p-5 h-64 md:h-full rounded-lg shadow-2xl">
                 <span class="font-notosans font-semibold text-xl dark:text-white"> Schedule </span>
                 <span class="font-notosans text-xs dark:text-white"> The planning of events begins with the upcoming ones </span>
-                <div class="flex flex-col dark:bg-white w-full h-36 overflow-x-hidden overflow-y-visible shadow-inner rounded-lg border-2 mt-3 p-2 gap-1">
-                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
-                        <div class="flex flex-col justify-center w-32">
-                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
-                            <span class="font-notosans text-xs"> 10:00 AM </span>
-                        </div>
-                        <div class="flex flex-col justify-center w-full">
-                            <span class="font-notosans font-semibold"> Schedule 1 </span>
-                        </div>
-                    </div>
-                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
-                        <div class="flex flex-col justify-center w-32">
-                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
-                            <span class="font-notosans text-xs"> 10:00 AM </span>
-                        </div>
-                        <div class="flex flex-col justify-center w-full">
-                            <span class="font-notosans font-semibold"> Schedule 1 </span>
-                        </div>
-                    </div>
-                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
-                        <div class="flex flex-col justify-center w-32">
-                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
-                            <span class="font-notosans text-xs"> 10:00 AM </span>
-                        </div>
-                        <div class="flex flex-col justify-center w-full">
-                            <span class="font-notosans font-semibold"> Schedule 1 </span>
-                        </div>
-                    </div>
-                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
-                        <div class="flex flex-col justify-center w-32">
-                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
-                            <span class="font-notosans text-xs"> 10:00 AM </span>
-                        </div>
-                        <div class="flex flex-col justify-center w-full">
-                            <span class="font-notosans font-semibold"> Schedule 1 </span>
-                        </div>
-                    </div>
-                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
-                        <div class="flex flex-col justify-center w-32">
-                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
-                            <span class="font-notosans text-xs"> 10:00 AM </span>
-                        </div>
-                        <div class="flex flex-col justify-center w-full">
-                            <span class="font-notosans font-semibold"> Schedule 1 </span>
-                        </div>
-                    </div>
-                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
-                        <div class="flex flex-col justify-center w-32">
-                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
-                            <span class="font-notosans text-xs"> 10:00 AM </span>
-                        </div>
-                        <div class="flex flex-col justify-center w-full">
-                            <span class="font-notosans font-semibold"> Schedule 1 </span>
-                        </div>
-                    </div>
-                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
-                        <div class="flex flex-col justify-center w-32">
-                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
-                            <span class="font-notosans text-xs"> 10:00 AM </span>
-                        </div>
-                        <div class="flex flex-col justify-center w-full">
-                            <span class="font-notosans font-semibold"> Schedule 1 </span>
-                        </div>
-                    </div>
-                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
-                        <div class="flex flex-col justify-center w-32">
-                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
-                            <span class="font-notosans text-xs"> 10:00 AM </span>
-                        </div>
-                        <div class="flex flex-col justify-center w-full">
-                            <span class="font-notosans font-semibold"> Schedule 1 </span>
-                        </div>
-                    </div>
-                    <div class="flex h-12 border-2 rounded-lg p-2 gap-3">
-                        <div class="flex flex-col justify-center w-32">
-                            <span class="font-notosans text-xs"> Aug 21, 2024 </span>
-                            <span class="font-notosans text-xs"> 10:00 AM </span>
-                        </div>
-                        <div class="flex flex-col justify-center w-full">
-                            <span class="font-notosans font-semibold"> Schedule 1 </span>
-                        </div>
-                    </div>
+                <div class="flex flex-col dark:bg-[#487e69] w-full h-full overflow-x-hidden overflow-y-visible shadow-inner rounded-lg mt-3 p-2 gap-1">
+                    {% if events.count != 0 %}
+                        {% for event in events %}
+                            <div class="flex flex-col p-4 dark:bg-dark-alt rounded-lg shadow-lg mb-2">
+                                {% for key, value in event.getData.items %}
+                                    {% if key == "date" %}
+                                        <span class="font-poppins font-semibold text-xs text-gray-800 dark:text-white"> {{value}} - 
+                                    {% elif key == "time" %}
+                                        {{value}} </span>
+                                    {% elif key == "name" %}
+                                        <span class="font-poppins font-semibold text-gray-800 dark:text-white"> {{ value }} </span>
+                                    {% endif %}  
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <span class="font-poppins font-semibold text-white"> No upcoming events </span>
+                    {% endif %} 
                 </div>
             </div>
         </div>

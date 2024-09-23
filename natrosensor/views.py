@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from scipy.optimize import curve_fit
 from io import StringIO
 from .forms import SignupForm, LoginForm
-from .models import Otp
+from .models import Otp, Event, User
 from .module import fourpl
 
 import folium, branca, geocoder, os
@@ -21,39 +21,8 @@ map_markers = []
 
 @login_required(login_url='/login')
 def test(request):
-    global map_markers
-
-    g = geocoder.google([45.15, -75.14], method='reverse')
-    g.latlng = (14.1769, 121.2225)
-    g.city = "Los Baños"
-    g.country = "PH"
-    g.postal = "4030"
-
-    map = folium.Map(location=g.latlng, zoom_start=5)
-    folium.Marker(g.latlng, popup=g.address,icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
-
-    if request.method == 'POST':
-        lat = float(request.POST.get('loc_lat'))
-        lng = float(request.POST.get('loc_lng'))        
-        g = geocoder.google([lat, lng], method='reverse')
-        g.latlng = [lat, lng]
-
-        map_markers.append({
-            'lat': lat,
-            'lng': lng,
-            'addr': g
-        })     
-
-    for marker in map_markers:
-        folium.Marker([marker['lat'], marker['lng']], popup="[" + str(marker['lat']) + "," + str(marker['lng']) + "]" + str(marker['addr']), icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
-
     template_name = "natrosensor/test.html"
-    map.add_child(folium.LatLngPopup())
-
-    fig = branca.element.Figure(height='100%')
-    fig.add_child(map)
-    map_embed = fig._repr_html_()
-    return render(request, template_name, context={"template_name": "Location", "map": map_embed, "location": g})
+    return render(request, template_name, context={"template_name": "Test"})
 
 def index(request):
     map = folium.Map([14.1608, 121.2453], zoom_start=18)
@@ -150,8 +119,11 @@ def location(request):
 @login_required(login_url='/login')
 def dashboard(request):
     first_name = request.user.first_name if request.user.is_authenticated else "User"
+    user_count = User.objects.all().count()
+    events = Event.objects.filter(user=request.user)
+
     template_name = "natrosensor/dashboard.html"
-    return render(request, template_name, context={"template_name": "Dashboard", "first_name": first_name})
+    return render(request, template_name, context={"template_name": "Dashboard", "first_name": first_name, "user_count": user_count, "events": events})
 
 @login_required(login_url='/login')
 def process(request):
@@ -161,9 +133,6 @@ def process(request):
 @login_required(login_url='/login')
 def autolocate(request):
     pass
-    # location = geocoder.ip('me')
-    # location = geocoder.osm(location.latlng, method="reverse")
-    # print(location)
 
 @login_required(login_url='/login')
 def records(request):
@@ -172,8 +141,18 @@ def records(request):
 
 @login_required(login_url='/login')
 def schedule(request):
+    if request.method == "POST":
+        name = request.POST.get('event_name')
+        date = request.POST.get('event_date')
+        time = request.POST.get('event_time')
+        detail = request.POST.get('event_detail')
+        
+        new_event = Event(name=name, date=date, time=time, detail=detail, user=request.user)
+        new_event.save()
+
+    events = Event.objects.filter(user=request.user)
     template_name = "natrosensor/schedule.html"
-    return render(request, template_name, context={"template_name": "Schedule"})
+    return render(request, template_name, context={"template_name": "Schedule", "events": events})
 
 @login_required(login_url='/login')
 def about(request):

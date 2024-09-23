@@ -40,7 +40,7 @@ function calendar() {
                 this.days.push({ date: day, current: true, })
             }
             
-            while (this.days.length % 7 !== 0) {
+            while (this.days.length != 42) {
                 this.days.push({ date: '', current: false });
             }
         },
