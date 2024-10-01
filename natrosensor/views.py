@@ -7,7 +7,7 @@ from .forms import SignupForm, LoginForm
 from .models import Otp, Event, Records, User
 from .module import fourpl
 
-import folium, branca, geocoder, os
+import folium, branca, geocoder, base64, io, os
 import pandas as pd
 
 LOC_INFO = {
@@ -103,7 +103,7 @@ def location(request):
     current_location = geocoder.ip("me")
     g_curr = geocoder.osm(current_location.latlng, method='reverse')
     print(g_curr.address) 
-    print(g_curr)  
+    print(g_curr) 
 
     for marker in map_markers:
         folium.Marker([marker['lat'], marker['lng']], popup="[" + str(marker['lat']) + "," + str(marker['lng']) + "]" + str(marker['addr']), icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
@@ -120,10 +120,11 @@ def location(request):
 def dashboard(request):
     first_name = request.user.first_name if request.user.is_authenticated else "User"
     user_count = User.objects.all().count()
+    process_count = Records.objects.filter(user=request.user).count()
     events = Event.objects.filter(user=request.user)
 
     template_name = "natrosensor/dashboard.html"
-    return render(request, template_name, context={"template_name": "Dashboard", "first_name": first_name, "user_count": user_count, "events": events})
+    return render(request, template_name, context={"template_name": "Dashboard", "first_name": first_name, "user_count": user_count, "process_count": process_count, "events": events})
 
 @login_required(login_url='/login')
 def process(request):
@@ -132,15 +133,15 @@ def process(request):
 
         process = {
             'name': request.POST.get('process_name'),
-            'med': request.POST.get('process_med'),
+            'antibiotics': request.POST.get('process_med'),
             'trial': int(request.POST.get('process_trial')),
             'region': request.POST.get('process_region'),
             'province': request.POST.get('process_province'),
             'municipality': request.POST.get('process_municipality'),
             'barangay': request.POST.get('process_barangay'),
             'address': request.POST.get('process_addr'),
-            'temp': request.POST.get('process_temp'),
-            'pH': request.POST.get('process_ph'),
+            'temperature': request.POST.get('process_temp'),
+            'ph': request.POST.get('process_ph'),
             'note': request.POST.get('process_note')
         }
 
@@ -148,13 +149,13 @@ def process(request):
         size = fourpl.graph_settings()
         fig, y_int, slope = fourpl.fourpl(df, size)
 
-        imgdata = StringIO()
-        fig.savefig(imgdata, format='svg')
+        imgdata = io.BytesIO()
+        fig.print_png(imgdata)
         imgdata.seek(0)
-        graph = imgdata.getvalue()   
+        graph = base64.b64encode(imgdata.getvalue()).decode('utf-8')
 
         request.session['process'] = process
-        request.session['graph'] = graph
+        request.session['graph'] = "data:image/png;base64," + graph
         request.session['y_int'] = y_int
         request.session['slope'] = slope
 
@@ -169,8 +170,10 @@ def autolocate(request):
 
 @login_required(login_url='/login')
 def records(request):
+    records = Records.objects.filter(user=request.user)
+    headers = ["Name", "Date", "Time", "Antibiotics", "Details"]
     template_name = "natrosensor/records.html"
-    return render(request, template_name, context={"template_name": "Records"})
+    return render(request, template_name, context={"template_name": "Records", "records": records, "headers": headers})
 
 @login_required(login_url='/login')
 def schedule(request):
@@ -215,7 +218,13 @@ def result(request):
     slope = request.session.get('slope') 
 
     if request.method == "POST":
-        print(process['name'])
-    
+        new_result = Records(name=process['name'], antibiotics=process['antibiotics'], trial=process['trial'], temperature=process['temperature'], ph=process['ph'], note=process['note'], graph=graph, user=request.user)
+        new_result.save()
+
+    records = Records.objects.filter(user=request.user)
+    for record in records:
+        for key, value in record.getData().items():
+            print(key.capitalize() + ": " + str(value))
+
     template_name = "natrosensor/result.html"
     return render(request, template_name, context={"template_name": "Result", "graph": graph, "y_int": y_int, "slope": slope, "process": process})

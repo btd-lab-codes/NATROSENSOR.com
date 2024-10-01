@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block subcontent %}
-<div x-data="{step: 1}" class="flex flex-col flex-grow overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-dark-primary h-screen p-5">
+<div x-data="{step: 1, record: ''}" class="flex flex-col flex-grow overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-dark-primary h-screen p-5">
     <form method="post" enctype="multipart/form-data" class="flex flex-col flex-grow">
         {% csrf_token %}
         <div class="flex flex-col h-full rounded-lg" :class="{'hidden': step != 1}">

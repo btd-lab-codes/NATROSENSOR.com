@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-  <div x-data="{sidebar: true}" class="flex flex-col flex-auto flex-shrink-0 antialiased text-gray-800">
+  <div x-data="{sidebar: true, result: ''}" class="flex flex-col flex-auto flex-shrink-0 antialiased text-gray-800">
     <div class="fixed flex flex-col top-0 left-0 w-60 h-full bg-transparent md:bg-white dark:md:bg-dark-content z-40 transition-all duration-300" :class="{'-translate-x-full md:translate-x-0': sidebar, 'translate-x-0 md:-translate-x-full': !sidebar}">
       <div class="flex items-center justify-center h-16 bg-cyan-950 border-green-500 border-b-2 rounded-tr-3xl">
         <div class="py-4">

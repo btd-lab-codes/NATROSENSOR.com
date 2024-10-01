@@ -14,7 +14,7 @@
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                 </svg>
             </button>
-            <!-- Dropdown menu -->
+
             <div id="dropdownRadio" class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow" data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top" style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate3d(522.5px, 3847.5px, 0px);">
                 <ul class="p-3 space-y-1 text-sm text-gray-700" aria-labelledby="dropdownRadioButton">
                     <li>
@@ -58,130 +58,33 @@
             <input type="text" id="table-search" class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 dark:bg-dark-contrast focus:ring-blue-500 focus:border-blue-500" placeholder="Search for items">
         </div>
     </div>
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div class="relative flex flex-col flex-grow overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
             <thead class="text-xs text-white uppercase bg-cyan-950">
                 <tr>
-                    <th scope="col" class="px-6 py-3">
-                        Name
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Datetime
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Location
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Antibiotics
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Action
-                    </th>
+                    {% for header in headers %}
+                        <th scope="col" class="px-6 py-3">
+                            {{ header }}
+                        </th>
+                    {% endfor %}
                 </tr>
             </thead>
             <tbody>
-                <tr class="bg-white dark:bg-dark-alt border-b hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-cyan-400 whitespace-nowrap">
-                        Test 1
-                    </th>
-                    <td class="px-6 py-4 dark:text-white">
-                        23 Jan 2024 09:00 AM
-                    </td>
-                    <td class="px-6 py-4 dark:text-white">
-                        Los Ba&ntilde;os, Laguna
-                    </td>
-                    <td class="px-6 py-4 dark:text-white">
-                        Antibiotics 1
-                    </td>
-                    <td class="px-6 py-4">
-                        <a href="#" class="font-medium text-blue-600 dark:text-cyan-400 hover:underline">View</a>
-                    </td>
-                </tr>
-                <tr class="bg-white dark:bg-dark-alt border-b hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-cyan-400 whitespace-nowrap">
-                        Test 2
-                    </th>
-                    <td class="px-6 py-4 dark:text-white">
-                        22 Jan 2024 09:00 AM
-                    </td>
-                    <td class="px-6 py-4 dark:text-white">
-                        Los Ba&ntilde;os, Laguna
-                    </td>
-                    <td class="px-6 py-4 dark:text-white">
-                        Antibiotics 2
-                    </td>
-                    <td class="px-6 py-4">
-                        <a href="#" class="font-medium text-blue-600 dark:text-cyan-400 hover:underline">View</a>
-                    </td>
-                </tr>
-                <tr class="bg-white dark:bg-dark-alt border-b hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-cyan-400 whitespace-nowrap">
-                        Test 3
-                    </th>
-                    <td class="px-6 py-4 dark:text-white">
-                        21 Jan 2024 09:00 AM
-                    </td>
-                    <td class="px-6 py-4 dark:text-white">
-                        Los Ba&ntilde;os, Laguna
-                    </td>
-                    <td class="px-6 py-4 dark:text-white">
-                        Antibiotics 3
-                    </td>
-                    <td class="px-6 py-4">
-                        <a href="#" class="font-medium text-blue-600 dark:text-cyan-400 hover:underline">View</a>
-                    </td>
-                </tr>
-                <tr class="bg-white dark:bg-dark-alt border-b hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-cyan-400 whitespace-nowrap">
-                        Test 4
-                    </th>
-                    <td class="px-6 py-4 dark:text-white">
-                        20 Jan 2024 09:00 AM
-                    </td>
-                    <td class="px-6 py-4 dark:text-white">
-                        Los Ba&ntilde;os, Laguna
-                    </td>
-                    <td class="px-6 py-4 dark:text-white">
-                        Antibiotics 4
-                    </td>
-                    <td class="px-6 py-4">
-                        <a href="#" class="font-medium text-blue-600 dark:text-cyan-400 hover:underline">View</a>
-                    </td>
-                </tr>
-                <tr class="bg-white dark:bg-dark-alt border-b hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-cyan-400 whitespace-nowrap">
-                        Test 5
-                    </th>
-                    <td class="px-6 py-4 dark:text-white">
-                        19 Jan 2024 09:00 AM
-                    </td>
-                    <td class="px-6 py-4 dark:text-white">
-                        Los Ba&ntilde;os, Laguna
-                    </td>
-                    <td class="px-6 py-4 dark:text-white">
-                        Antibiotics 5
-                    </td>
-                    <td class="px-6 py-4">
-                        <a href="#" class="font-medium text-blue-600 dark:text-cyan-400 hover:underline">View</a>
-                    </td>
-                </tr>
-                <tr class="bg-white dark:bg-dark-alt hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-cyan-400 whitespace-nowrap">
-                        Test 6
-                    </th>
-                    <td class="px-6 py-4 dark:text-white">
-                        18 Jan 2024 09:00 AM
-                    </td>
-                    <td class="px-6 py-4 dark:text-white">
-                        Los Ba&ntilde;os, Laguna
-                    </td>
-                    <td class="px-6 py-4 dark:text-white">
-                        Antibiotics 6
-                    </td>
-                    <td class="px-6 py-4">
-                        <a href="#" class="font-medium text-blue-600 dark:text-cyan-400 hover:underline">View</a>
-                    </td>
-                </tr>
+                {% for record in records %}
+                    <tr class="bg-white dark:bg-dark-alt border-b hover:bg-gray-50 dark:hover:bg-gray-800">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-cyan-400 whitespace-nowrap">{{record.getData.name}}</th>
+                        <td class="px-6 py-4 dark:text-white">{{record.getData.created_date}}</td>
+                        <td class="px-6 py-4 dark:text-white">{{record.getData.created_time}}</td>
+                        <td class="px-6 py-4 dark:text-white">{{record.getData.antibiotics}}</td>
+                        <td x-data="{ recordItems: {} }"  x-init="
+                            {% for key, value in record.getData.items %}
+                                recordItems['{{key}}'] = '{{value}}'
+                            {% endfor %}
+                        ">
+                            <button @click="purpose = 'Record', result = recordItems" type="button" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">View</button>
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
@@ -213,3 +116,42 @@
     </nav>
 </div>
 {% endblock subcontent %}
+
+{% block modal %}
+<div class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden" :class="{'hidden': purpose != 'Record'}">
+    <div class="flex flex-col items-center justify-center h-screen p-6">    
+        <div class="flex justify-between dark:bg-dark-secondary w-full max-w-lg rounded-t-lg px-6 py-3">
+            <span class="text-white text-lg font-notosans font-semibold" x-text="result.name"></span>
+            <button type="button" @click="purpose = '', result = ''" id="close-btn" class="justify-end items-center text-white bg-white/0 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="font-bold size-6">
+                    <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                </svg>  
+            </button>
+        </div>
+        <div class="flex flex-col overflow-x-hidden overflow-y-auto bg-white dark:bg-dark-primary p-6 shadow-lg w-full max-w-lg rounded-b-lg mx-4 gap-2">
+            <div class="grid grid-cols-2 gap-2">
+                <div class="relative flex flex-col col-span-2 text-white font-notosans font-semibold gap-1">
+                    <span class="text-lg"> Graph </span>
+                    <img :src="result.graph">
+                </div>
+                <div class="flex flex-col text-white font-notosans font-semibold gap-1">
+                    <span class="text-lg"> Antibiotics </span>
+                    <span class="text-sm text-gray-300 ps-2" x-text="result.antibiotics"></span>
+                </div>
+                <div class="flex flex-col text-white font-notosans font-semibold gap-1">
+                    <span class="text-lg"> Date </span>
+                    <span class="text-sm text-gray-300 ps-2" x-text="result.created_date"></span>
+                </div>
+                <div class="flex flex-col text-white font-notosans font-semibold gap-1">
+                    <span class="text-lg"> Time </span>
+                    <span class="text-sm text-gray-300 ps-2" x-text="result.created_time"></span>
+                </div>   
+                <div class="flex flex-col text-white font-notosans font-semibold gap-1">
+                    <span class="text-lg"> Trial </span>
+                    <span class="text-sm text-gray-300 ps-2" x-text="result.trial"></span>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+{% endblock modal %}

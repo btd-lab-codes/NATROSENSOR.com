@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.conf import settings
+from django.utils import timezone
 
 class CustomUserManager(BaseUserManager):
     def _create_user(self, email, password, first_name, last_name, institution, **extra_fields):
@@ -43,10 +44,14 @@ class Records(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=255)
     antibiotics = models.CharField(max_length=255)
-    trials = models.IntegerField(default=1)
+    trial = models.IntegerField(default=1)
     temperature = models.CharField(max_length=255, null=True)
     ph = models.CharField(max_length=255, blank=True, null=True)
     note = models.TextField(blank=True, null=True)
+    graph = models.TextField(blank=True, null=True)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.name
@@ -54,12 +59,14 @@ class Records(models.Model):
     def getData(self):
         record = {
             'name': self.name,
-            'created_at': self.created_at,
+            'created_date': timezone.localtime(self.created_at).strftime("%B %d, %Y"),
+            'created_time': timezone.localtime(self.created_at).strftime("%I:%M %p"),
             'antibiotics': self.antibiotics,
-            'trials': self.trials,
+            'trial': self.trial,
             'temperature': self.temperature,
             'ph': self.ph,
-            'note': self.note
+            'note': self.note,
+            'graph': self.graph
         }
 
         return record

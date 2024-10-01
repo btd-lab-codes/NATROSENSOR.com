@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from scipy import interpolate
 from scipy.optimize import curve_fit
 
@@ -71,7 +72,7 @@ def fourpl(dataframe, size):
 
     print(f'The LR has a formula: y = {popt_l[0]} + {popt[1]}.')
 
-    return fig, popt_l[0], popt[1]
+    return FigureCanvas(fig), popt_l[0], popt[1]
 
 #Get the 4PL logistic curve 
 def fourpl_model(x, r_min, slope, ec50, r_max):
