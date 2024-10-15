@@ -186,8 +186,6 @@ def process(request):
         request.session['y_int'] = y_int
         request.session['slope'] = slope
 
-        return redirect('/result')
-
     template_name = "natrosensor/process.html"
     return render(request, template_name, context={"template_name": "Process", "loc_info": LOC_INFO})
 
