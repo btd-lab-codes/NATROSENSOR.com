@@ -49,7 +49,12 @@ class Records(models.Model):
     ph = models.CharField(max_length=255, blank=True, null=True)
     note = models.TextField(blank=True, null=True)
     graph = models.TextField(blank=True, null=True)
-
+    region = models.CharField(max_length=255)
+    province = models.CharField(max_length=255)
+    municipality = models.CharField(max_length=255)
+    barangay = models.CharField(max_length=255)
+    address = models.TextField()
+   
     class Meta:
         ordering = ['-created_at']
 
@@ -66,7 +71,12 @@ class Records(models.Model):
             'temperature': self.temperature,
             'ph': self.ph,
             'note': self.note,
-            'graph': self.graph
+            'graph': self.graph,
+            'region': self.region,
+            'province': self.province,
+            'municipality': self.municipality,
+            'barangay': self.barangay,
+            'address': self.address
         }
 
         return record

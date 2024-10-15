@@ -1,12 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+from django.db.models.functions import TruncDate
+from django.utils import timezone
 from scipy.optimize import curve_fit
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from io import StringIO
+from datetime import datetime, timedelta
 from .forms import SignupForm, LoginForm
 from .models import Otp, Event, Records, User
 from .module import fourpl
 
+import matplotlib.pyplot as plt
 import folium, branca, geocoder, base64, io, os
 import pandas as pd
 
@@ -119,12 +125,33 @@ def location(request):
 @login_required(login_url='/login')
 def dashboard(request):
     first_name = request.user.first_name if request.user.is_authenticated else "User"
-    user_count = User.objects.all().count()
-    process_count = Records.objects.filter(user=request.user).count()
+    process = Records.objects.filter(user=request.user)
     events = Event.objects.filter(user=request.user)
+    user_count = User.objects.all().count()    
+    process_count = {}
 
+    today = datetime.today()
+    for index in range(7, 0, -1):
+        start = today - timedelta(days=index-1)
+        proc = Records.objects.filter(user=request.user).filter(created_at__date=start)
+        process_count[timezone.localdate(timezone.make_aware(start)).strftime("%B %d, %Y")] = proc.count()
+
+    label = list(process_count.keys())
+    value = list(process_count.values())
+
+    fig = plt.figure()
+    plt.plot(label, value, marker='o')
+    plt.xlabel("Date (Last 7 Days)")
+    plt.ylabel("Process Count")
+
+    fig = FigureCanvas(fig)
+    imgdata = io.BytesIO()
+    fig.print_png(imgdata)
+    imgdata.seek(0)
+    graph = "data:image/png;base64," + base64.b64encode(imgdata.getvalue()).decode('utf-8')
+    
     template_name = "natrosensor/dashboard.html"
-    return render(request, template_name, context={"template_name": "Dashboard", "first_name": first_name, "user_count": user_count, "process_count": process_count, "events": events})
+    return render(request, template_name, context={"template_name": "Dashboard", "first_name": first_name, "user_count": user_count, "process": process, "events": events, "graph": graph})
 
 @login_required(login_url='/login')
 def process(request):
@@ -172,6 +199,7 @@ def autolocate(request):
 def records(request):
     records = Records.objects.filter(user=request.user)
     headers = ["Name", "Date", "Time", "Antibiotics", "Details"]
+
     template_name = "natrosensor/records.html"
     return render(request, template_name, context={"template_name": "Records", "records": records, "headers": headers})
 
@@ -218,13 +246,22 @@ def result(request):
     slope = request.session.get('slope') 
 
     if request.method == "POST":
-        new_result = Records(name=process['name'], antibiotics=process['antibiotics'], trial=process['trial'], temperature=process['temperature'], ph=process['ph'], note=process['note'], graph=graph, user=request.user)
+        new_result = Records(
+            name=process['name'], 
+            antibiotics=process['antibiotics'], 
+            trial=process['trial'], 
+            region=process['region'],
+            province=process['province'],
+            municipality=process['municipality'],
+            barangay=process['barangay'],
+            address=process['address'],
+            temperature=process['temperature'], 
+            ph=process['ph'], 
+            note=process['note'], 
+            graph=graph, 
+            user=request.user
+        )
         new_result.save()
-
-    records = Records.objects.filter(user=request.user)
-    for record in records:
-        for key, value in record.getData().items():
-            print(key.capitalize() + ": " + str(value))
 
     template_name = "natrosensor/result.html"
     return render(request, template_name, context={"template_name": "Result", "graph": graph, "y_int": y_int, "slope": slope, "process": process})

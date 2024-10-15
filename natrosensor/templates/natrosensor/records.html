@@ -70,21 +70,27 @@
                 </tr>
             </thead>
             <tbody>
-                {% for record in records %}
-                    <tr class="bg-white dark:bg-dark-alt border-b hover:bg-gray-50 dark:hover:bg-gray-800">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-cyan-400 whitespace-nowrap">{{record.getData.name}}</th>
-                        <td class="px-6 py-4 dark:text-white">{{record.getData.created_date}}</td>
-                        <td class="px-6 py-4 dark:text-white">{{record.getData.created_time}}</td>
-                        <td class="px-6 py-4 dark:text-white">{{record.getData.antibiotics}}</td>
-                        <td x-data="{ recordItems: {} }"  x-init="
-                            {% for key, value in record.getData.items %}
-                                recordItems['{{key}}'] = '{{value}}'
-                            {% endfor %}
-                        ">
-                            <button @click="purpose = 'Record', result = recordItems" type="button" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">View</button>
-                        </td>
+                {% if records.count != 0 %}
+                    {% for record in records %}
+                        <tr class="bg-white dark:bg-dark-secondary border-b hover:bg-gray-50 dark:hover:bg-gray-800">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-cyan-400 whitespace-nowrap">{{record.getData.name}}</th>
+                            <td class="px-6 py-4 dark:text-white">{{record.getData.created_date}}</td>
+                            <td class="px-6 py-4 dark:text-white">{{record.getData.created_time}}</td>
+                            <td class="px-6 py-4 dark:text-white">{{record.getData.antibiotics}}</td>
+                            <td x-data="{ recordItems: {} }"  x-init="
+                                {% for key, value in record.getData.items %}
+                                    recordItems['{{key}}'] = '{{value}}'
+                                {% endfor %}
+                            ">
+                                <button @click="purpose = 'Record', result = recordItems" type="button" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">View</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr class="bg-white dark:bg-dark-alt border-b">
+                        <td colspan="5" class="px-6 py-4 dark:text-white">No available data </td>
                     </tr>
-                {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>
@@ -110,7 +116,7 @@
                 <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 dark:text-white bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-dark-alt">5</a>
             </li>
             <li>
-        <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 dark:text-white bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-dark-alt">Next</a>
+                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 dark:text-white bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-dark-alt">Next</a>
             </li>
         </ul>
     </nav>
@@ -120,35 +126,82 @@
 {% block modal %}
 <div class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden" :class="{'hidden': purpose != 'Record'}">
     <div class="flex flex-col items-center justify-center h-screen p-6">    
-        <div class="flex justify-between dark:bg-dark-secondary w-full max-w-lg rounded-t-lg px-6 py-3">
-            <span class="text-white text-lg font-notosans font-semibold" x-text="result.name"></span>
+        <div class="flex justify-between dark:bg-dark-alt w-full max-w-lg rounded-t-lg shadow-lg px-6 py-3">
+            <span class="text-white text-lg font-poppins font-bold" x-text="result.name"></span>
             <button type="button" @click="purpose = '', result = ''" id="close-btn" class="justify-end items-center text-white bg-white/0 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="font-bold size-6">
                     <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                 </svg>  
             </button>
         </div>
-        <div class="flex flex-col overflow-x-hidden overflow-y-auto bg-white dark:bg-dark-primary p-6 shadow-lg w-full max-w-lg rounded-b-lg mx-4 gap-2">
+        <div class="flex flex-col overflow-x-hidden overflow-y-auto bg-white dark:bg-dark-secondary p-6 shadow-lg w-full max-w-lg rounded-b-lg mx-4 gap-2">
             <div class="grid grid-cols-2 gap-2">
-                <div class="relative flex flex-col col-span-2 text-white font-notosans font-semibold gap-1">
-                    <span class="text-lg"> Graph </span>
+                <div class="relative flex flex-col col-span-2 text-white font-poppins font-bold gap-1">
+                    <span class="text-lg"> 4PL Graph </span>
                     <img :src="result.graph">
                 </div>
+                <div class="flex flex-col col-span-2">
+                    <hr class="my-3" />
+                </div>
+                <div class="flex flex-col col-span-2 font-poppins font-bold text-white pb-1">
+                    <span class="text-lg"> Process Details </span>
+                </div>
                 <div class="flex flex-col text-white font-notosans font-semibold gap-1">
-                    <span class="text-lg"> Antibiotics </span>
+                    <span> Antibiotics </span>
                     <span class="text-sm text-gray-300 ps-2" x-text="result.antibiotics"></span>
                 </div>
                 <div class="flex flex-col text-white font-notosans font-semibold gap-1">
-                    <span class="text-lg"> Date </span>
+                    <span> Date </span>
                     <span class="text-sm text-gray-300 ps-2" x-text="result.created_date"></span>
                 </div>
                 <div class="flex flex-col text-white font-notosans font-semibold gap-1">
-                    <span class="text-lg"> Time </span>
+                    <span> Time </span>
                     <span class="text-sm text-gray-300 ps-2" x-text="result.created_time"></span>
                 </div>   
                 <div class="flex flex-col text-white font-notosans font-semibold gap-1">
-                    <span class="text-lg"> Trial </span>
+                    <span> Trial </span>
                     <span class="text-sm text-gray-300 ps-2" x-text="result.trial"></span>
+                </div>
+                <div class="flex flex-col text-white font-notosans font-semibold gap-1">
+                    <span> Temperature </span>
+                    <span class="text-sm text-gray-300 ps-2" x-text="result.temperature ? result.temperature : 'N/A'"></span>
+                </div>
+                <div class="flex flex-col text-white font-notosans font-semibold gap-1">
+                    <span> pH </span>
+                    <span class="text-sm text-gray-300 ps-2" x-text="result.ph ? result.ph : 'N/A'"></span>
+                </div>
+                <div class="flex flex-col text-white font-notosans font-semibold gap-1">
+                    <span> Note </span>
+                    <span class="text-sm text-gray-300 ps-2" x-text="result.note ? result.note : 'N/A'"></span>
+                </div>
+                <div class="flex flex-col col-span-2">
+                    <hr class="my-3" />
+                </div>
+                <div class="flex flex-col col-span-2 font-poppins font-bold text-white pb-1">
+                    <span class="text-lg"> Location Details </span>
+                </div>
+                <div class="flex flex-col col-span-2 text-white font-notosans font-semibold gap-1">
+                    <span> Address </span>
+                    <span class="text-sm text-gray-300 ps-2" x-text="result.address ? result.address : 'N/A'"></span>
+                </div>
+                <div class="flex flex-col text-white font-notosans font-semibold gap-1">
+                    <span> Barangay </span>
+                    <span class="text-sm text-gray-300 ps-2" x-text="result.barangay"></span>
+                </div>
+                <div class="flex flex-col text-white font-notosans font-semibold gap-1">
+                    <span> Municipality </span>
+                    <span class="text-sm text-gray-300 ps-2" x-text="result.municipality"></span>
+                </div>
+                <div class="flex flex-col text-white font-notosans font-semibold gap-1">
+                    <span> Province </span>
+                    <span class="text-sm text-gray-300 ps-2" x-text="result.province"></span>
+                </div>
+                <div class="flex flex-col text-white font-notosans font-semibold gap-1">
+                    <span> Region </span>
+                    <span class="text-sm text-gray-300 ps-2" x-text="result.region"></span>
+                </div>
+                <div class="flex flex-col col-span-2">
+                    <hr class="my-3" />
                 </div>
             </div> 
         </div>

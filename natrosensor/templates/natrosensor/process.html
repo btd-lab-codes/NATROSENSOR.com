@@ -2,11 +2,11 @@
 {% load static %}
 
 {% block subcontent %}
-<div x-data="{step: 1, record: ''}" class="flex flex-col flex-grow overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-dark-primary h-screen p-5">
+<div x-data="{step: 1}" class="flex flex-col flex-grow overflow-y-auto overflow-x-hidden bg-gray-100 dark:bg-dark-primary h-screen p-5">
     <form method="post" enctype="multipart/form-data" class="flex flex-col flex-grow">
         {% csrf_token %}
-        <div class="flex flex-col h-full rounded-lg" :class="{'hidden': step != 1}">
-            <div class="flex justify-between px-1 mb-3">
+        <div class="flex flex-col h-full rounded-lg gap-3" :class="{'hidden': step != 1}">
+            <div class="flex justify-between px-1">
                 <div class="flex flex-col">
                     <span class="font-poppins font-bold text-2xl text-slate-800 dark:text-white"> Calibration </span>
                     <span class="font-poppins text-xs text-slate-800 dark:text-gray-300"> Adjusts model to match accurate reference standards </span>
@@ -15,6 +15,7 @@
                     <span class="font-poppins font-bold text-xs text-slate-800 dark:text-slate-500"> Step 1/4 </span>
                 </div>    
             </div>
+            <hr />
             <div class="flex flex-col flex-grow bg-white dark:bg-dark-secondary rounded-lg shadow-xl py-4 gap-3">
                 <div class="px-6">
                     <label for="process_name" class="block ms-2 mb-2 text-md font-medium text-gray-900 dark:text-white">Process Name <span class="text-red-500">*</span></label>

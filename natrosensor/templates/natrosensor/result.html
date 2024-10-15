@@ -29,10 +29,10 @@
                     <span class="font-notosans font-bold text-xl text-center dark:text-white pt-6"> Linear Range </span>
                     <span class="font-notosans font-semibold text-sm text-center dark:text-white">y = {{y_int}} + {{slope}}x</span>
                     <div class="w-full px-6 pt-2">
-                        <input x-model="input1" x-on:input="isEmpty(input1) ? input2 = '' : input2 = {{y_int}} + ({{slope}} * input1)" type="text" id="linear_x" name="linear_x" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="x"/>
+                        <input x-model="input1" x-on:input="isEmpty(input1) ? input2 = '' : input2 = (-1 * {{y_int}}) + (-1 * {{slope}} * input1)" type="text" id="linear_x" name="linear_x" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="x"/>
                     </div>
                     <div class="w-full px-6 pt-2">
-                        <input x-model="input2" x-on:input="isEmpty(input2) ? input1 = '' : input1 = (input2 - {{y_int}}) / {{slope}}" type="text" id="linear_y" name="linear_y" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="y"/>
+                        <input x-model="input2" x-on:input="isEmpty(input2) ? input1 = '' : input1 = (input2 - (-1 * {{y_int}})) / (-1 * {{slope}})" type="text" id="linear_y" name="linear_y" class="block rounded-lg ps-2 px-2.5 py-2.5 w-full text-md text-gray-900 bg-gray-50 dark:bg-dark-contrast border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600" placeholder="y"/>
                     </div>
                 </div>
             </div>
@@ -85,6 +85,13 @@
                 </div>
             </div>               
             <button type="button" @click="purpose = ''" id="close-btn" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">Close</button>
+        </div>
+    </div>
+</div>
+
+<div class="absolute inset-0 bg-black bg-opacity-50 z-50 hidden" :class="{'hidden': purpose != 'Save'}">
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white dark:bg-dark-primary p-6 rounded-lg shadow-lg w-full max-w-lg mx-4">
         </div>
     </div>
 </div>
