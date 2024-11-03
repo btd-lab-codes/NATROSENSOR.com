@@ -25,23 +25,29 @@ function calendar() {
         updateCalendar() {
             const year = this.currentDate.getFullYear();
             const month = this.currentDate.getMonth();
-            const month_day = this.currentDate.getDay();
+
+            const today_year = new Date().getFullYear();
+            const today_month = new Date().getMonth();
+            const today_day = new Date().getDate();
             
             const firstDay = new Date(year, month, 1).getDay();
             const lastDay = new Date(year, month + 1, 0).getDate();
-            
+
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };           
             this.days = [];
             
             for (let i = 0; i < firstDay; i++) {
-                this.days.push({ date: '', current: false });
+                this.days.push({ date: '', stringDate: '', current: false, today: false });
             }
             
             for (let day = 1; day <= lastDay; day++) {
-                this.days.push({ date: day, current: true, })
+                let today = (today_year == year && today_month == month && today_day == day ) ? true : false;
+                let formatDate = new Date(year, month, day).toLocaleDateString(undefined, options);
+                this.days.push({ date: day, stringDate: formatDate, current: true, today: today });
             }
             
             while (this.days.length != 42) {
-                this.days.push({ date: '', current: false });
+                this.days.push({ date: '', stringDate: '', current: false, today: false });
             }
         },
         prevMonth() {
@@ -59,4 +65,17 @@ function calendar() {
             this.$refs.monthYear.textContent = this.currentDate.toLocaleDateString(undefined, options);
         }
     }
+}
+
+function eventFilter(selectedDate, events) {
+    return {
+        selectedDate: selectedDate,
+        events: events,
+        filteredEvents: [],
+        filterEvents() {
+            this.filteredEvents = this.events.map(event => {
+                return event.getDate() === this.selectedDate;
+            });
+        }
+    };
 }

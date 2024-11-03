@@ -3,15 +3,15 @@
 
 {% block content %}
   <div x-data="{sidebar: true, result: ''}" class="flex flex-col flex-auto flex-shrink-0 antialiased text-gray-800">
-    <div class="fixed flex flex-col top-0 left-0 w-60 h-full bg-transparent md:bg-white dark:md:bg-dark-content z-40 transition-all duration-300" :class="{'-translate-x-full md:translate-x-0': sidebar, 'translate-x-0 md:-translate-x-full': !sidebar}">
-      <div class="flex items-center justify-center h-16 bg-cyan-950 border-green-500 border-b-2 rounded-tr-3xl">
+    <div class="fixed flex flex-col top-0 left-0 w-60 h-full bg-transparent md:bg-white dark:md:bg-[#0C2E3D] z-40 transition-all duration-300" :class="{'-translate-x-full md:translate-x-0': sidebar, 'translate-x-0 md:-translate-x-full': !sidebar}">
+      <div class="flex items-center justify-center h-16 bg-dark-blue border-green-500 border-b-2 rounded-tr-3xl">
         <div class="py-4">
           <button @click="sidebar = !sidebar">
             <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-2xl font-extrabold font-poppins mb-5">NATRO<span class="text-white">SENSOR</span></span>
           </button>
         </div>
       </div>
-      <div class="overflow-y-auto overflow-x-hidden bg-cyan-950 flex-grow">
+      <div class="overflow-y-auto overflow-x-hidden bg-dark-blue flex-grow">
         <ul class="flex flex-col py-4 space-y-1">
           <li class="px-5">
             <div class="flex flex-row items-center h-8">
@@ -113,7 +113,7 @@
     </div>
     <div class="fixed flex flex-col top-0 left-0 w-full h-full bg-black/50 z-30 transition-all duration-300 md:hidden" @click="sidebar = !sidebar" :class="{'hidden': sidebar, 'block': !sidebar}"></div>
     <div x-data="{dropdown_app: false}" id="content-area" class="fixed flex flex-col top-0 right-0 bottom-0 transition-all duration-300" :class="{'left-0 md:left-60': sidebar, 'left-0': !sidebar}">
-      <div id="content-header" class="flex justify-between h-16 z-20 bg-white dark:bg-dark-content border-green-500 border-b-2 px-5">
+      <div id="content-header" class="flex justify-between h-16 z-20 bg-white dark:bg-[#0C2E3D] border-green-500 border-b-2 px-5">
           <div class="py-4">
             <button class="text-2xl me-2 dark:text-gray-300" @click="sidebar = !sidebar" :class="{'md:hidden': sidebar}">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

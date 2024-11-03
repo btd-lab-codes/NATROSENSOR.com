@@ -72,7 +72,7 @@ def fourpl(dataframe, size):
 
     print(f'The LR has a formula: y = {popt_l[0]} + {popt[1]}.')
 
-    return FigureCanvas(fig), popt_l[0], popt[1]
+    return FigureCanvas(fig), popt_l[0], popt[1], c50, c50_y
 
 #Get the 4PL logistic curve 
 def fourpl_model(x, r_min, slope, ec50, r_max):

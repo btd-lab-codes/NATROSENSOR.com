@@ -54,6 +54,8 @@ class Records(models.Model):
     municipality = models.CharField(max_length=255)
     barangay = models.CharField(max_length=255)
     address = models.TextField()
+    concentration = models.CharField(max_length=255, default="0")
+    absorbance = models.CharField(max_length=255, default="0")
    
     class Meta:
         ordering = ['-created_at']
@@ -76,7 +78,9 @@ class Records(models.Model):
             'province': self.province,
             'municipality': self.municipality,
             'barangay': self.barangay,
-            'address': self.address
+            'address': self.address,
+            'concentration': self.concentration,
+            'absorbance': self.absorbance
         }
 
         return record
@@ -101,17 +105,10 @@ class Event(models.Model):
             'time': self.time.strftime("%I:%M %p"),
             'detail': self.detail
         }
-
         return event
     
-    def getYear(self):
-        return self.date.year
-    
-    def getMonth(self):
-        return self.date.month
-    
-    def getDay(self):
-        return self.date.day
+    def getDate(self):
+        return self.date.strftime('%B %d, %Y').lstrip('0').replace(" 0", " ")
 
 class Otp(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="otp")

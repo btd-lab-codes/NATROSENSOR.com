@@ -77,11 +77,10 @@
             <div class="flex flex-col bg-white dark:bg-dark-secondary h-auto md:h-full rounded-lg shadow-2xl">
                 <div class="flex flex-col dark:bg-dark-alt rounded-t-lg px-5 py-3">
                     <span class="font-notosans font-semibold text-xl dark:text-white"> Graph </span>
-                    <span class="font-notosans text-xs dark:text-white"> The total number of processes within the week/month </span>
+                    <span class="font-notosans text-xs dark:text-white"> The total number of processes within the week </span>
                 </div>
-                <div class="flex flex-col justify-center items-center h-full px-5 py-8">
+                <div class="relative flex flex-col justify-center items-center">
                     <img src="{{graph}}">
-                    {% comment %} <span class="font-notosans font-bold text-6xl dark:text-white"> {{user_count}} </span> {% endcomment %}
                 </div>
             </div>
             <div class="relative flex flex-col bg-white dark:bg-dark-secondary h-auto md:h-full rounded-lg shadow-2xl">
@@ -125,8 +124,19 @@
                 </svg>  
             </button>
         </div>
-        <div class="flex flex-col overflow-x-hidden overflow-y-auto bg-white dark:bg-dark-secondary p-6 shadow-lg w-full max-w-lg rounded-b-lg mx-4 gap-2">
+        <div class="flex flex-col overflow-x-hidden overflow-y-auto bg-white dark:bg-dark-secondary p-6 shadow-lg w-full max-w-lg mx-4 gap-2">
             <div class="grid grid-cols-2 gap-2">
+                <div class="relative flex flex-col text-white font-poppins font-bold gap-1">
+                    <span class="text-lg"> Concentration </span>
+                    <span class="text-sm text-gray-300 ps-2"> {{process.first.getData.concentration}} </span>
+                </div>
+                <div class="relative flex flex-col text-white font-poppins font-bold gap-1">
+                    <span class="text-lg"> Absorbance </span>
+                    <span class="text-sm text-gray-300 ps-2"> {{process.first.getData.absorbance}} </span>
+                </div>
+                <div class="flex flex-col col-span-2">
+                    <hr class="my-3" />
+                </div>
                 <div class="relative flex flex-col col-span-2 text-white font-poppins font-bold gap-1">
                     <span class="text-lg"> 4PL Graph </span>
                     <img src="{{process.first.getData.graph}}">
@@ -243,10 +253,9 @@
                         {% endif %} 
                     </span>
                 </div>
-                <div class="flex flex-col col-span-2">
-                    <hr class="my-3" />
-                </div>
             </div> 
+        </div>
+        <div class="flex justify-between dark:bg-dark-alt w-full max-w-lg rounded-b-lg shadow-lg px-6 py-3">
         </div>
     </div>
 </div>

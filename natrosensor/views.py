@@ -1,12 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
-from django.db.models.functions import TruncDate
 from django.utils import timezone
-from scipy.optimize import curve_fit
+from django.db.models import Avg
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from io import StringIO
 from datetime import datetime, timedelta
 from .forms import SignupForm, LoginForm
 from .models import Otp, Event, Records, User
@@ -15,6 +12,7 @@ from .module import fourpl
 import matplotlib.pyplot as plt
 import folium, branca, geocoder, base64, io, os
 import pandas as pd
+import osmnx as ox
 
 LOC_INFO = {
     'region': pd.read_csv(os.path.join(os.path.dirname(__file__), "module/csv/table_region.csv")).to_dict('split')['data'],
@@ -23,10 +21,9 @@ LOC_INFO = {
     'barangay': pd.read_csv(os.path.join(os.path.dirname(__file__), "module/csv/table_barangay.csv")).to_dict('split')['data']
 }
 
-map_markers = []
-
 @login_required(login_url='/login')
 def test(request):
+    # Records.objects.filter(user=request.user).delete()
     template_name = "natrosensor/test.html"
     return render(request, template_name, context={"template_name": "Test"})
 
@@ -92,27 +89,64 @@ def verify(request, email):
             user.is_active = True
             user.save()
             return redirect('/login')
+        
+def geocode_coord(name):
+    name = name + ", Philippines"
+    gdf = ox.geocode_to_gdf(name)
+    geojson = gdf.__geo_interface__
+    center = [gdf.geometry.centroid.y.mean(), gdf.geometry.centroid.x.mean()]
+    return geojson, center
+
+def map_geojson(map, records, geojson, center, name, antibiotics):
+    if records.count() != 0:
+        concentration = records.aggregate(Avg('concentration'))['concentration__avg']
+        absorbance = records.aggregate(Avg('absorbance'))['absorbance__avg']
+        popup = f'''
+        <div style="width: 250px; text-align: center;">
+            <h6 style="margin: 0;">Data for {name} { "(" + antibiotics + ")" if antibiotics != "All" else ""}</h6>
+            <p style="margin: 5px 0;">Concentration (avg): <strong>{concentration}</strong></p>
+            <p style="margin: 5px 0;">Absorbance (avg): <strong>{absorbance}</strong></p>
+        </div>
+        '''
+
+        folium.GeoJson(
+            geojson,
+            style_function=lambda feature: {
+                'fillColor': 'red',
+                'color': 'red',
+                'weight': 1,
+                'fillOpacity': absorbance
+            }
+        ).add_to(map)
+
+        folium.Marker(
+            location=center, 
+            popup=folium.Popup(popup, max_width=300),
+            icon=folium.Icon(icon='info-sign', color='blue')
+        ).add_to(map)
 
 @login_required(login_url='/login')
-def location(request):
-    global map_markers
+def location(request, antibiotics="All", division="Region"):
+    if request.method == "POST":
+        division = request.POST.get('location_division')
+        antibiotics = request.POST.get('location_antibiotics')
 
-    g = geocoder.google([45.15, -75.14], method='reverse')
-    g.latlng = (14.1769, 121.2225)
-    g.city = "Los Baños"
-    g.country = "PH"
-    g.postal = "4030"
+    _, default_center = geocode_coord("NCR")
+    map = folium.Map(location=default_center, zoom_start=7)
+    records = Records.objects.filter(user=request.user)
 
-    map = folium.Map(location=g.latlng, zoom_start=5)
-    folium.Marker(g.latlng, popup=g.address,icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
-
-    current_location = geocoder.ip("me")
-    g_curr = geocoder.osm(current_location.latlng, method='reverse')
-    print(g_curr.address) 
-    print(g_curr) 
-
-    for marker in map_markers:
-        folium.Marker([marker['lat'], marker['lng']], popup="[" + str(marker['lat']) + "," + str(marker['lng']) + "]" + str(marker['addr']), icon=folium.Icon(color='blue', icon='crosshairs', prefix='fa')).add_to(map)
+    if division == "Region":
+        for name in list(records.values_list('region', flat=True).distinct()):
+            region_geojson, region_center = geocode_coord(name)
+            records_region = records.filter(region=name)
+            records_region = records_region.filter(antibiotics=antibiotics) if antibiotics != "All" else records_region
+            map_geojson(map, records_region, region_geojson, region_center, name, antibiotics)
+    elif division == "Province":
+        for name in list(records.values_list('province', flat=True).distinct()):
+            province_geojson, province_center = geocode_coord(name)
+            records_province = records.filter(province=name)
+            records_province = records_province.filter(antibiotics=antibiotics) if antibiotics != "All" else records_province
+            map_geojson(map, records_province, province_geojson, province_center, name, antibiotics)
 
     template_name = "natrosensor/location.html"
     map.add_child(folium.LatLngPopup())
@@ -120,13 +154,13 @@ def location(request):
     fig = branca.element.Figure(height='100%')
     fig.add_child(map)
     map_embed = fig._repr_html_()
-    return render(request, template_name, context={"template_name": "Location", "map": map_embed, "location": g})
+    return render(request, template_name, context={"template_name": "Location", "map": map_embed, "loc_info": LOC_INFO, "antibiotics": antibiotics, "division": division})
 
 @login_required(login_url='/login')
 def dashboard(request):
     first_name = request.user.first_name if request.user.is_authenticated else "User"
     process = Records.objects.filter(user=request.user)
-    events = Event.objects.filter(user=request.user)
+    events = Event.objects.filter(user=request.user).filter(date__gte=timezone.now().date())
     user_count = User.objects.all().count()    
     process_count = {}
 
@@ -134,7 +168,7 @@ def dashboard(request):
     for index in range(7, 0, -1):
         start = today - timedelta(days=index-1)
         proc = Records.objects.filter(user=request.user).filter(created_at__date=start)
-        process_count[timezone.localdate(timezone.make_aware(start)).strftime("%B %d, %Y")] = proc.count()
+        process_count[timezone.localdate(timezone.make_aware(start)).strftime("%m/%d/%Y")] = proc.count()
 
     label = list(process_count.keys())
     value = list(process_count.values())
@@ -143,6 +177,8 @@ def dashboard(request):
     plt.plot(label, value, marker='o')
     plt.xlabel("Date (Last 7 Days)")
     plt.ylabel("Process Count")
+    plt.xticks(rotation=10)
+    plt.tight_layout()
 
     fig = FigureCanvas(fig)
     imgdata = io.BytesIO()
@@ -174,7 +210,7 @@ def process(request):
 
         df = pd.read_csv(process_file)
         size = fourpl.graph_settings()
-        fig, y_int, slope = fourpl.fourpl(df, size)
+        fig, y_int, slope, c50, c50_y = fourpl.fourpl(df, size)
 
         imgdata = io.BytesIO()
         fig.print_png(imgdata)
@@ -185,6 +221,8 @@ def process(request):
         request.session['graph'] = "data:image/png;base64," + graph
         request.session['y_int'] = y_int
         request.session['slope'] = slope
+        request.session['c50'] = c50
+        request.session['c50_y'] = c50_y
 
         request.session.modified = True
         return redirect('/result')
@@ -245,6 +283,8 @@ def result(request):
     graph = request.session.get('graph')
     y_int = request.session.get('y_int')
     slope = request.session.get('slope') 
+    c50 = request.session.get('c50')
+    c50_y = request.session.get('c50_y')
 
     if request.method == "POST":
         new_result = Records(
@@ -260,9 +300,11 @@ def result(request):
             ph=process['ph'], 
             note=process['note'], 
             graph=graph, 
+            concentration=c50,
+            absorbance=c50_y,
             user=request.user
         )
         new_result.save()
 
     template_name = "natrosensor/result.html"
-    return render(request, template_name, context={"template_name": "Result", "graph": graph, "y_int": y_int, "slope": slope, "process": process})
+    return render(request, template_name, context={"template_name": "Result", "graph": graph, "y_int": y_int, "slope": slope, "c50": c50, "c50_y": c50_y, "process": process})
