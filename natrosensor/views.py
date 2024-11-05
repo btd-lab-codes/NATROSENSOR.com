@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import folium, branca, geocoder, base64, io, os
 import pandas as pd
 import osmnx as ox
+import pyfirmata2, time
 
 LOC_INFO = {
     'region': pd.read_csv(os.path.join(os.path.dirname(__file__), "module/csv/table_region.csv")).to_dict('split')['data'],
@@ -23,7 +24,19 @@ LOC_INFO = {
 
 @login_required(login_url='/login')
 def test(request):
-    # Records.objects.filter(user=request.user).delete()
+    # port = pyfirmata2.Arduino.AUTODETECT  # Automatically detect the port if unsure
+    # # Initialize the board
+    # board = pyfirmata2.Arduino(port)
+    # # Blink an LED on a digital pin (e.g., D4)
+    # pin = board.get_pin('d:4:o')  # 'd' for digital, '4' for GPIO4 (D4), 'o' for output
+
+    # # Blink the LED in a loop
+    # while True:
+    #     pin.write(1)  # Turn on
+    #     time.sleep(1)
+    #     pin.write(0)  # Turn off
+    #     time.sleep(1)
+
     template_name = "natrosensor/test.html"
     return render(request, template_name, context={"template_name": "Test"})
 

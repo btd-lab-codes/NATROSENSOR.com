@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import osmnx as ox
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -154,3 +155,7 @@ INTERNAL_IPS = [
 
 CSRF_TRUSTED_ORIGINS = ['https://natrosensor.org']
 NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+
+# Configure global settings using the settings module
+ox.settings.cache_folder = 'cache'
+ox.settings.use_cache = True
