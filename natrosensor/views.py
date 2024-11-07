@@ -111,51 +111,52 @@ def center_geojson(name):
     return geojson, center
 
 def map_geojson(map, records, geojson, center, name, antibiotics):
-    concentration = records.aggregate(Avg('concentration'))['concentration__avg']
-    absorbance = records.aggregate(Avg('absorbance'))['absorbance__avg']
-    popup = f'''
-    <div style="width: 250px; text-align: center; gap: 10px;">
-        <h6 style="font-size: 16px;"><strong>Data for {name} { "(" + antibiotics + ")" if antibiotics != "All" else ""}</strong></h6>
-        <div style="display: flex; flex-wrap: wrap; font-size: 12px;">
-            <div style="flex: 1 1 0; text-align: center;">
-                <p style="margin: 0;"><strong>Total Count</strong></p>
+    if records.count() != 0:
+        concentration = records.aggregate(Avg('concentration'))['concentration__avg']
+        absorbance = records.aggregate(Avg('absorbance'))['absorbance__avg']
+        popup = f'''
+        <div style="width: 250px; text-align: center; gap: 10px;">
+            <h6 style="font-size: 16px;"><strong>Data for {name} { "(" + antibiotics + ")" if antibiotics != "All" else ""}</strong></h6>
+            <div style="display: flex; flex-wrap: wrap; font-size: 12px;">
+                <div style="flex: 1 1 0; text-align: center;">
+                    <p style="margin: 0;"><strong>Total Count</strong></p>
+                </div>
+                <div style="flex: 1 1 0; text-align: center;">
+                    <p style="margin: 0;"><strong>Concentration (avg)</strong></p>
+                </div>
+                <div style="flex: 1 1 0; text-align: center;">
+                    <p style="margin: 0;"><strong>Absorbance (avg)</strong></p>
+                </div>
             </div>
-            <div style="flex: 1 1 0; text-align: center;">
-                <p style="margin: 0;"><strong>Concentration (avg)</strong></p>
-            </div>
-            <div style="flex: 1 1 0; text-align: center;">
-                <p style="margin: 0;"><strong>Absorbance (avg)</strong></p>
+            <div style="display: flex; flex-wrap: wrap; font-size: 14px; margin-top: 10px;">
+                <div style="flex: 1 1 0; text-align: center;">
+                    <p style="margin: 0;"><strong>{records.count()}</strong></p>
+                </div>
+                <div style="flex: 1 1 0; text-align: center;">
+                    <p style="margin: 0;"><strong>{round(concentration, 4)}</strong></p>
+                </div>
+                <div style="flex: 1 1 0; text-align: center;">
+                    <p style="margin: 0;"><strong>{round(absorbance, 4)}</strong></p>
+                </div>
             </div>
         </div>
-        <div style="display: flex; flex-wrap: wrap; font-size: 14px; margin-top: 10px;">
-            <div style="flex: 1 1 0; text-align: center;">
-                <p style="margin: 0;"><strong>{records.count()}</strong></p>
-            </div>
-            <div style="flex: 1 1 0; text-align: center;">
-                <p style="margin: 0;"><strong>{round(concentration, 4)}</strong></p>
-            </div>
-            <div style="flex: 1 1 0; text-align: center;">
-                <p style="margin: 0;"><strong>{round(absorbance, 4)}</strong></p>
-            </div>
-        </div>
-    </div>
-    '''
+        '''
 
-    folium.GeoJson(
-        geojson,
-        style_function=lambda feature: {
-            'fillColor': 'red',
-            'color': 'red',
-            'weight': 1,
-            'fillOpacity': absorbance
-        }
-    ).add_to(map)
+        folium.GeoJson(
+            geojson,
+            style_function=lambda feature: {
+                'fillColor': 'red',
+                'color': 'red',
+                'weight': 1,
+                'fillOpacity': absorbance
+            }
+        ).add_to(map)
 
-    folium.Marker(
-        location=center, 
-        popup=folium.Popup(popup, max_width=300),
-        icon=folium.Icon(icon='info-sign', color='blue')
-    ).add_to(map)
+        folium.Marker(
+            location=center, 
+            popup=folium.Popup(popup, max_width=300),
+            icon=folium.Icon(icon='info-sign', color='blue')
+        ).add_to(map)
 
 @login_required(login_url='/login')
 def location(request, antibiotics="All", division="Region"):
