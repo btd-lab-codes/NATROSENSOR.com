@@ -103,7 +103,7 @@ def verify(request, email):
             user.save()
             return redirect('/login')
         
-def geocode_coord(name):
+def center_geojson(name):
     name = name + ", Philippines"
     gdf = ox.geocode_to_gdf(name)
     geojson = gdf.__geo_interface__
@@ -111,32 +111,51 @@ def geocode_coord(name):
     return geojson, center
 
 def map_geojson(map, records, geojson, center, name, antibiotics):
-    if records.count() != 0:
-        concentration = records.aggregate(Avg('concentration'))['concentration__avg']
-        absorbance = records.aggregate(Avg('absorbance'))['absorbance__avg']
-        popup = f'''
-        <div style="width: 250px; text-align: center;">
-            <h6 style="margin: 0;">Data for {name} { "(" + antibiotics + ")" if antibiotics != "All" else ""}</h6>
-            <p style="margin: 5px 0;">Concentration (avg): <strong>{concentration}</strong></p>
-            <p style="margin: 5px 0;">Absorbance (avg): <strong>{absorbance}</strong></p>
+    concentration = records.aggregate(Avg('concentration'))['concentration__avg']
+    absorbance = records.aggregate(Avg('absorbance'))['absorbance__avg']
+    popup = f'''
+    <div style="width: 250px; text-align: center; gap: 10px;">
+        <h6 style="font-size: 16px;"><strong>Data for {name} { "(" + antibiotics + ")" if antibiotics != "All" else ""}</strong></h6>
+        <div style="display: flex; flex-wrap: wrap; font-size: 12px;">
+            <div style="flex: 1 1 0; text-align: center;">
+                <p style="margin: 0;"><strong>Total Count</strong></p>
+            </div>
+            <div style="flex: 1 1 0; text-align: center;">
+                <p style="margin: 0;"><strong>Concentration (avg)</strong></p>
+            </div>
+            <div style="flex: 1 1 0; text-align: center;">
+                <p style="margin: 0;"><strong>Absorbance (avg)</strong></p>
+            </div>
         </div>
-        '''
+        <div style="display: flex; flex-wrap: wrap; font-size: 14px; margin-top: 10px;">
+            <div style="flex: 1 1 0; text-align: center;">
+                <p style="margin: 0;"><strong>{records.count()}</strong></p>
+            </div>
+            <div style="flex: 1 1 0; text-align: center;">
+                <p style="margin: 0;"><strong>{round(concentration, 4)}</strong></p>
+            </div>
+            <div style="flex: 1 1 0; text-align: center;">
+                <p style="margin: 0;"><strong>{round(absorbance, 4)}</strong></p>
+            </div>
+        </div>
+    </div>
+    '''
 
-        folium.GeoJson(
-            geojson,
-            style_function=lambda feature: {
-                'fillColor': 'red',
-                'color': 'red',
-                'weight': 1,
-                'fillOpacity': absorbance
-            }
-        ).add_to(map)
+    folium.GeoJson(
+        geojson,
+        style_function=lambda feature: {
+            'fillColor': 'red',
+            'color': 'red',
+            'weight': 1,
+            'fillOpacity': absorbance
+        }
+    ).add_to(map)
 
-        folium.Marker(
-            location=center, 
-            popup=folium.Popup(popup, max_width=300),
-            icon=folium.Icon(icon='info-sign', color='blue')
-        ).add_to(map)
+    folium.Marker(
+        location=center, 
+        popup=folium.Popup(popup, max_width=300),
+        icon=folium.Icon(icon='info-sign', color='blue')
+    ).add_to(map)
 
 @login_required(login_url='/login')
 def location(request, antibiotics="All", division="Region"):
@@ -144,22 +163,28 @@ def location(request, antibiotics="All", division="Region"):
         division = request.POST.get('location_division')
         antibiotics = request.POST.get('location_antibiotics')
 
-    _, default_center = geocode_coord("NCR")
+    _, default_center = center_geojson("NCR")
     map = folium.Map(location=default_center, zoom_start=7)
     records = Records.objects.filter(user=request.user)
 
     if division == "Region":
-        for name in list(records.values_list('region', flat=True).distinct()):
-            region_geojson, region_center = geocode_coord(name)
+        for name in list(set(records.values_list('region', flat=True).distinct())):
+            region_geojson, region_center = center_geojson(name)
             records_region = records.filter(region=name)
             records_region = records_region.filter(antibiotics=antibiotics) if antibiotics != "All" else records_region
             map_geojson(map, records_region, region_geojson, region_center, name, antibiotics)
     elif division == "Province":
-        for name in list(records.values_list('province', flat=True).distinct()):
-            province_geojson, province_center = geocode_coord(name)
+        for name in list(set(records.values_list('province', flat=True).distinct())):
+            province_geojson, province_center = center_geojson(name)
             records_province = records.filter(province=name)
             records_province = records_province.filter(antibiotics=antibiotics) if antibiotics != "All" else records_province
             map_geojson(map, records_province, province_geojson, province_center, name, antibiotics)
+    elif division == "Municipality":
+        for municipality, province in list(set(records.values_list('municipality', 'province').distinct())):
+            municipality_geojson, municipality_center = center_geojson(municipality + ", " + province)
+            records_municipality = records.filter(municipality=municipality, province=province)
+            records_municipality = records_municipality.filter(antibiotics=antibiotics) if antibiotics != "All" else records_municipality
+            map_geojson(map, records_municipality, municipality_geojson, municipality_center, municipality + ", " + province, antibiotics)
 
     template_name = "natrosensor/location.html"
     map.add_child(folium.LatLngPopup())
