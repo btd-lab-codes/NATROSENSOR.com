@@ -42,6 +42,9 @@ module.exports = {
         // '../../**/*.py'
         './theme/static_src/**/*.js',
     ],
+    safelist: [
+        ...Array.from({ length: 101 }, (_, i) => `h-[${i}%]`),
+    ],
     theme: {
         extend: {
             fontFamily: { 

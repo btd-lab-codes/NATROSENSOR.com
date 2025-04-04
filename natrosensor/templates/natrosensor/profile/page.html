@@ -1,0 +1,99 @@
+{% extends '../ui/sidebar.html' %}
+{% load static %}
+{% load filters %}
+
+{% block name %} {{template_name}} {% endblock name %}
+{% block section %}
+<div x-data="successTrigger('editProfileBtn')" class="absolute inset-0 p-0 md:p-4">
+    <div x-data="{name: 'View'}" class="flex w-full h-full bg-gray-400 dark:bg-gray-800 aspect-square md:rounded-lg md:border border-emerald-800 dark:border-emerald-300 component-shadow dark:shadow-lg">
+        <div x-show="name == 'View'" class="flex flex-col flex-grow overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-cyan-950/80 md:rounded-lg shadow-inner p-4">
+            <div class="flex flex-col md:flex-row w-full md:min-h-40 p-3 gap-5">
+                <div class="flex justify-center items-center h-full">
+                    <span class="flex justify-center items-center bg-emerald-300/80 dark:bg-emerald-600 dark:text-white rounded-lg w-32 h-32 text-5xl font-semibold border-2 border-emerald-600 dark:border-emerald-300"> {{ user.first_name|first }}{{ user.last_name|first }} </span>
+                </div> 
+                <div class="flex flex-col items-center md:items-start h-full">
+                    <span class="font-semibold font-poppins text-3xl text-slate-900 dark:text-white text-center md:text-start"> {{ user.first_name }} {{ user.last_name }} </span>
+                    <span class="font-poppins text-slate-900 dark:text-gray-300 text-center md:text-start"> {{ user.email }} </span>
+                    <span class="font-poppins text-slate-900 dark:text-gray-300 text-center md:text-start"> {{ user.institution }} </span>
+                    <div class="mt-auto pt-2">
+                        <button @click="name = 'Edit'" type="button" class="flex justify-center items-center text-white bg-emerald-600 hover:bg-emerald-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center"> Edit Profile </button>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-slate-900 dark:border-gray-300 mx-3 pb-2" />
+            <div class="flex flex-col h-full border border-gray-600 dark:border-gray-500 rounded-lg mx-3">
+                {% include '../ui/dashboard_card.html' with card_title="Process Graph" %}
+                <div class="flex w-full h-full min-h-64 overflow-x-auto overflow-y-hidden justify-evenly bg-gray-50 dark:bg-cyan-950/80 rounded-b-lg shadow-inner p-4 gap-3">
+                    {% for date, count in process.items %}
+                    <div class="flex flex-col w-5 justify-end gap-1">
+                        <div class="flex text-xs justify-center text-center font-bold text-slate-900 dark:text-white"> {{count}} </div>
+                        <div class="flex flex-col h-[{{count|compute_height:max}}%] bg-gradient-to-b from-emerald-400 via-emerald-500 to-emerald-600 rounded border border-slate-600 dark:border-slate-400"></div>
+                        <div class="flex text-xs justify-center text-center font-bold text-slate-900 dark:text-white"> {{date}} </div>
+                    </div>
+                    {% endfor %}
+                </div> 
+            </div>
+        </div>
+        <form action="{% url 'natrosensor:profile' %}" method="POST" hx-post="{% url 'natrosensor:profile' %}" hx-trigger="submit" hx-swap="none" @submit="loading = true" x-show="name == 'Edit'" x-data="{ inputs: { fname: '{{user.first_name}}', lname: '{{user.last_name}}', institution: '{{user.institution}}'}, defaults: { fname: '{{user.first_name}}', lname: '{{user.last_name}}', institution: '{{user.institution}}'}, errors: {}}" class="flex flex-col flex-grow overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-cyan-950/80 md:rounded-lg shadow-inner">
+            {% csrf_token %}
+            {% include '../ui/dashboard_card.html' with page="true" card_title="Edit Profile" %}
+            <div class="flex flex-col md:flex-row w-full md:min-h-40 px-8 py-5 gap-5">
+                <div class="flex justify-center md:justify-start h-full">
+                    <span class="flex justify-center items-center bg-emerald-300/80 dark:bg-emerald-600 dark:text-white rounded-lg w-32 h-32 text-5xl font-semibold border-2 border-emerald-600 dark:border-emerald-300"> {{ user.first_name|first }}{{ user.last_name|first }} </span>
+                </div> 
+                <div class="flex flex-col justify-evenly w-full h-full">
+                    <div class="relative w-full" :class="{'mb-2': errors.fname, 'mb-5': !errors.fname}">
+                        <input id="profile_fname" type="text" name="first_name" x-model="inputs.fname" class="block rounded-lg ps-4 px-2.5 pb-3.5 pt-8 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans component-shadow dark:shadow-lg" value="{{user.first_name}}">
+                        <label for="profile_fname" class="absolute ps-2 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-5 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans font-semibold"> First Name <span class="text-red-500"> * </span></label>
+                    </div>
+                    <span x-show="errors.fname" class="font-bold ms-2 mb-3 text-sm text-red-500 dark:text-red-400"> First name cannot be empty </span>
+                    <div class="relative w-full" :class="{'mb-2': errors.lname, 'mb-5': !errors.lname}">
+                        <input id="profile_lname" type="text" name="last_name" x-model="inputs.lname" class="block rounded-lg ps-4 px-2.5 pb-3.5 pt-8 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans component-shadow dark:shadow-lg" value="{{user.last_name}}">
+                        <label for="profile_lname" class="absolute ps-2 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-5 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans font-semibold"> Last Name <span class="text-red-500"> * </span></label>
+                    </div>
+                    <span x-show="errors.lname" class="font-bold ms-2 mb-3 text-sm text-red-500 dark:text-red-400"> Last name cannot be empty </span>
+                    <div class="relative w-full" :class="{'mb-2': errors.institution, 'mb-5': !errors.institution}">
+                        <input id="profile_institution" type="text" name="institution" x-model="inputs.institution" class="block rounded-lg ps-4 px-3.5 pb-2.5 pt-8 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans component-shadow dark:shadow-lg" value="{{user.institution}}">
+                        <label for="profile_institution" class="absolute ps-2 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-5 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans font-semibold"> Institution <span class="text-red-500"> * </span></label>
+                    </div>
+                    <span x-show="errors.institution" class="font-bold ms-2 text-sm text-red-500 dark:text-red-400"> Institution cannot be empty </span>
+                </div>
+            </div>
+            <div class="flex mt-auto justify-between px-8 pb-5">
+                <button @click="name = 'View', errors = {}" type="reset" class="flex w-24 justify-center items-center text-white bg-emerald-600 hover:bg-emerald-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center"> Cancel </button>
+                <button @click="
+                        errors = {};
+                        for (const [key, value] of Object.entries(inputs)) {
+                            if (!value.trim()) errors[key] = true;
+                        }
+
+                        if (Object.keys(errors).length > 0) $event.preventDefault();
+                    " name="editProfileBtn" type="submit" class="flex w-24 justify-center items-center text-white bg-emerald-600 hover:bg-emerald-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:dark:bg-gray-800 disabled:dark:hover:bg-gray-800 disabled:text-gray-600 disabled:border-gray-400 disabled:cursor-not-allowed" :disabled="Object.keys(inputs).every(key => inputs[key] === defaults[key])"> 
+                    <span x-cloak x-show="!loading"> Save </span>
+                    <div x-cloak x-show="loading" class="flex items-center">
+                        {% include '../ui/svg.html' with class="animate-spin h-5 w-5 text-white" color="none" viewBox="0 0 24 24" path="../ui/svg/spinner.html" %}
+                    </div> 
+                </button>
+            </div>
+        </form>
+    </div>
+    <div x-cloak x-show="success" class="fixed inset-0 bg-black bg-opacity-50 z-50">
+        <div class="flex flex-col items-center justify-center h-screen p-6">    
+            <div class="flex bg-emerald-400 dark:bg-emerald-700 w-full max-w-lg rounded-t-lg shadow-xl p-4 items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-emerald-900 dark:text-green-500 rounded-full shadow-[-1px_0_6px_rgba(0,0,0,0.15),1px_0_6px_rgba(0,0,0,0.15)] dark:shadow-[-1px_0_6px_rgba(255,255,255,0.15),1px_0_6px_rgba(255,255,255,0.15)] border-emerald-500 dark:border-emerald-800">
+                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+                </svg>      
+                <span class="text-gray-800 dark:text-white text-lg font-poppins font-bold"> Success </span>
+            </div>
+            <div class="flex flex-col overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-cyan-950 p-6 rounded-b-lg shadow-lg w-full max-w-lg mx-4 gap-2">
+                <div class="flex flex-col font-poppins font-bold text-gray-800 pb-1">
+                    <span class="dark:text-gray-200"> Profile updated successfully </span>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" hx-get="{% url 'natrosensor:profile' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="flex w-24 justify-center items-center text-white bg-emerald-600 hover:bg-emerald-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center"> Confirm </button>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock section %}

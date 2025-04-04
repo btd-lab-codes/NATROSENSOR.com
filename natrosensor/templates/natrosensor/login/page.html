@@ -1,0 +1,43 @@
+{% extends '../base/page.html' %}
+{% load static %}
+{% load filters %}
+
+{% block page %}
+<div class="fixed flex inset-0 bg-black/30 dark:bg-black/70 justify-center items-center">
+    <div x-data="{error: {{error|lower}}, loading: false}" class="flex flex-col w-full h-full md:max-w-lg md:h-auto md:rounded-xl bg-cyan-950 justify-center md:border-4 md:border-green-500">
+        <form action="{% url 'natrosensor:login' %}" method="POST" hx-post="{% url 'natrosensor:login' %}" hx-trigger="submit" hx-target="body" hx-swap="outerHTML" @submit="loading = true" class="flex flex-col h-full bg-black/30 justify-center md:rounded-xl p-10 sm:px-20 md:px-10 gap-4">
+            {% csrf_token %}
+            <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-4xl font-extrabold font-poppins">NATRO<span class="text-white">SENSOR</span></span>
+            <div class="relative">
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                    {% include '../ui/svg.html' with class="w-4 h-4 text-gray-500 dark:text-white" color="currentColor" viewBox="0 0 20 16" path="../ui/svg/message.html" %}
+                </div>
+                <div @click="error = false">
+                    {{ form.email|addClass:'block rounded-lg ps-10 px-2.5 pb-3 pt-6 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-semibold component-shadow dark:shadow-lg input-autofill'}}
+                    <label for="email_login" class="absolute ps-10 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-4 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans">Email Address</label>
+                </div>
+            </div>
+            <div class="relative">  
+                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">  
+                    {% include '../ui/svg.html' with class="w-4 h-4 text-gray-500 dark:text-white" color="currentColor" viewBox="0 0 24 24" path="../ui/svg/lock.html" %}
+                </div>  
+                <div @click="error = false">      
+                    {{ form.password|addClass:'block rounded-lg ps-10 px-2.5 pb-3 pt-6 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans component-shadow dark:shadow-lg input-autofill'}}
+                    <label for="password_login" class="absolute ps-10 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-4 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans">Password</label>
+                </div>
+            </div>
+            <div class="flex flex-col gap-3">
+                <span x-cloak x-show="error" class="font-semibold ms-1 text-sm text-red-500 dark:text-red-400 font-poppins"> You have entered an invalid email or password </span> 
+                <a href="#" class="font-semibold ms-1 text-cyan-400 hover:underline font-poppins">Forgot password?</a>
+                <button type="submit" class="relative flex flex-col w-full items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-lg text-md px-5 py-2.5 text-center me-2 font-poppins shadow-lg"> 
+                    <span x-show="!loading"> Login </span>
+                    <div x-cloak x-show="loading" class="flex items-center">
+                        {% include '../ui/svg.html' with class="animate-spin h-6 w-6 text-white" color="none" viewBox="0 0 24 24" path="../ui/svg/spinner.html" %}
+                    </div> 
+                </button>
+                <span class="font-semibold font-poppins ms-1 justify-center text-white"> Don't have an account? <button type="button" hx-get="{% url 'natrosensor:signup' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="text-cyan-400 hover:underline"> Signup </button></span>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock page %}

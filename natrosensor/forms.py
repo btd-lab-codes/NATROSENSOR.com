@@ -9,12 +9,12 @@ class SignupForm(forms.ModelForm):
     last_name = forms.CharField()
     institution = forms.CharField()
 
-    email.widget.attrs.update({'id': 'email_signup', 'placeholder': ''})
-    password1.widget.attrs.update({'id': 'password_signup', 'placeholder': ''})
-    password2.widget.attrs.update({'id': 'password_confirm', 'placeholder': ''})
-    first_name.widget.attrs.update({'id': 'fname_signup', 'placeholder': ''})
-    last_name.widget.attrs.update({'id': 'lname_signup', 'placeholder': ''})
-    institution.widget.attrs.update({'id': 'inst_signup', 'placeholder': ''})
+    email.widget.attrs.update({'id': 'email_signup', 'x-model': 'inputs.email', 'autocomplete': 'off'})
+    password1.widget.attrs.update({'id': 'password_signup', 'x-model': 'inputs.password1'})
+    password2.widget.attrs.update({'id': 'password_confirm', 'x-model': 'inputs.password2'})
+    first_name.widget.attrs.update({'id': 'fname_signup', 'x-model': 'inputs.first_name', 'autocomplete': 'off'})
+    last_name.widget.attrs.update({'id': 'lname_signup', 'x-model': 'inputs.last_name', 'autocomplete': 'off'})
+    institution.widget.attrs.update({'id': 'inst_signup', 'x-model': 'inputs.institution', 'autocomplete': 'off'})
 
     class Meta:
         model = User

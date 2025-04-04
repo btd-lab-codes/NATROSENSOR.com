@@ -1,3 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    [x-cloak] {
+        display: none !important;
+    }
+
+    .input-autofill {
+        @apply [&:-webkit-autofill]:appearance-none
+               [&:-webkit-autofill]:border-b-2
+               [&:-webkit-autofill]:border-emerald-600
+               [&:-webkit-autofill]:focus:outline-none
+               [&:-webkit-autofill]:focus:ring-0
+               [&:-webkit-autofill]:focus:border-cyan-600
+               [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_#ffffff,-2px_0_6px_rgba(0,0,0,0.15),2px_0_6px_rgba(0,0,0,0.15)]  
+               [&:-webkit-autofill]:[-webkit-text-fill-color:black]
+               dark:[&:-webkit-autofill]:border-emerald-300
+               dark:[&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_#164e63]                 
+               dark:[&:-webkit-autofill]:[-webkit-text-fill-color:white] 
+               dark:[&:-webkit-autofill]:caret-white;
+    }
+
+    .input-remove-icon {
+        @apply [&::-webkit-calendar-picker-indicator]:opacity-0;
+    }
+
+    .component-shadow {
+        @apply shadow-[-2px_0_6px_rgba(0,0,0,0.15),2px_0_6px_rgba(0,0,0,0.15)] 
+               dark:shadow-[-2px_0_6px_rgba(255,255,255,0.15),2px_0_6px_rgba(255,255,255,0.15)];
+    }
+
+    .file-input-btn {
+        @apply file:outline-none 
+               file:border-0 
+               file:bg-gradient-to-r 
+               file:bg-cyan-950 
+               file:rounded-lg 
+               file:px-4 
+               file:text-white 
+               file:me-3 
+               hover:file:hover:bg-blue-500/80;
+    }
+}

@@ -1,0 +1,28 @@
+{% extends '../base/page.html' %}
+{% load static %}
+{% load filters %}
+
+{% block page %}
+<div class="absolute inset-0 bg-white dark:bg-cyan-900">
+    <div class="relative flex flex-col justify-center h-14 bg-white dark:bg-cyan-950 border-b-2 border-green-800 dark:border-green-400 px-5">
+        <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-2xl font-extrabold font-poppins">NATRO<span class="text-cyan-950 dark:text-gray-50">SENSOR</span></span>
+    </div>
+    <div class="relative flex flex-col justify-center bg-cover bg-no-repeat bg-bottom font-poppins" style="background-image: url({% static '/natrosensor/assets/antibiotic.jpg' %});">
+        <div class="flex flex-col h-full justify-center items-center gap-5 bg-black/70 p-8">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-24 h-24 text-white">
+                <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clip-rule="evenodd" />
+            </svg>
+            <div class="flex flex-col gap-3">
+                <span class="font-bold text-5xl text-white text-center"> Page Not Found </span>
+                <span class="text-lg text-white text-center"> The page you are looking for does not exist. </span>
+            </div>
+            {% if is_authenticated %}
+                <button type="button" hx-get="{% url 'natrosensor:dashboard' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="text-white bg-gradient-to-r from-cyan-950 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-bold rounded-lg px-8 py-2 text-center text-lg font-poppins"> Back to Dashboard </button>
+            {% else %}
+                <button type="button" hx-get="{% url 'natrosensor:login' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="text-white bg-gradient-to-r from-cyan-950 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-bold rounded-lg px-8 py-2 text-center text-lg font-poppins"> Back to Login </button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock page %}
+

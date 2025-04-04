@@ -1,0 +1,60 @@
+<script>
+    function countdownTimer() {
+        return {
+            success: '',
+            loading: false,
+            sendingCode: false,
+            errorMessage: '',
+            codeMessage: '',
+            valid_until: null,
+            timeLeft: '0',
+            intervalId: null,
+
+            startCountdown() {
+                if (this.intervalId) {
+                    clearInterval(this.intervalId);
+                }
+
+                this.intervalId = setInterval(() => {
+                    if (!this.valid_until) return;
+
+                    let diff = new Date(this.valid_until).getTime() - new Date().getTime();
+                    let minutes = Math.floor((diff / 1000) / 60).toString().padStart(2, '0');
+                    let seconds = Math.floor((diff / 1000) % 60).toString().padStart(2, '0');
+                    this.timeLeft = `Resend code in ${minutes}:${seconds}`;
+
+                    if (diff <= 0) {
+                        clearInterval(this.intervalId);
+                        this.timeLeft = '0';
+                        return;
+                    }  
+
+                }, 1000);
+            },
+            init() {
+                document.body.addEventListener('htmx:beforeRequest', (event) => {
+                    if (document.activeElement.name === 'codeBtn') {
+                        this.sendingCode = true;
+                    }
+                });
+
+                document.body.addEventListener('htmx:afterRequest', (event) => {
+                    if (document.activeElement.name === 'codeBtn') {
+                        let response = JSON.parse(event.detail.xhr.responseText);
+                        this.valid_until = response.valid_until;
+                        this.codeMessage = response.message;
+                        this.startCountdown()
+                        this.sendingCode = false;
+                    }
+
+                    if (document.activeElement.name === 'signupBtn') {
+                        let response = JSON.parse(event.detail.xhr.responseText);
+                        this.success = response.success;
+                        this.errorMessage = response.message;
+                        this.loading = false;
+                    }
+                });
+            }
+        };
+    }
+</script>

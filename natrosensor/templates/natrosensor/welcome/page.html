@@ -1,0 +1,107 @@
+{% extends '../base/page.html' %}
+{% load static %}
+{% load filters %}
+
+{% block page %}
+<div class="fixed inset-0">
+    <div class="flex h-14 inset-x-0 bg-white dark:bg-cyan-950 items-center border-b-2 border-green-800 dark:border-green-400 px-5 z-0">
+        <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-2xl font-extrabold font-poppins">NATRO<span class="text-cyan-950 dark:text-gray-50">SENSOR</span></span>
+    </div>
+    <div class="fixed flex flex-col top-14 bottom-0 inset-x-0 bg-cyan-950 z-0">
+        <div class="flex-grow h-screen overflow-x-hidden overflow-y-auto">
+            <div class="relative flex h-96 bg-cover bg-no-repeat bg-bottom border-b-2 border-green-800 dark:border-green-400" style="background-image: url({% static '/natrosensor/assets/antibiotic.jpg' %});">
+                <div class="absolute flex inset-0 bg-black/70 p-8 items-center">
+                    <div class="flex flex-col border-l-8 border-gray-50 p-8 gap-3">
+                        <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-4xl font-extrabold font-poppins">NATRO<span class="text-gray-50">SENSOR</span></span>
+                        <span class="text-gray-50 font-bold text-xl md:text-start font-notosans"> Experience the future of wastewater monitoring with our antibiotic detection technology </span>
+                        <div class="flex gap-3">
+                            <button type="button" hx-get="{% url 'natrosensor:login' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="text-white bg-gradient-to-r from-cyan-950 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-bold rounded-lg px-8 py-2 text-center text-lg font-poppins"> Login </button>
+                            <button type="button" hx-get="{% url 'natrosensor:signup' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="text-white bg-gradient-to-r from-green-400 via-green-600 to-green-800 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-bold rounded-lg px-8 py-2 text-center text-lg font-poppins"> Signup </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-[#E8F5E9] dark:bg-[#143232] h-auto border-b-2 border-green-800 dark:border-green-400 component-shadow dark:shadow-lg">
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 dark:bg-black/20 p-16 gap-8">
+                    <div class="flex flex-col sm:col-span-2 lg:col-span-4 gap-3">
+                        <span class="font-bold text-3xl text-cyan-950 dark:text-[#98ff98] text-center font-poppins"> Features </span>
+                        <span class="font-semibold text-cyan-950 dark:text-white text-sm text-center font-poppins"> Delivering extensive monitoring capabilities paired with in-depth analytical insights </span>
+                    </div>
+                    {% include '../ui/feature_section.html' with title="Detect" description="Detect details" path='../ui/svg/detect.html' %}
+                    {% include '../ui/feature_section.html' with title="Analyze" description="Analyze details" path='../ui/svg/analyze.html' %}
+                    {% include '../ui/feature_section.html' with title="Record" description="Record details" path='../ui/svg/record.html' %}
+                    {% include '../ui/feature_section.html' with title="Locate" description="Locate details" path='../ui/svg/locate.html' %}
+                </div>
+            </div>
+            <div class="flex flex-col bg-[#C8E6C9] dark:bg-[#092635] border-b-2 border-green-800 dark:border-green-400">
+                <div class="flex flex-col h-full p-16 gap-8 dark:bg-black/20">
+                    <div class="flex flex-col gap-3">
+                        <span class="font-bold text-3xl text-green-950 dark:text-cyan-300 text-center font-poppins"> Our Team </span>
+                        <span class="font-semibold text-green-950 dark:text-white text-sm text-center font-poppins"> Meet our dedicated team of experts, committed to delivering innovative solutions and exceptional service </span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2">
+                        {% include '../ui/project_staff.html' with image=project_leader.image name=project_leader.name position=project_leader.position extra_classes='sm:col-span-2' %}
+                        {% for image, name, position in project_staff %}
+                            {% include '../ui/project_staff.html' with image=image name=name position=position %}  
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="bg-[#E8F5E9] dark:bg-[#143232] border-b-2 border-green-800 dark:border-green-400 component-shadow dark:shadow-lg">
+                <div class="flex flex-col dark:bg-black/20 p-16 gap-8">
+                    <div class="flex flex-col sm:col-span-2 lg:col-span-4 gap-3">
+                        <span class="font-bold text-3xl text-cyan-950 dark:text-[#98ff98] text-center font-poppins"> Innovating the Future of Healthcare </span>
+                        <span class="font-semibold text-cyan-950 dark:text-white text-sm text-center font-poppins"> Explore groundbreaking research from the UPLB Biomedical Technology and Devices Laboratory </span>
+                    </div>
+                    <div class="max-w-sm mx-auto">
+                        <a href="https://www.facebook.com/UPLBBiomedicalTechnologyAndDevicesLab" target="_blank" class="block group">
+                          <div class="relative overflow-hidden rounded-lg component-shadow dark:shadow-lg">
+                            <img src="{% static '/natrosensor/assets/biomedical-logo.jpg' %}" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105">
+                          </div>
+                          <div class="mt-4">
+                            <h2 class="text-lg font-semibold text-gray-800 group-hover:text-blue-600 dark:text-[#98ff98] dark:group-hover:text-cyan-300">UPLB Biomedical Technology and Devices Laboratory</h2>
+                            <p class="text-sm text-gray-600 dark:text-gray-50">Join us on the journey to revolutionize biomedical science!</p>
+                          </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-dark-blue">
+                <div class="flex flex-col dark:bg-black/50 p-8 gap-8">
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 p-5 gap-8">
+                        <div class="flex flex-col text-gray-50">
+                            <span class="font-bold mb-2 text-lg font-poppins"> About NATROSENSOR</span>          
+                            <span class="text-justify">The <span class="font-bold">NATROSENSOR</span> aims to develop a multiplex detection device that can be used to detect the presence of various antibiotics for monitoring the success of wastewater treatment facilities. it can also be used to detect the presence of various antibiotics in other substrates such as surface and ground water, and food products such as milk.</span>
+                        </div>
+                        <div class="flex flex-col text-gray-50">
+                            <span class="font-bold mb-2 font-poppins"> Contact </span>
+                            <div class="flex gap-3">
+                                {% include '../ui/svg.html' with class="w-5 h-5 me-2" color="currentColor" viewBox="0 0 24 24" path="../ui/svg/contact.html" %}
+                                <div class="flex flex-col">
+                                    <span> A108-A109 CEAT Bldg. A., Pili Drive, </span>
+                                    <span class="mb-3"> UP Los Ba&ntilde;os, College, Laguna 4031 </span>
+                                    {{map | safe}}
+                                </div>  
+                            </div>
+                        </div>
+                        <div class="flex flex-col md:col-span-2 lg:col-span-1 text-gray-50">
+                            <span class="font-bold mb-2 font-poppins"> Agency </span>
+                            <div class="flex flex-wrap gap-1 justify-center">
+                                {% include '../ui/image.html' with class="flex w-24 h-24" image="dost-logo.jpg" img_class="rounded-lg" %}
+                                {% include '../ui/image.html' with class="flex w-24 h-24" image="uplb-logo.jpg" img_class="rounded-lg" %}
+                                {% include '../ui/image.html' with class="flex w-24 h-24" image="ceat-logo.jpg" img_class="rounded-lg" %}
+                                {% include '../ui/image.html' with class="flex w-24 h-24" image="des-logo.jpg" img_class="rounded-lg" %}
+                                {% include '../ui/image.html' with class="flex w-48 h-24" image="biomedical-logo.jpg" img_class="rounded-lg" %}
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <hr class="border-gray-300" />
+                        <span class="mt-2 text-white text-xs"> Copyright &copy; 2024. All Rights Reserved by Project NATROSENSOR.</span> 
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page %}

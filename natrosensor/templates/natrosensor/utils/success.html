@@ -1,0 +1,17 @@
+<script>
+    function successTrigger(targetButton) {
+        return {
+            success: false,
+            loading: false,
+            init() {
+                document.body.addEventListener('htmx:afterRequest', (event) => {
+                    if (document.activeElement.name === targetButton) {
+                        let response = JSON.parse(event.detail.xhr.responseText);
+                        this.success = response.success;
+                        this.loading = false;
+                    }
+                });
+            }
+        }
+    }
+</script>

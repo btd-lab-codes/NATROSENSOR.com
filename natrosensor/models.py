@@ -1,7 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.hashers import check_password
 from django.conf import settings
 from django.utils import timezone
+from django.utils.timezone import now
+
+from .utils.valid_until import valid_until
 
 class CustomUserManager(BaseUserManager):
     def _create_user(self, email, password, first_name, last_name, institution, **extra_fields):
@@ -65,6 +69,7 @@ class Records(models.Model):
     
     def getData(self):
         record = {
+            'id': self.id,
             'name': self.name,
             'created_date': timezone.localtime(self.created_at).strftime("%B %d, %Y"),
             'created_time': timezone.localtime(self.created_at).strftime("%I:%M %p"),
@@ -100,6 +105,7 @@ class Event(models.Model):
     
     def getData(self):
         event = {
+            "id": self.id,
             'name': self.name,
             'date': self.date.strftime("%B %d, %Y"),
             'time': self.time.strftime("%I:%M %p"),
@@ -108,11 +114,27 @@ class Event(models.Model):
         return event
     
     def getDate(self):
-        return self.date.strftime('%B %d, %Y').lstrip('0').replace(" 0", " ")
+        return self.date.strftime('%B %d, %Y').lstrip('0').replace(" 0", " ") 
 
 class Otp(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="otp")
-    code = models.CharField(max_length=6)
+    email = models.EmailField(unique=True, max_length=255)
+    code = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now=True)
+    valid_until = models.DateTimeField(default=valid_until)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
-        return self.user.email
+        return self.email
+    
+    def checkCode(self, code):
+        return check_password(code, self.code)
+    
+    def getValid(self):
+        return self.valid_until
+
+    def is_valid(self):
+        return now() < self.valid_until
+    
+    

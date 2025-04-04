@@ -1,0 +1,5 @@
+<div class="flex flex-col justify-center items-center p-8 gap-3 {{ extra_classes }}">
+    {% include './image.html' with image=image img_class="rounded-full w-48 h-48 border-2 border-green-800 dark:border-[#7fffd4] component-shadow dark:shadow-lg" %}
+    <span class="font-bold text-2xl text-green-950 dark:text-cyan-300 font-poppins text-center"> {{ name }} </span>
+    <span class="font-medium text-lg text-green-950 dark:text-white text-center font-notosans"> {{ position }} </span>
+</div>

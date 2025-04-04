@@ -1,0 +1,83 @@
+{% extends "../base/page.html" %}
+{% load static %}
+
+{% block page %}
+<div x-data="{sidebar: true}" class="fixed inset-0 bg-white dark:bg-cyan-900">
+  <div class="w-full h-full dark:bg-black/20">
+    <div x-cloak class="absolute inset-y-0 left-0 w-60 h-full bg-cyan-950 border-r border-cyan-900 rounded-tr-3xl transition-all duration-300 z-40" :class="{'-translate-x-full md:translate-x-0': sidebar, 'translate-x-0 md:-translate-x-full': !sidebar}">
+      <div class="flex flex-col dark:bg-black/30">
+        <div class="absolute flex flex-col inset-x-0 top-0 h-14 border-b-2 border-emerald-500 rounded-tr-3xl justify-center items-center">
+          <button type="button" @click="sidebar = !sidebar">
+            <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-2xl font-extrabold font-poppins mb-5">NATRO<span class="text-white">SENSOR</span></span>
+          </button>
+        </div>
+        <div class="absolute inset-x-0 top-14 bottom-0 overflow-x-hidden overflow-y-auto py-5">
+          <div class="flex flex-col gap-1">
+            <div class="text-md text-slate-500 tracking-wide font-poppins font-bold ps-5">Menu</div>
+            {% include './sidebar_item.html' with item="dashboard" path="./svg/dashboard_menu.html" %}
+            {% include './sidebar_item.html' with item="process" item2="result" path="./svg/process_menu.html" %}
+            {% include './sidebar_item.html' with item="records" path="./svg/records_menu.html" %}
+            {% include './sidebar_item.html' with item="location" path="./svg/location_menu.html" %}
+            {% include './sidebar_item.html' with item="schedule" path="./svg/schedule_menu.html" %}
+            {% include './sidebar_item.html' with item="about" path="./svg/about_menu.html" %}
+            <div class="text-md text-slate-500 tracking-wide font-poppins font-bold ps-5">Account</div>
+            {% include './sidebar_item.html' with item="profile" path="./svg/profile_menu.html" %}
+            {% include './sidebar_item.html' with item="settings" path="./svg/settings_menu.html" %}
+            {% include './sidebar_item.html' with item="logout" path="./svg/logout_menu.html" %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div x-show="sidebar == false" class="fixed inset-0 bg-black/30 dark:bg-black/70 transition-all duration-300 z-30 md:hidden" @click="sidebar = !sidebar"></div>
+    <div class="absolute inset-y-0 right-0 h-full transition-all duration-300" :class="{'left-0 md:left-60': sidebar, 'left-0': !sidebar}">
+      <div class="absolute flex inset-x-0 top-0 h-14 border-b-2 border-emerald-500 justify-between items-center px-5">
+        <div class="flex h-full items-center gap-2">
+          <button class="text-2xl me-2 dark:text-gray-300" @click="sidebar = !sidebar" :class="{'md:hidden': sidebar}">
+            {% include '../ui/svg.html' with class="w-5 h-5 font-bold" color="currentColor" viewBox="0 0 24 24" path="./svg/menu.html" %}
+          </button>
+          <span class="bg-slate-900 dark:bg-white bg-clip-text text-transparent text-xl font-bold"> {% block name %} {{ request.resolver_match.url_name.capitalize }} {% endblock name %}</span>
+        </div>
+        <div x-data="{ open: false }" class="relative inline-block text-left">
+          <button
+            @click="open = !open"
+            class="inline-flex justify-center w-full rounded-full border-2 border-cyan-950 dark:border-[#7fffd4] shadow-sm px-2 py-1 bg-white dark:bg-[#98ff98] text-sm text-center font-medium text-cyan-950 dark:text-[#003e36] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <span class="text-xl font-semibold font-poppins"> {{user.first_name|first}}{{user.last_name|first}} </span>
+          </button>
+        
+          <div
+            x-cloak
+            x-show="open"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="transform -translate-y-4 opacity-0"
+            x-transition:enter-end="transform translate-y-0 opacity-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="transform translate-y-0 opacity-100"
+            x-transition:leave-end="transform -translate-y-4 opacity-0"
+            @click.away="open = false"
+            class="absolute right-0 mt-3 w-72 rounded-md shadow-lg bg-white dark:bg-cyan-950 border-b-2 border-emerald-600 dark:border-emerald-300 component-shadow focus:outline-none z-10">
+            <div class="flex w-full border-b-2 border-emerald-500 items-center p-4 gap-3">
+              <span class="text-xl font-semibold font-poppins rounded-lg border-2 border-cyan-950 dark:border-[#7fffd4] shadow-sm px-2 py-1 bg-white dark:bg-[#98ff98] text-center text-cyan-950 dark:text-[#003e36]">{{user.first_name|first}}{{user.last_name|first}}</span>
+              <div class="flex flex-col">
+                <span class="font-poppins text-slate-800 dark:text-white"> Signed in </span>
+                <span class="font-semibold font-notosans text-slate-800 dark:text-white">{{user.first_name}} {{user.last_name}}</span>
+              </div>      
+            </div>
+            <div class="flex flex-col w-full py-1">
+              <button type="button" hx-get="{% url 'natrosensor:profile' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="flex font-bold text-slate-800 dark:text-gray-50 px-8 py-3 hover:bg-gray-200 dark:hover:text-gray-700">Profile</button>
+              <button type="button" hx-get="{% url 'natrosensor:settings' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="flex font-bold text-slate-800 dark:text-gray-50 px-8 py-3 hover:bg-gray-200 dark:hover:text-gray-700">Settings</button>
+              <button type="button" hx-get="{% url 'natrosensor:logout' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="flex font-bold text-slate-800 dark:text-gray-50 px-8 py-3 hover:bg-gray-200 dark:hover:text-gray-700">Logout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="absolute inset-x-0 top-14 bottom-0 overflow-x-hidden overflow-y-auto bg-black/10 dark:bg-black/40">
+        <div x-data="{ purpose: '' }" id="section">
+          {% block section %}
+          {% endblock section %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock page %}

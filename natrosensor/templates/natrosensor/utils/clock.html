@@ -1,0 +1,17 @@
+<script>
+    function clock() {
+        return {
+            date: "",
+            time: "",
+            init() {
+                this.getDatetime();
+                setInterval(()=> this.getDatetime(), 1000)
+            },
+            getDatetime() {
+                const now = new Date();
+                this.date = now.toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric' });
+                this.time = now.toLocaleTimeString();
+            }
+        };
+    }
+</script>

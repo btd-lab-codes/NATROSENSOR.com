@@ -1,0 +1,137 @@
+{% extends '../ui/sidebar.html' %}
+{% load static %}
+{% load filters %}
+
+{% block name %} {{template_name}} {% endblock name %}
+{% block section %}
+<div x-data="successTrigger('resultBtn')" class="absolute inset-0 p-0 md:p-4">
+    <form action="{% url 'natrosensor:result' %}" method="POST" hx-post="{% url 'natrosensor:result' %}" hx-trigger="submit" hx-swap="none" @submit="loading = true" class="flex w-full h-full bg-gray-400 dark:bg-gray-700 aspect-square md:rounded-lg md:border border-gray-600 dark:border-gray-500 component-shadow dark:shadow-lg">
+        {% csrf_token %}
+        <div class="flex flex-col w-full h-full rounded-lg">
+            {% include '../ui/dashboard_card.html' with process="true" card_title="Analysis" card_caption="Results based on the calibrated model" card_step="Step 4/4" %}
+            <div class="flex flex-col flex-grow overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-cyan-950/80 md:rounded-b-lg px-5 pt-3 pb-5">
+                <div class="grid grid-cols-1 lg:grid-cols-5 px-2 gap-1">
+                    <div x-data="{process: true, location: false, linear: false}" class="flex flex-col gap-1 w-full h-full lg:col-span-2">
+                        <div class="flex flex-col">
+                            <button type="button" @click="process = !process, location = false, linear = false" class="flex justify-between items-center bg-gradient-to-tr from-cyan-500/50 to-cyan-400/50 dark:from-cyan-700/50 dark:to-cyan-600/50 rounded-lg p-3 cursor-auto lg:cursor-pointer shadow-lg border border-emerald-800 dark:border-cyan-500/50">
+                                <span class="text-slate-900 dark:text-white font-semibold font-poppins"> Process Details </span>
+                                <div class="hidden lg:block">
+                                    <div x-show="process">
+                                        {% include '../ui/svg.html' with class="w-4 h-4 text-slate-900 dark:text-white font-bold" color="currentColor" viewBox="0 0 24 24" path="../ui/svg/chevron_up.html" %}
+                                    </div>
+                                    <div x-show="!process">
+                                        {% include '../ui/svg.html' with class="w-4 h-4 text-slate-900 dark:text-white font-bold" color="currentColor" viewBox="0 0 24 24" path="../ui/svg/chevron_down.html" %}
+                                    </div>
+                                </div>
+                            </button>
+                            <div x-cloak
+                                 class="flex flex-col gap-1 p-2"
+                                 :class="{'lg:hidden': !process}">
+                                {% include '../ui/process_item.html' with name="Name: " detail=process.name extra_class="items-center" %}
+                                {% include '../ui/process_item.html' with name="Antibiotics: " detail=process.antibiotics extra_class="items-center" %}
+                                {% include '../ui/process_item.html' with name="Trial: " detail=process.trial extra_class="items-center" %}
+                                {% include '../ui/process_item.html' with name="Temperature: " detail=process.temperature|default:"N/A" extra_class="items-center" %}
+                                {% include '../ui/process_item.html' with name="pH: " detail=process.ph|default:"N/A" extra_class="items-center" %}
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <button type="button" @click="location = !location, process = false, linear = false" class="flex justify-between items-center bg-gradient-to-tr from-cyan-500/50 to-cyan-400/50 dark:from-cyan-700/50 dark:to-cyan-600/50 rounded-lg p-3 cursor-auto lg:cursor-pointer shadow-lg border border-emerald-800 dark:border-cyan-500/50">
+                                <span class="text-slate-900 dark:text-white font-semibold font-poppins"> Location Details </span> 
+                                <div class="hidden lg:block">
+                                    <div x-show="location">
+                                        {% include '../ui/svg.html' with class="w-4 h-4 text-slate-900 dark:text-white font-bold" color="currentColor" viewBox="0 0 24 24" path="../ui/svg/chevron_up.html" %}
+                                    </div>
+                                    <div x-show="!location">
+                                        {% include '../ui/svg.html' with class="w-4 h-4 text-slate-900 dark:text-white font-bold" color="currentColor" viewBox="0 0 24 24" path="../ui/svg/chevron_down.html" %}
+                                    </div>
+                                </div>
+                            </button>
+                            <div x-cloak
+                                 class="flex flex-col gap-1 p-2"
+                                 :class="{'lg:hidden': !location}">
+                                {% include '../ui/process_item.html' with name="Address: " detail=process.address|default:"N/A" extra_class="items-center" %}
+                                {% include '../ui/process_item.html' with name="Region: " detail=process.region|default:"N/A" extra_class="items-center" %}
+                                {% include '../ui/process_item.html' with name="Province: " detail=process.province|default:"N/A" extra_class="items-center" %}
+                                {% include '../ui/process_item.html' with name="Municipality: " detail=process.municipality|default:"N/A" extra_class="items-center" %}
+                                {% include '../ui/process_item.html' with name="Barangay: " detail=process.barangay|default:"N/A" extra_class="items-center" %}
+                            </div>
+                        </div>
+                        <div class="flex flex-col">
+                            <button type="button" @click="linear = !linear, process = false, location = false" class="flex justify-between items-center bg-gradient-to-tr from-cyan-500/50 to-cyan-400/50 dark:from-cyan-700/50 dark:to-cyan-600/50 rounded-lg p-3 cursor-auto lg:cursor-pointer shadow-lg border border-emerald-800 dark:border-cyan-500/50">
+                                <span class="text-slate-900 dark:text-white font-semibold font-poppins"> Linear Range </span>
+                                <div class="hidden lg:block">
+                                    <div x-show="linear">
+                                        {% include '../ui/svg.html' with class="w-4 h-4 text-slate-900 dark:text-white font-bold" color="currentColor" viewBox="0 0 24 24" path="../ui/svg/chevron_up.html" %}
+                                    </div>
+                                    <div x-show="!linear">
+                                        {% include '../ui/svg.html' with class="w-4 h-4 text-slate-900 dark:text-white font-bold" color="currentColor" viewBox="0 0 24 24" path="../ui/svg/chevron_down.html" %}
+                                    </div>
+                                </div>
+                            </button>
+                            <div x-cloak
+                                 x-data="{concentration: '', absorbance: ''}"
+                                 class="flex flex-col p-2 gap-2"
+                                 :class="{'lg:hidden': !linear}">
+                                 <div class="flex items-center ms-2">
+                                    {% include '../ui/process_item.html' with name="Function: " %}
+                                    <span class="text-sm text-slate-800 dark:text-gray-300 font-semibold"> y = {{y_int}} + {{slope}}x </span>
+                                 </div>
+                                 <div class="flex w-full gap-2 items-center">
+                                    <div class="relative w-full">
+                                        <input id="concentration_lr" type="number" name="concentration_lr" x-model="concentration" x-on:input="concentration !== '' ? absorbance = (-1 * {{y_int}}) + (-1 * {{slope}} * concentration) : absorbance = ''" class="block rounded-lg ps-4 px-2.5 pb-3.5 pt-8 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-semibold component-shadow dark:shadow-lg input-autofill">
+                                        <label for="concentration_lr" class="absolute ps-2 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-5 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans font-semibold"> Concentration </label>
+                                    </div>
+                                 </div>
+                                 <div class="flex w-full gap-2 items-center">
+                                    <div class="relative w-full">
+                                        <input id="absorbance_lr" type="number" name="absorbance_lr" x-model="absorbance" x-on:input="absorbance !== '' ? concentration = (absorbance - (-1 * {{y_int}})) / (-1 * {{slope}}) : concentration = ''" class="block rounded-lg ps-4 px-2.5 pb-3.5 pt-8 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-semibold component-shadow dark:shadow-lg input-autofill">
+                                        <label for="absorbance_lr" class="absolute ps-2 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-5 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans font-semibold"> Absorbance </label>
+                                    </div>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-1 w-full h-full lg:col-span-3">
+                        <div class="flex bg-gradient-to-tr from-cyan-500/50 to-cyan-400/50 dark:from-cyan-700/50 dark:to-cyan-600/50 rounded-lg p-3 shadow-lg border border-emerald-800 dark:border-cyan-500/50">
+                            <span class="text-slate-900 dark:text-white font-semibold font-poppins"> Four Parameter Logistic Graph </span>
+                        </div>
+                        <div class="flex w-full justify-center items-center">
+                            <div class="flex flex-col max-w-lg justify-items-center p-1">
+                                <img class="flex w-auto h-auto items-center justify-center object-contain p-1 component-shadow dark:shadow-lg" src="{{ graph }}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex mt-auto justify-between px-3">
+                    <button type="button" hx-get="{% url 'natrosensor:process' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="flex w-24 justify-center items-center text-white bg-emerald-600 hover:bg-emerald-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center"> Discard </button>
+                    <button name="resultBtn" type="submit" class="flex flex-col w-24 justify-center items-center text-white bg-emerald-600 hover:bg-emerald-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center"> 
+                        <span x-cloak x-show="!loading"> Save </span>
+                        <div x-cloak x-show="loading" class="flex items-center">
+                            {% include '../ui/svg.html' with class="animate-spin h-5 w-5 text-white" color="none" viewBox="0 0 24 24" path="../ui/svg/spinner.html" %}
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div x-cloak x-show="success" class="fixed inset-0 bg-black bg-opacity-50 z-50">
+        <div class="flex flex-col items-center justify-center h-screen p-6">    
+            <div class="flex bg-emerald-400 dark:bg-emerald-700 w-full max-w-lg rounded-t-lg shadow-xl p-4 items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-emerald-800 dark:text-green-500">
+                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+                </svg>      
+                <span class="text-gray-800 dark:text-white text-lg font-poppins font-bold"> Success </span>
+            </div>
+            <div class="flex flex-col overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-cyan-950 p-6 rounded-b-lg shadow-lg w-full max-w-lg mx-4 gap-2">
+                <div class="flex flex-col font-poppins font-bold text-gray-800 pb-1">
+                    <span class="dark:text-gray-200"> The process has successfully saved in the records </span>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" hx-get="{% url 'natrosensor:records' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="flex w-24 justify-center items-center text-white bg-emerald-600 hover:bg-emerald-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center"> Confirm </button>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock section %}
+

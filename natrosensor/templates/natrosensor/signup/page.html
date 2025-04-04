@@ -1,0 +1,194 @@
+{% extends '../base/page.html' %}
+{% load static %}
+{% load filters %}
+
+{% block page %}
+<div class="fixed flex inset-0 bg-black/30 dark:bg-black/70 justify-center items-center">
+    <div x-data="countdownTimer" class="flex flex-col w-full h-full md:max-w-lg md:h-auto md:rounded-xl bg-cyan-950 justify-center md:border-4 md:border-green-500">
+        <form method="POST" x-data="{ current: 'first' }" hx-post="{% url 'natrosensor:signup' %}" hx-trigger="submit" hx-swap="none" @submit="loading = true" class="flex flex-col h-full bg-black/30 justify-center md:rounded-xl p-10 sm:px-20 md:px-10">
+            {% csrf_token %}
+            <div x-show="current === 'first'" x-data="{ inputs: { email: '', password1: '', password2: '' }, errors: {}}" class="flex flex-col">
+                <div class="flex flex-col mb-5">
+                    <div class="flex justify-between items-center">
+                        <span class="text-3xl text-white font-bold font-poppins"> Create an account </span>
+                        <span class="text-sm text-gray-300 hidden lg:block"> Step 1/3 </span>
+                    </div>
+                    <span class="text-white justify-center text-sm font-poppins"> Already have an account? <button hx-get="{% url 'natrosensor:login' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="font-medium text-cyan-400 hover:underline"> Login </button> </span>
+                </div> 
+                <div class="flex flex-col gap-2" :class="{'mb-3': $refs.error_email.textContent == '', 'mb-5': $refs.error_email.textContent != ''}">
+                    <div class="relative" @click="$refs.error_email.textContent = ''">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                            {% include '../ui/svg.html' with class="w-4 h-4 text-gray-500 dark:text-white" color="currentColor" viewBox="0 0 20 16" path="../ui/svg/message.html" %}
+                        </div>
+                        {{ form.email|addClass:'block rounded-lg ps-10 px-2.5 pb-3 pt-6 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-semibold component-shadow dark:shadow-lg input-autofill'}}
+                        <label for="email_signup" class="absolute ps-10 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-4 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans">Email Address</label>
+                    </div> 
+                    <div id="error_email" x-ref="error_email" class="font-bold ms-2 text-sm text-red-500 dark:text-red-400"></div>
+                </div>
+                <div class="flex flex-col gap-2" :class="{'mb-3': errors.password1, 'mb-5': !errors.password1}">
+                    <div class="relative" @click="errors.password1 = ''">  
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">  
+                            {% include '../ui/svg.html' with class="w-4 h-4 text-gray-500 dark:text-white" color="currentColor" viewBox="0 0 24 24" path="../ui/svg/lock.html" %}
+                        </div>        
+                        {{ form.password1|addClass:'block rounded-lg ps-10 px-2.5 pb-3 pt-6 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-semibold component-shadow dark:shadow-lg input-autofill'}}
+                        <label for="password_signup" class="absolute ps-10 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-4 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans">Password</label>
+                    </div>
+                    <span x-cloak x-show="errors.password1" class="font-bold ms-2 text-sm text-red-500 dark:text-red-400"> Password cannot be empty </span>
+                </div>
+                <div class="flex flex-col gap-2" :class="{'mb-3': errors.password2, 'mb-5': !errors.password2}">
+                    <div class="relative" @click="errors.password2 = '', errors.password_match = ''">  
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">  
+                            {% include '../ui/svg.html' with class="w-4 h-4 text-gray-500 dark:text-white" color="currentColor" viewBox="0 0 24 24" path="../ui/svg/lock.html" %} 
+                        </div>        
+                        {{ form.password2|addClass:'block rounded-lg ps-10 px-2.5 pb-3 pt-6 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-semibold component-shadow dark:shadow-lg input-autofill'}}
+                        <label for="password_confirm" class="absolute ps-10 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-4 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans">Confirm Password</label>
+                    </div>
+                    <span x-cloak x-show="errors.password2" class="font-bold ms-2 text-sm text-red-500 dark:text-red-400"> Confirm password cannot be empty </span>
+                    <span x-cloak x-show="errors.password_match" class="font-bold ms-2 text-sm text-red-500 dark:text-red-400"> Your passwords do not match </span>
+                </div>
+                <div class="flex justify-end">
+                    <button @click="
+                    errors = {};
+                    for (const [key, value] of Object.entries(inputs)) {
+                        if (!value.trim()) errors[key] = true;
+                    }
+
+                    if (inputs.password1 != inputs.password2 && inputs.password2) {
+                        errors['password_match'] = true
+                    }
+
+                    setTimeout(() => {
+                        if (Object.keys(errors).length === 0 && $refs.error_email.textContent.trim() === '') {
+                            current = 'second'
+                        }
+                    }, 100)" type="button" hx-get="{% url 'natrosensor:check_email' %}" hx-target="#error_email" hx-swap="innerHTML" hx-trigger="click" hx-include="#email_signup" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center">Next</button>
+                </div> 
+            </div>
+            <div x-cloak x-show="current === 'second'" x-data="{ inputs: { first_name: '', last_name: '', institution: '' }, errors: {}}" class="flex flex-col">
+                <div class="flex flex-col mb-5">
+                    <div class="flex justify-between items-center">
+                        <span class="text-3xl text-white font-bold font-poppins"> Profile details </span>
+                        <span class="text-sm text-gray-300 hidden lg:block"> Step 2/3 </span>
+                    </div>
+                    <span class="text-white justify-center text-sm font-poppins"> Already have an account? <button hx-get="{% url 'natrosensor:login' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="font-medium text-cyan-400 hover:underline"> Login </button> </span>
+                </div>  
+                <div class="flex flex-col gap-2" :class="{'mb-3': errors.first_name, 'mb-5': !errors.first_name}">
+                    <div class="relative" @click="errors.first_name = ''">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
+                                <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z"/>
+                                <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z"/>
+                            </svg>
+                        </div>
+                        {{ form.first_name|addClass:'block rounded-lg ps-10 px-2.5 pb-3 pt-6 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-semibold component-shadow dark:shadow-lg input-autofill'}}
+                        <label for="fname_signup" class="absolute ps-10 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-4 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans">First Name</label>
+                    </div>
+                    <span x-cloak x-show="errors.first_name" class="font-bold ms-2 text-sm text-red-500 dark:text-red-400"> First name cannot be empty </span>
+                </div>
+                <div class="flex flex-col gap-2" :class="{'mb-3': errors.last_name, 'mb-5': !errors.last_name}">
+                    <div class="relative" @click="errors.last_name = ''">  
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">  
+                            <svg class="w-4 h-4 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                                <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
+                            </svg>  
+                        </div>        
+                        {{ form.last_name|addClass:'block rounded-lg ps-10 px-2.5 pb-3 pt-6 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-semibold component-shadow dark:shadow-lg input-autofill'}}
+                        <label for="lname_signup" class="absolute ps-10 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-4 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans">Last Name</label>
+                    </div>
+                    <span x-cloak x-show="errors.last_name" class="font-bold ms-2 text-sm text-red-500 dark:text-red-400"> Last name cannot be empty </span>
+                </div>
+                <div class="flex flex-col gap-2" :class="{'mb-3': errors.institution, 'mb-5': !errors.institution}">
+                    <div class="relative" @click="errors.institution = ''">  
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">  
+                            <svg class="w-4 h-4 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                                <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
+                            </svg>  
+                        </div>        
+                        {{ form.institution|addClass:'block rounded-lg ps-10 px-2.5 pb-3 pt-6 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-semibold component-shadow dark:shadow-lg input-autofill'}}
+                        <label for="inst_signup" class="absolute ps-10 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-4 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans">Institution</label>
+                    </div> 
+                    <span x-cloak x-show="errors.institution" class="font-bold ms-2 text-sm text-red-500 dark:text-red-400"> Institution cannot be empty </span>
+                </div>
+                <div class="flex justify-between">
+                    <button @click="current = 'first'" type="button" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">Previous</button>
+                    <button @click="
+                        errors = {};
+                        for (const [key, value] of Object.entries(inputs)) {
+                            if (!value.trim()) errors[key] = true;
+                        }
+
+                        if (Object.keys(errors).length === 0) {
+                            current = 'third'
+                        }
+                    " type="button" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Next</button>
+                </div>
+            </div>
+            <div x-cloak x-show="current === 'third'" x-data="{ otp: [ '', '', '', '', '', '' ] }" class="flex flex-col gap-5">
+                <div class="flex flex-col">
+                    <div class="flex justify-between items-center">
+                        <span class="text-3xl text-white font-bold font-poppins"> Verification </span>
+                        <span class="text-sm text-gray-300 hidden lg:block"> Step 3/3 </span>
+                    </div>
+                    <span class="text-white justify-center text-sm font-poppins"> Already have an account? <button hx-get="{% url 'natrosensor:login' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" class="font-medium text-cyan-400 hover:underline"> Login </button> </span>
+                </div> 
+                <div class="relative flex flex-col gap-2" @click="errorMessage = ''">
+                    <div class="grid grid-cols-6 gap-2">
+                        <template x-for="(digit, index) in otp" :key="index">
+                            <input type="text"
+                                   :name="'otp_' + (index + 1)"
+                                   x-model="otp[index]"
+                                   maxlength="1"
+                                   class="block rounded-lg px-2.5 py-4 w-full text-xl text-center text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-bold component-shadow dark:shadow-lg input-autofill"
+                                   placeholder=""
+                                   autocomplete="off"
+                                   @input="if ($event.target.value && index < 5) $event.target.nextElementSibling.focus()"
+                                   @keydown.backspace="if (!otp[index] && index > 0) $event.target.previousElementSibling.focus()">
+                        </template>
+                    </div>
+                    <div id="error_code" x-text="errorMessage" class="font-bold text-sm text-red-500 dark:text-red-400"></div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <div id="sent_code" x-text="codeMessage" class="font-bold text-sm text-emerald-500 dark:text-emerald-400"></div>
+                    <span class="flex items-center text-white text-sm font-poppins gap-1"> 
+                        <span> Didn't get the code? </span>
+                        <span x-cloak x-show="timeLeft !== '0'" x-text="timeLeft" class="text-cyan-400"></span>
+                        <button x-cloak x-show="timeLeft === '0'" @click="codeMessage = ''" name="codeBtn" type="button" hx-get="{% url 'natrosensor:generate_code' %}" hx-swap="none" hx-trigger="click" hx-include="#email_signup" hx-params="not codeBtn" class="font-medium text-cyan-400 hover:underline"> 
+                            <span x-show="!sendingCode"> Send code </span>
+                            <div x-show="sendingCode" class="flex items-center">
+                                {% include '../ui/svg.html' with class="animate-spin h-3 w-3 text-white" color="none" viewBox="0 0 24 24" path="../ui/svg/spinner.html" %}
+                            </div>
+                        </button>
+                    </span>
+                </div>
+                <div class="flex justify-between mt-auto">
+                    <button @click="current = 'second', otp = [ '', '', '', '', '', '' ]" type="button" class="w-24 items-center text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2">Previous</button>
+                    <button name="signupBtn" type="submit" class="flex flex-col w-24 items-center text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                        <span x-cloak x-show="!loading"> Submit </span>
+                        <div x-cloak x-show="loading" class="flex flex-col h-full items-center ms-2">
+                            {% include '../ui/svg.html' with class="animate-spin h-5 w-5 text-white" color="none" viewBox="0 0 24 24" path="../ui/svg/spinner.html" %}
+                        </div> 
+                    </button>
+                </div> 
+            </div>
+        </form>
+        <div x-cloak x-show="success" class="fixed inset-0 bg-black bg-opacity-50 z-50">
+            <div class="flex flex-col items-center justify-center h-screen p-6">    
+                <div class="flex bg-emerald-400 dark:bg-emerald-700 w-full max-w-lg rounded-t-lg shadow-xl p-4 items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 text-emerald-900 dark:text-green-500 rounded-full shadow-[-1px_0_6px_rgba(0,0,0,0.15),1px_0_6px_rgba(0,0,0,0.15)] dark:shadow-[-1px_0_6px_rgba(255,255,255,0.15),1px_0_6px_rgba(255,255,255,0.15)] border-emerald-500 dark:border-emerald-800">
+                        <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+                    </svg>      
+                    <span class="text-gray-800 dark:text-white text-lg font-poppins font-bold"> Success </span>
+                </div>
+                <div class="flex flex-col overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-cyan-950 p-6 rounded-b-lg shadow-lg w-full max-w-lg mx-4 gap-2">
+                    <div class="flex flex-col font-poppins font-bold text-gray-800 pb-1">
+                        <span class="dark:text-gray-200"> Your account has been created successfully </span>
+                    </div>
+                    <div class="flex justify-end">
+                        <button @click="success = false" hx-get="{% url 'natrosensor:login' %}" hx-trigger="click" hx-target="body" hx-swap="outerHTML" hx-push-url="true" type="button" class="flex w-24 justify-center items-center text-white bg-emerald-600 hover:bg-emerald-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center"> Confirm </button>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock page %}

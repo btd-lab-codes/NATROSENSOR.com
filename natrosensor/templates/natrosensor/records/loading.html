@@ -1,0 +1,18 @@
+{% extends '../ui/sidebar.html' %}
+{% load static %}
+{% load filters %}
+
+{% block name %} {{template_name}} {% endblock name %}
+{% block section %}
+<div hx-get="{% url 'natrosensor:records' %}" hx-trigger="load" hx-target="body" hx-swap="outerHTML">
+    <div class="grid grid-cols-2">
+        <div class="flex flex-col gap-1">
+            <div class="animate-pulse h-4 bg-slate-400"> </div>
+            <div class="animate-pulse h-4 bg-slate-400"> </div>
+        </div>
+        <div class="flex flex-col">
+            <div class="animate-pulse h-4 bg-slate-400"> </div>
+        </div>
+    </div>
+</div>
+{% endblock section %}

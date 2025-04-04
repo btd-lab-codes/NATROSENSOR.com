@@ -156,6 +156,12 @@ INTERNAL_IPS = [
 CSRF_TRUSTED_ORIGINS = ['https://natrosensor.org']
 NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
-# Configure global settings using the settings module
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "natrosensor.des.uplb@gmail.com"
+EMAIL_HOST_PASSWORD = "xbnx hqwt ycsc jsht"
+
 ox.settings.cache_folder = 'cache'
 ox.settings.use_cache = True

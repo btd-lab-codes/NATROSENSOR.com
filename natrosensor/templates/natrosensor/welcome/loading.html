@@ -1,0 +1,15 @@
+{% extends '../base/page.html' %}
+{% load static %}
+{% load filters %}
+
+{% block page %}
+<div hx-get="{% url 'natrosensor:welcome' %}" hx-trigger="load" hx-target="body" hx-swap="outerHTML" class="bg-cyan-950 h-screen shimmer">
+    <div class="flex flex-col h-full bg-black/30 justify-center items-center gap-6">
+        <span class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent text-5xl font-extrabold font-poppins">NATRO<span class="text-white">SENSOR</span></span>
+        <div class="flex items-center gap-3">
+            {% include '../ui/svg.html' with class="animate-spin -ml-1 mr-3 h-10 w-10 text-white" color="none" viewBox="0 0 24 24" path="../ui/svg/spinner.html" %}
+            <span class="font-semibold text-lg text-white"> Loading resources... </span>
+        </div>   
+    </div>
+</div>
+{% endblock page %}
