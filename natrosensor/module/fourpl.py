@@ -14,73 +14,93 @@ matplotlib.use('agg')
     # r_max - max value (d)
 
 def fourpl(dataframe, size):
-    x_data = dataframe.iloc[:,2]
-    y_data = dataframe.iloc[:,3]
+    x_data = dataframe.iloc[:,0]
+    y_data = dataframe.iloc[:,1]
 
-    x_data = np.log10(x_data)*-1
+    #x_data = np.log10(x_data)*-1
 
     #Perform the estimation of the parameters r_min, slope, ec50, and r_max
-    popt, pcov = curve_fit(fourpl_model, x_data, y_data, p0=[0,1,1,1])
+    #Estimate intial p0
+    p0_est = [max(y_data), 1.0, np.median(x_data), min(y_data)]
+    bounds = (0, [np.inf, 10, np.inf, np.inf])
+    popt, pcov = curve_fit(fourpl_model, x_data, y_data, p0=p0_est, bounds=bounds)
+
+    a_f = popt[0]
+    b_f = popt[1]
+    c_f = popt[2]
+    d_f = popt[3]
 
     #Computation of R-squared
     r_squared = get_rsquared(x_data, y_data, popt)
 
-    c50, c50_y, kd = get_c50(popt)
+    #Identify EC50 and its position
+    c50, c50_y = get_c50(popt)
 
-    x_model = np.linspace(min(x_data), max(x_data), 100)
+    #Identify the Limit of detection (LOD)
+    lod = get_lod(x_data, y_data, popt)[0]
+
+    x_model = np.linspace(min(x_data), max(x_data), 500)
     y_model = fourpl_model(x_model, *popt)
 
-    print('Four parameter logistic model')
-    print(f'a = {popt[0]}')
-    print(f'b = {popt[1]}')
-    print(f'c = {popt[2]}')
-    print(f'd = {popt[3]}')
-
     fig = plt.figure()
-    plt.plot(x_data, y_data, 'o', markersize = 10, mfc = 'none', color = 'black')
-    plt.plot(x_model, y_model, color='black')
-    plt.xlabel("H1 concentration, nM")
-    plt.ylabel("Absrobance 450 nm")
-    plt.annotate("C50", xy = (c50, c50_y), xytext = (c50, c50_y + 0.1), arrowprops = dict(arrowstyle = "->"), color = 'b', weight = 'bold', ha='center', size = size * 1.15)
-    plt.hlines(c50_y, c50, len(x_data) + 0.5, linestyle="dashed", color = "b")
-    plt.vlines(c50, 0, c50_y, linestyle="dashed", color="b")
+    plt.plot(x_data, y_data, 'o', markersize = 8, mfc = 'none', color = 'blue')
+    plt.plot(x_model, y_model, color='black', linewidth=2, label=f'4PL Model Fit, R\u00b2 = {r_squared:.2f}')
 
-    x_data.to_numpy()
-    ticks = 10**(-x_data)
+    plt.xscale('log')
+    plt.xlabel("Antibiotic Dosage, ppm")
+    plt.ylabel("Peak current, µA")
+    plt.title('DPV Peak Current vs Antibiotic Dosage (4PL Model)')
 
-    v = [-0.5, 6.5, 0.2, 0.7]
-    plt.axis(v)
-    plt.xticks(np.arange(7), ticks)
-    plt.gca().invert_xaxis()
+    #Annotate the EC50
+    plt.axvline(c50, color = 'green', linestyle='--', label=f'EC50 = {c50:.2f} ppm')
+    #Annotate LOD
+    if not np.isnan(lod):
+         plt.axvline(lod, color = 'orange', linestyle='--', label=f'Detection Limit = {lod:.2f} ppm')
 
-    # plt.imshow(np.log(np.abs(pcov)))
-    # plt.colorbar()
+    plt.legend()
 
-    #Creating a tangent line to c50
-    x_0 = c50
-    tck = interpolate.splrep(x_model, y_model)
-    y_0 = interpolate.splev(x_0, tck)
-    dydx = interpolate.splev(x_0, tck, der=1)
+    #Create a linear equation from lod to r_max
+    #Define the LLOQ
+    sd_blank = get_lod(x_data, y_data, popt)[1]
+    y_lloq = a_f - 10*sd_blank
+    y_lod = a_f - 3*sd_blank
 
-    tangent = lambda x: dydx*x + (y_0-dydx*x_0)
+    lod_conc = inv_4PL(y_lod, *popt)
+    lloc_conc = inv_4PL(y_lloq, *popt)
 
-    #Plot the tangent line
-    x_plot = np.linspace(4.5,1,50)
-    #plt.plot(x_plot, tangent(x_plot), linestyle = "dashed", color = 'blue')
+    #Define the ULOQ
+    uloq_conc = np.max(x_data)
+    y_uloq = fourpl_model(uloq_conc, *popt)
 
-    popt_l, pcov_l = curve_fit(model_, x_plot, tangent(x_plot), p0=[1,0.1])
+    #Create the Linear Equation y=mx + b, where m is the Hill's slope
+    #Since DPV current decreases with concentration, m is negative
+    m_ = -b_f
 
-    print(f'The LR has a formula: y = {popt_l[0]} + {popt[1]}.')
+    #solve for the y-intercept, b
+    y_int = y_lloq - (m_ * lloc_conc)
 
-    return FigureCanvas(fig), popt_l[0], popt[1], c50, c50_y
+    return FigureCanvas(fig), y_int, m_, c50, c50_y
 
 #Get the 4PL logistic curve 
-def fourpl_model(x, r_min, slope, ec50, r_max):
-    return r_max + ((r_min - r_max) / (1 + (x / ec50) ** slope))
+# y = d + (a - d) / (1 + (x / c)**b)
+# a: Maximum asymptote (Top) r_max
+# d: Minimum asymptote (Bottom) r_min
+# c: EC50 (Inflection point)
+# b: Hill slope (Steepness)
+def fourpl_model(x, r_max, slope, ec50, r_min):
+    return r_min + ((r_max - r_min) / (1 + (x / ec50) ** slope))
 
-#Get the slope and intercept of the LR for LOD calculation
-def model_(x_, m_, int_):
-        return m_*x_+int_
+#Inverse 4PL
+def inv_4PL(y, r_max, slope, ec50, r_min):
+    if y >= r_max:
+        return 0.0
+    if y <= r_min:
+        return np.inf
+    val = ((r_max - r_min) / (y - r_min)) - 1
+    
+    if val < 0:
+        return np.nan
+    return ec50 * (val**(1/slope))
 
 def get_rsquared(x_data, y_data, popt):
     residuals = y_data - fourpl_model(x_data, *popt)
@@ -88,30 +108,34 @@ def get_rsquared(x_data, y_data, popt):
     ss_tot = np.sum((y_data - np.mean(y_data)) ** 2)
     r_squared = 1 - (ss_res / ss_tot)
 
-    print(f'The value of R_squared is {r_squared}')
+    #print(f'The value of R_squared is {r_squared}')
     return r_squared
 
 def get_c50(popt):
     c50 = popt[2]
-    kd = 10 ** (-c50)
     c50_y = fourpl_model(c50, *popt)
+    #print(f'The value of the half maximal effective concentration is {c50}.')
+    return c50, c50_y
 
-    print(f'The value of the half maximal effective concentration is {c50}.')
-    print(f'The corresponding absorbance is {c50_y}.')
-    print(f'The Kd value is {kd} nM.')
-    return c50, c50_y, kd
+def get_lod(x_d, y_d, params):
+    residuals = y_d - fourpl_model(x_d, *params)
+    sd_blank = np.std(residuals)
+
+    a_fit = params[0]
+    b_fit = params[1]
+    c_fit = params[2]
+    d_fit = params[3]
+    y_lod = a_fit - 3*sd_blank
+
+    if y_lod > d_fit:
+         lod = c_fit*(((a_fit-d_fit)/(y_lod-d_fit))-1)**(1/b_fit)
+
+    else:
+         lod = np.nan #Signal is too low to resolve from background
+    
+    #print(f'The detection limit is {lod} ppm.')
+    return lod, sd_blank
 
 def graph_settings():
     size = 16
-    params = {'font.family': 'Times New Roman',
-            'legend.fontsize': 'x-large',
-            'figure.figsize': (8,6), 
-            'figure.dpi': 100,
-            'axes.labelsize': size,
-            'axes.titlesize': size,
-            'xtick.labelsize': size*0.95,
-            'ytick.labelsize': size*0.95,
-            'axes.titlepad': 40}
-    
-    plt.rcParams.update(params)
     return size
