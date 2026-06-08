@@ -194,10 +194,10 @@ def map_geojson(map, records, geojson, center, name, antibiotics):
                     <p style="margin: 0;"><strong>Total Count</strong></p>
                 </div>
                 <div style="flex: 1 1 0; text-align: center;">
-                    <p style="margin: 0;"><strong>Concentration (avg)</strong></p>
+                    <p style="margin: 0;"><strong>DPV reading (avg)</strong></p>
                 </div>
                 <div style="flex: 1 1 0; text-align: center;">
-                    <p style="margin: 0;"><strong>Absorbance (avg)</strong></p>
+                    <p style="margin: 0;"><strong>Dose, ppm (avg)</strong></p>
                 </div>
             </div>
             <div style="display: flex; flex-wrap: wrap; font-size: 14px; margin-top: 10px;">
@@ -205,10 +205,10 @@ def map_geojson(map, records, geojson, center, name, antibiotics):
                     <p style="margin: 0;"><strong>{records.count()}</strong></p>
                 </div>
                 <div style="flex: 1 1 0; text-align: center;">
-                    <p style="margin: 0;"><strong>{round(concentration, 4)}</strong></p>
+                    <p style="margin: 0;"><strong>{round(concentration, 2)}</strong></p>
                 </div>
                 <div style="flex: 1 1 0; text-align: center;">
-                    <p style="margin: 0;"><strong>{round(absorbance, 4)}</strong></p>
+                    <p style="margin: 0;"><strong>{round(absorbance, 2)}</strong></p>
                 </div>
             </div>
         </div>
@@ -221,7 +221,7 @@ def map_geojson(map, records, geojson, center, name, antibiotics):
                 'fillColor': 'red',
                 'color': 'red',
                 'weight': 1,
-                'fillOpacity': absorbance
+                'fillOpacity': (1-concentration/40)
             }
         ).add_to(map)
 
@@ -523,9 +523,24 @@ def result(request):
     slope = request.session.get('slope') 
     c50 = request.session.get('c50')
     c50_y = request.session.get('c50_y')
+    lod = request.session.get('lod')
 
     # When the user saves the process
     if request.method == "POST":
+##==> Correction to record data input per location
+        concentration_lr = request.POST.get('concentration_lr', '').strip()
+        absorbance_lr = request.POST.get('absorbance_lr', '').strip()
+        if concentration_lr:
+            try:
+                concentration_value = float(concentration_lr)
+                absorbance_value = float(absorbance_lr)
+            except ValueError:
+                concentration_value = c50
+                absorbance_value = c50_y
+        else:
+            concentration_value = c50
+            absorbance_value = c50_y
+##==>
         # Create and save new record from all the process details
         new_result = Records(
             name=process['name'], 
@@ -540,8 +555,12 @@ def result(request):
             ph=process['ph'], 
             note=process['note'], 
             graph=graph, 
-            concentration=c50,
-            absorbance=c50_y,
+            #concentration=c50, #c50
+            #absorbance=c50_y
+            ##==>
+            concentration=concentration_value, #Antibiotic dosage (ppm), as computed using Linear regression
+            absorbance=absorbance_value, #DPV peak current input (uA)
+            ##==>
             user=request.user
         )
         new_result.save()
