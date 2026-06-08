@@ -69,7 +69,7 @@
                                 </div>
                             </button>
                             <div x-cloak
-                                 x-data="{concentration: '', absorbance: ''}"
+                                 x-data="{concentration: null, absorbance: null}"
                                  class="flex flex-col p-2 gap-2"
                                  :class="{'lg:hidden': !linear}">
                                  <div class="flex items-center ms-2">
@@ -78,14 +78,14 @@
                                  </div>
                                  <div class="flex w-full gap-2 items-center">
                                     <div class="relative w-full">
-                                        <input id="concentration_lr" type="number" name="concentration_lr" x-model="concentration" x-on:input="concentration !== '' ? absorbance = (-1 * {{y_int}}) + (-1 * {{slope}} * concentration) : absorbance = ''" class="block rounded-lg ps-4 px-2.5 pb-3.5 pt-8 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-semibold component-shadow dark:shadow-lg input-autofill">
-                                        <label for="concentration_lr" class="absolute ps-2 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-5 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans font-semibold"> Concentration </label>
+                                        <input id="concentration_lr" type="number" step="any" name="concentration_lr" x-model="concentration" x-on:input="concentration !== '' ? absorbance = ({{y_int}} + {{slope}} * concentration).toFixed(2) : absorbance = ''" class="block rounded-lg ps-4 px-2.5 pb-3.5 pt-8 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-semibold component-shadow dark:shadow-lg input-autofill">
+                                        <label for="concentration_lr" class="absolute ps-2 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-5 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans font-semibold"> Input: DPV Peak Current, uA </label>
                                     </div>
                                  </div>
                                  <div class="flex w-full gap-2 items-center">
                                     <div class="relative w-full">
-                                        <input id="absorbance_lr" type="number" name="absorbance_lr" x-model="absorbance" x-on:input="absorbance !== '' ? concentration = (absorbance - (-1 * {{y_int}})) / (-1 * {{slope}}) : concentration = ''" class="block rounded-lg ps-4 px-2.5 pb-3.5 pt-8 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-semibold component-shadow dark:shadow-lg input-autofill">
-                                        <label for="absorbance_lr" class="absolute ps-2 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-5 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans font-semibold"> Absorbance </label>
+                                        <input id="absorbance_lr" type="number" step="any" name="absorbance_lr" x-model="absorbance" x-on:input="absorbance !== '' ? concentration = (-1 * (absorbance - {{y_int}}) / {{slope}}).toFixed(2) : concentration = ''" class="block rounded-lg ps-4 px-2.5 pb-3.5 pt-8 w-full text-sm text-gray-900 dark:text-white bg-white dark:bg-cyan-900 border-0 border-b-2 border-emerald-600 dark:border-emerald-300 appearance-none focus:outline-none focus:ring-0 focus:border-cyan-600 peer font-notosans font-semibold component-shadow dark:shadow-lg input-autofill">
+                                        <label for="absorbance_lr" class="absolute ps-2 text-gray-600 dark:text-white duration-300 transform -translate-y-4 scale-75 top-5 origin-[0] start-2.5 peer-focus:text-blue-600 dark:peer-focus:text-cyan-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto font-notosans font-semibold"> Predicted Concentration, ppm </label>
                                     </div>
                                  </div>
                             </div>
