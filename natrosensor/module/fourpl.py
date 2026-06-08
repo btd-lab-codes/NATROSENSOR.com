@@ -63,21 +63,22 @@ def fourpl(dataframe, size):
     #Define the LLOQ
     sd_blank = get_lod(x_data, y_data, popt)[1]
     y_lloq = a_f - 10*sd_blank
-    y_lod = a_f - 3*sd_blank
+    #y_lod = a_f - 3*sd_blank
 
-    lod_conc = inv_4PL(y_lod, *popt)
-    lloc_conc = inv_4PL(y_lloq, *popt)
+    #lod_conc = inv_4PL(y_lod, *popt) == lod
+    lloq_conc = inv_4PL(y_lloq, *popt)
 
     #Define the ULOQ
     uloq_conc = np.max(x_data)
     y_uloq = fourpl_model(uloq_conc, *popt)
 
-    #Create the Linear Equation y=mx + b, where m is the Hill's slope
+    #Create the Linear Equation y=mx + b, where m is the slope
     #Since DPV current decreases with concentration, m is negative
-    m_ = -b_f
+    #m_ = (y_uloq-y_lloq)/(uloq_conc-lloq_conc)
+    m_= -b_f
 
-    #solve for the y-intercept, b
-    y_int = y_lloq - (m_ * lloc_conc)
+    #solve for the y-intercept
+    y_int = y_lloq - (m_ * lloq_conc)
 
     return FigureCanvas(fig), y_int, m_, c50, c50_y
 
