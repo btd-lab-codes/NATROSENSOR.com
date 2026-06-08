@@ -173,8 +173,8 @@
                             <span class="text-slate-900 dark:text-white font-semibold font-poppins"> Results </span>
                         </div> 
                         <div class="grid geid-cols-1 lg:grid-cols-2 gap-2 p-3">
-                            {% include '../ui/process_item.html' with name="Concentration" detail=record.getData.concentration extra_class="flex-col" %}
-                            {% include '../ui/process_item.html' with name="Absorbance" detail=record.getData.absorbance extra_class="flex-col" %}
+                            {% include '../ui/process_item.html' with name="DPV reading, µA" detail=record.getData.concentration extra_class="flex-col" %}
+                            {% include '../ui/process_item.html' with name="Antibiotic Dose, ppm" detail=record.getData.absorbance extra_class="flex-col" %}
                         </div>  
                     </div>
                     <div class="relative flex flex-col text-white font-notosans font-semibold gap-2 justify-center">
